@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Wand2, Upload, Mic, BookOpen, PlusCircle, FileText, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useFirestore } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { collection, query, orderBy } from 'firebase/firestore';
 import type { BlogPost } from '@/lib/types';
 
 
@@ -66,7 +66,7 @@ export default function DashboardPage() {
 
   const articlesQuery = useMemoFirebase(() => {
     if (!user) return null;
-    return collection(firestore, `users/${user.uid}/blogPosts`);
+    return query(collection(firestore, `users/${user.uid}/blogPosts`), orderBy('createdAt', 'desc'));
   }, [firestore, user]);
 
   const { data: articles, isLoading: articlesLoading } = useCollection<BlogPost>(articlesQuery);
@@ -84,15 +84,15 @@ export default function DashboardPage() {
         <p className="text-muted-foreground">Here's your personal dashboard.</p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {/* Column 1: Get Started */}
+      <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-3">
+        {/* Column 1: Get Started & Usage */}
         <div className="space-y-6">
-          <Card className="h-full flex flex-col">
+          <Card>
             <CardHeader>
               <CardTitle>Get Started</CardTitle>
               <CardDescription>Create your next masterpiece.</CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 flex flex-col justify-center gap-4">
+            <CardContent className="flex flex-col gap-4">
               <Button asChild size="lg">
                 <Link href="/dashboard/new-article">
                   <Mic className="mr-2 h-5 w-5" />
@@ -107,10 +107,28 @@ export default function DashboardPage() {
               </Button>
             </CardContent>
           </Card>
+           <Card>
+            <CardHeader>
+              <CardTitle>Your usage</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+               <div>
+                <p className="text-sm font-semibold">Recordings</p>
+                <Progress value={33} className="my-2" />
+                <p className="text-sm text-muted-foreground">1/3 recorded articles this month.</p>
+              </div>
+               <div>
+                <p className="text-sm font-semibold">Personalized AI Models</p>
+                <Progress value={0} className="my-2" />
+                <p className="text-sm text-muted-foreground">0/0 in total (0/0 created this month)</p>
+                <p className="text-xs text-muted-foreground mt-1">Personalized AI models are not available on free trial</p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Column 2: Your Articles */}
-        <div className="space-y-6 lg:col-span-2">
+        {/* Column 2 & 3: Your Articles */}
+        <div className="space-y-6 md:col-span-2">
           <Card className="h-full flex flex-col">
             <CardHeader>
               <CardTitle>Your Articles</CardTitle>
@@ -127,7 +145,7 @@ export default function DashboardPage() {
                   ))}
                 </div>
               ) : (
-                 <div className="flex-1 flex flex-col items-center justify-center text-center h-full">
+                 <div className="flex-1 flex flex-col items-center justify-center text-center h-full py-12">
                   <BookOpen className="h-12 w-12 text-muted-foreground mb-4" />
                   <h3 className="font-semibold text-lg">No articles yet</h3>
                   <p className="text-sm text-muted-foreground">

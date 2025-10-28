@@ -14,7 +14,7 @@ import {
 import { transcribeAudioToText } from '@/ai/flows/transcribe-audio-to-text';
 import { generateStructuredBlogPost } from '@/ai/flows/generate-structured-blog-post';
 import { useUser, useFirestore, addDocumentNonBlocking } from '@/firebase';
-import { collection, serverTimestamp } from 'firebase/firestore';
+import { collection, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 
@@ -105,7 +105,7 @@ export function AudioRecorder() {
   }
 
   const handleCreateArticle = async () => {
-    if (!audioUrl || !user) return;
+    if (!audioUrl || !user || !firestore) return;
     setRecorderState('creating');
 
     try {

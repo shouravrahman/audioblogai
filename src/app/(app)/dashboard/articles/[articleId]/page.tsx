@@ -1,6 +1,6 @@
 'use client';
 
-import { useDoc, useMemoFirebase } from '@/firebase';
+import { useDoc, useMemoFirebase, useUser } from '@/firebase';
 import { useFirestore } from '@/firebase/provider';
 import { doc } from 'firebase/firestore';
 import { useParams } from 'next/navigation';
@@ -9,15 +9,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ArticlePage() {
   const { articleId } = useParams();
+  const { user } = useUser();
   const firestore = useFirestore();
 
   const articleRef = useMemoFirebase(() => {
-    if (!articleId) return null;
-    // This path will need to be updated once user auth is in place.
-    // For now, it assumes a top-level 'blogPosts' collection.
-    // The correct path will be `users/${userId}/blogPosts/${articleId}`
-    return doc(firestore, 'blogPosts', articleId as string);
-  }, [firestore, articleId]);
+    if (!user || !articleId) return null;
+    return doc(firestore, `users/${user.uid}/blogPosts`, articleId as string);
+  }, [firestore, user, articleId]);
 
   const {
     data: article,
@@ -50,13 +48,15 @@ export default function ArticlePage() {
     <div className="max-w-4xl mx-auto">
        <div className="mb-8">
         <h1 className="text-4xl font-bold tracking-tight">{article.title}</h1>
-        <p className="text-muted-foreground mt-2">
-          Published on {new Date(article.createdAt).toLocaleDateString()}
-        </p>
+        {article.createdAt && (
+            <p className="text-muted-foreground mt-2">
+                Published on {new Date(article.createdAt).toLocaleDateString()}
+            </p>
+        )}
       </div>
 
       <article className="prose prose-invert max-w-none">
-        <p>{article.content}</p>
+        <div dangerouslySetInnerHTML={{ __html: article.content.replace(/\n/g, '<br />') }} />
       </article>
     </div>
   );
