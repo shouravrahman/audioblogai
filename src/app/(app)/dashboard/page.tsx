@@ -1,6 +1,6 @@
 'use client';
 
-import { useUser } from '@/firebase';
+import { useUser, useCollection, useMemoFirebase } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import {
   Card,
@@ -11,14 +11,66 @@ import {
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { Wand2, Upload, Mic, BookOpen, PlusCircle } from 'lucide-react';
+import { Wand2, Upload, Mic, BookOpen, PlusCircle, FileText, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useFirestore } from '@/firebase';
+import { collection } from 'firebase/firestore';
+import type { BlogPost } from '@/lib/types';
+
+
+function ArticleCard({ article }: { article: BlogPost & { id: string } }) {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/dashboard/articles/${article.id}`);
+  };
+
+  return (
+    <Card 
+      className="flex flex-col cursor-pointer hover:border-primary transition-colors"
+      onClick={handleClick}
+    >
+      <CardHeader>
+        <CardTitle className="text-lg flex items-center gap-2">
+          {article.status === 'processing' ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <FileText className="h-5 w-5" />
+          )}
+          <span className="truncate">{article.title || 'Untitled Article'}</span>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="flex-1 space-y-2">
+        {article.status === 'processing' ? (
+          <>
+            <p className="text-sm text-muted-foreground">Generating your article...</p>
+            <Progress value={50} className="w-full" />
+          </>
+        ) : (
+          <p className="text-sm text-muted-foreground line-clamp-3">
+            {article.content
+              ? article.content.substring(0, 100) + '...'
+              : 'No content yet.'}
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 
 export default function DashboardPage() {
   const { user } = useUser();
+  const firestore = useFirestore();
   const router = useRouter();
 
-  // This is a fallback. The layout should handle redirecting unauthenticated users.
+  const articlesQuery = useMemoFirebase(() => {
+    if (!user) return null;
+    return collection(firestore, `users/${user.uid}/blogPosts`);
+  }, [firestore, user]);
+
+  const { data: articles, isLoading: articlesLoading } = useCollection<BlogPost>(articlesQuery);
+
   if (!user) {
     return null;
   }
@@ -33,7 +85,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {/* Column 1: Get Started & Your Articles */}
+        {/* Column 1: Get Started */}
         <div className="space-y-6">
           <Card className="h-full flex flex-col">
             <CardHeader>
@@ -58,7 +110,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Column 2: Your Articles */}
-        <div className="space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           <Card className="h-full flex flex-col">
             <CardHeader>
               <CardTitle>Your Articles</CardTitle>
@@ -66,54 +118,23 @@ export default function DashboardPage() {
                 Review and manage your generated content.
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 flex flex-col items-center justify-center text-center">
-              <BookOpen className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="font-semibold text-lg">No articles yet</h3>
-              <p className="text-sm text-muted-foreground">
-                Start recording to see your articles here.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Column 3: Usage & AI Models */}
-        <div className="space-y-6">
-           <Card className="border-2 border-primary/50 bg-primary/5">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Wand2 className="h-5 w-5 text-primary" />
-                <span>Free Trial Status</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <p className="font-medium">Recordings</p>
-                <p className="text-sm text-muted-foreground mb-2">
-                  0 / 3 recorded articles this month.
-                </p>
-                <Progress value={0} aria-label="0 out of 3 articles recorded" />
-              </div>
-              <Button size="sm" className="w-full">
-                Subscribe to Unlock More
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Personalized AI</CardTitle>
-              <CardDescription>
-                Train the AI to write in your unique style.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button variant="outline" className="w-full">
-                <PlusCircle className="mr-2 h-5 w-5" />
-                Create your first AI model
-              </Button>
-              <p className="text-xs text-muted-foreground mt-2 text-center">
-                Not available on the free trial.
-              </p>
+            <CardContent className="flex-1">
+              {articlesLoading && <p>Loading articles...</p>}
+              {!articlesLoading && articles && articles.length > 0 ? (
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {articles.map((article) => (
+                    <ArticleCard key={article.id} article={article} />
+                  ))}
+                </div>
+              ) : (
+                 <div className="flex-1 flex flex-col items-center justify-center text-center h-full">
+                  <BookOpen className="h-12 w-12 text-muted-foreground mb-4" />
+                  <h3 className="font-semibold text-lg">No articles yet</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Start recording to see your articles here.
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

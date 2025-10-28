@@ -49,6 +49,11 @@
           "type": "string",
           "description": "Content of the blog post (e.g., HTML, Markdown)."
         },
+        "status": {
+          "type": "string",
+          "description": "The processing status of the blog post.",
+          "enum": ["processing", "completed", "failed"]
+        },
         "createdAt": {
           "type": "string",
           "description": "Timestamp indicating when the blog post was created.",
@@ -65,6 +70,7 @@
         "userId",
         "title",
         "content",
+        "status",
         "createdAt",
         "updatedAt"
       ]
