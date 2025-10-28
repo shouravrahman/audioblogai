@@ -1,3 +1,190 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "kent-c-dodds-avatar",
+      "description": "Avatar for Kent C. Dodds",
+      "imageUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjE2NjYwODB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "santosh-yadav-avatar",
+      "description": "Avatar for Santosh Yadav",
+      "imageUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjE2NjYwODB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "scott-spence-avatar",
+      "description": "Avatar for Scott Spence",
+      "imageUrl": "https://images.unsplash.com/photo-1612694790876-bec1383fbb40?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtYW4lMjBnbGFzc2VzfGVufDB8fHx8MTc2MTYwNDU3MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man glasses"
+    },
+    {
+      "id": "anne-bovelett-avatar",
+      "description": "Avatar for Anne Bovelett",
+      "imageUrl": "https://images.unsplash.com/photo-1610655507808-a59293f4e332?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2MTU5OTgzN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "marc-backes-avatar",
+      "description": "Avatar for Marc Backes",
+      "imageUrl": "https://images.unsplash.com/photo-1562124638-724e13052daf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtYW4lMjBzbWlsaW5nfGVufDB8fHx8MTc2MTY4MDkxMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man smiling"
+    },
+    {
+      "id": "dominick-j-monaco-avatar",
+      "description": "Avatar for Dominick J. Monaco",
+      "imageUrl": "https://images.unsplash.com/photo-1531891437562-4301cf35b7e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtYW4lMjBwcm9maWxlfGVufDB8fHx8MTc2MTYwNjIwMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man profile"
+    },
+    {
+      "id": "nicolas-beaussart-avatar",
+      "description": "Avatar for Nicolas Beaussart",
+      "imageUrl": "https://images.unsplash.com/photo-1618322482505-2d58c5a6986a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxtYW4lMjBiZWFyZHxlbnwwfHx8fDE3NjE2NjY0NTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man beard"
+    },
+    {
+      "id": "keith-newton-md-avatar",
+      "description": "Avatar for Keith Newton, MD",
+      "imageUrl": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkb2N0b3IlMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjE2MzEyOTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "doctor portrait"
+    },
+    {
+      "id": "tessa-kriesel-avatar",
+      "description": "Avatar for Tessa Kriesel",
+      "imageUrl": "https://images.unsplash.com/photo-1550480082-dd9c35032f45?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx3b21hbiUyMGdsYXNzZXN8ZW58MHx8fHwxNzYxNjE3MTUzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman glasses"
+    },
+    {
+      "id": "tim-benniks-avatar",
+      "description": "Avatar for Tim Benniks",
+      "imageUrl": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxtYW4lMjBzbWlsaW5nfGVufDB8fHx8MTc2MTY4MDkxMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man smiling"
+    },
+    {
+      "id": "ellie-zubrowski-avatar",
+      "description": "Avatar for Ellie Zubrowski",
+      "imageUrl": "https://images.unsplash.com/photo-1610655507808-a59293f4e332?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2MTU5OTgzN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "jason-torres-avatar",
+      "description": "Avatar for Jason Torres",
+      "imageUrl": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjE2NjYwODB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "santanu-dasgupta-avatar",
+      "description": "Avatar for Santanu DasGupta",
+      "imageUrl": "https://images.unsplash.com/photo-1623184663110-89ba5b565eb6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtYW4lMjBzbWlsaW5nfGVufDB8fHx8MTc2MTY4MDkxMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man smiling"
+    },
+    {
+      "id": "ivan-burazin-avatar",
+      "description": "Avatar for Ivan Burazin",
+      "imageUrl": "https://images.unsplash.com/photo-1636377985931-898218afd306?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjE2NjYwODB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "danny-thompson-avatar",
+      "description": "Avatar for Danny Thompson",
+      "imageUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxtYW4lMjBwcm9maWxlfGVufDB8fHx8MTc2MTYwNjIwMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man profile"
+    },
+    {
+      "id": "steven-boutcher-avatar",
+      "description": "Avatar for Steven Boutcher",
+      "imageUrl": "https://images.unsplash.com/photo-1569779213435-ba3167dde7cc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxtYW4lMjBnbGFzc2VzfGVufDB8fHx8MTc2MTYwNDU3MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man glasses"
+    },
+    {
+      "id": "julius-de-kempenaer-avatar",
+      "description": "Avatar for Julius de Kempenaer",
+      "imageUrl": "https://images.unsplash.com/photo-1725866546799-4cc16f6cba23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtYW4lMjBzbWlsaW5nfGVufDB8fHx8MTc2MTY4MDkxMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man smiling"
+    },
+    {
+      "id": "this-dot-avatar",
+      "description": "Avatar for This Dot",
+      "imageUrl": "https://images.unsplash.com/photo-1687523327554-fa9f50423489?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjb21wYW55JTIwbG9nb3xlbnwwfHx8fDE3NjE2NTE1Mzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "company logo"
+    },
+    {
+      "id": "epic-web-avatar",
+      "description": "Avatar for Epic Web",
+      "imageUrl": "https://images.unsplash.com/photo-1620288627223-53302f4e8c74?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjb21wYW55JTIwbG9nb3xlbnwwfHx8fDE3NjE2NTE1Mzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "company logo"
+    },
+    {
+      "id": "pieces-avatar",
+      "description": "Avatar for Pieces",
+      "imageUrl": "https://images.unsplash.com/photo-1687523327554-fa9f50423489?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjb21wYW55JTIwbG9nb3xlbnwwfHx8fDE3NjE2NTE1Mzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "company logo"
+    },
+    {
+      "id": "stockcharts-com-avatar",
+      "description": "Avatar for StockCharts.com",
+      "imageUrl": "https://images.unsplash.com/photo-1619551734325-81aaf323686c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjb21wYW55JTIwbG9nb3xlbnwwfHx8fDE3NjE2NTE1Mzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "company logo"
+    },
+    {
+      "id": "demo-video-thumbnail",
+      "description": "Thumbnail for the demo video",
+      "imageUrl": "https://images.unsplash.com/photo-1588702547923-7093a6c3ba33?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxsYXB0b3AlMjBzY3JlZW58ZW58MHx8fHwxNzYxNjEzOTMwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "laptop screen"
+    },
+    {
+      "id": "driving-hands-free",
+      "description": "Image of someone using the app while driving",
+      "imageUrl": "https://images.unsplash.com/photo-1621639532859-8b26570b96fc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYXIlMjBpbnRlcmlvcnxlbnwwfHx8fDE3NjE2MzI1NTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car interior"
+    },
+    {
+      "id": "article-ai-job",
+      "description": "Thumbnail for article: AI is taking your job",
+      "imageUrl": "https://images.unsplash.com/photo-1624792054848-98a03bbb8546?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxyb2JvdCUyMG9mZmljZXxlbnwwfHx8fDE3NjE2ODk3MzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "robot office"
+    },
+    {
+      "id": "article-stripe-app",
+      "description": "Thumbnail for article: Building a Stripe App",
+      "imageUrl": "https://images.unsplash.com/photo-1608742213509-815b97c30b36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjb2RlJTIwc2NyZWVufGVufDB8fHx8MTc2MTYzMDMxM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "code screen"
+    },
+    {
+      "id": "article-qa-authority",
+      "description": "Thumbnail for article: My Journey to Building Authority in QA",
+      "imageUrl": "https://images.unsplash.com/photo-1515965885361-f1e0095517ea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxsYXB0b3AlMjBkZXNrfGVufDB8fHx8MTc2MTYxMzY0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "laptop desk"
+    },
+    {
+      "id": "article-slow-networks",
+      "description": "Thumbnail for article: Embracing Slow Networks",
+      "imageUrl": "https://images.unsplash.com/photo-1722606864785-53fd489068a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx3aWZpJTIwc3ltYm9sfGVufDB8fHx8MTc2MTY4OTczNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wifi symbol"
+    },
+    {
+      "id": "article-gen-ai-vs-llm",
+      "description": "Thumbnail for article: Generative AI vs LLMs",
+      "imageUrl": "https://images.unsplash.com/photo-1658329331192-06371efb4d57?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YWJzdHJhY3QlMjBicmFpbnxlbnwwfHx8fDE3NjE2NDE5Mzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract brain"
+    },
+    {
+      "id": "article-quitting-caffeine",
+      "description": "Thumbnail for article: Quitting caffeine",
+      "imageUrl": "https://images.unsplash.com/photo-1595434091143-b375ced5fe5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjb2ZmZWUlMjBjdXB8ZW58MHx8fHwxNzYxNjQzNTY3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "coffee cup"
+    },
+    {
+      "id": "article-spy-sectors",
+      "description": "Thumbnail for article: Three Sectors Leading SPY Back to Offense",
+      "imageUrl": "https://images.unsplash.com/photo-1649003515353-c58a239cf662?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdG9jayUyMGNoYXJ0fGVufDB8fHx8MTc2MTYxNTk5MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "stock chart"
+    },
+    {
+      "id": "article-visual-editing",
+      "description": "Thumbnail for article: Different Approaches to Visual Editing in Headless CMS",
+      "imageUrl": "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx3ZWIlMjBkZXNpZ258ZW58MHx8fHwxNzYxNjY4ODU4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "web design"
+    }
+  ]
 }
