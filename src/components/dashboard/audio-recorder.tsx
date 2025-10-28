@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Mic, Square, Download, Loader2, ArrowLeft } from 'lucide-react';
+import { Mic, Square, Download, Loader2, ArrowLeft, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
@@ -13,10 +13,12 @@ import {
 } from '@/components/ui/select';
 import { transcribeAudioToText } from '@/ai/flows/transcribe-audio-to-text';
 import { generateStructuredBlogPost } from '@/ai/flows/generate-structured-blog-post';
-import { useUser, useFirestore, addDocumentNonBlocking } from '@/firebase';
-import { collection, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { useUser, useFirestore } from '@/firebase';
+import { addDoc, collection, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
+import { blobToBase64 } from '@/lib/utils';
+import { AudioVisualizer } from './audio-visualizer';
 
 type RecorderState = 'idle' | 'recording' | 'recorded' | 'creating';
 
@@ -29,6 +31,7 @@ export function AudioRecorder() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const { user } = useUser();
   const firestore = useFirestore();
@@ -66,6 +69,7 @@ export function AudioRecorder() {
 
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        streamRef.current = stream;
         mediaRecorderRef.current = new MediaRecorder(stream);
         mediaRecorderRef.current.ondataavailable = (event) => {
             audioChunksRef.current.push(event.data);
@@ -95,26 +99,15 @@ export function AudioRecorder() {
     }
   };
 
-  const blobToBase64 = (blob: Blob): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  }
-
   const handleCreateArticle = async () => {
     if (!audioUrl || !user || !firestore) return;
     setRecorderState('creating');
 
+    let newArticleRef;
     try {
-      const audioBlob = await fetch(audioUrl).then(res => res.blob());
-      const audioDataUri = await blobToBase64(audioBlob);
-
       // 1. Create a placeholder document in Firestore
       const articlesCollection = collection(firestore, `users/${user.uid}/blogPosts`);
-      const newArticleRef = await addDocumentNonBlocking(articlesCollection, {
+      newArticleRef = await addDoc(articlesCollection, {
         userId: user.uid,
         title: "Generating your new article...",
         content: "",
@@ -128,56 +121,52 @@ export function AudioRecorder() {
         description: "Your article is being generated. You will be redirected shortly.",
       });
 
+      // Redirect to dashboard immediately
+      router.push('/dashboard');
+
       // 2. Start the AI generation process (non-blocking)
-      (async () => {
-        try {
-          const transcriptionResult = await transcribeAudioToText({ audioDataUri });
-          const transcribedText = transcriptionResult.transcription;
+      const audioBlob = await fetch(audioUrl).then(res => res.blob());
+      const audioDataUri = await blobToBase64(audioBlob);
+      
+      const transcriptionResult = await transcribeAudioToText({ audioDataUri });
+      const transcribedText = transcriptionResult.transcription;
 
-          if (!transcribedText) {
-            throw new Error("Transcription failed.");
-          }
+      if (!transcribedText) {
+        throw new Error("Transcription failed. The audio might be silent or unclear.");
+      }
 
-          const blogPostResult = await generateStructuredBlogPost({ transcribedText });
-          const structuredBlogPost = blogPostResult.structuredBlogPost;
+      const blogPostResult = await generateStructuredBlogPost({ transcribedText });
+      const structuredBlogPost = blogPostResult.structuredBlogPost;
 
-          // Extract title (first line) and content
-          const lines = structuredBlogPost.split('\n');
-          const title = lines[0].replace(/^#\s*/, '');
-          const content = lines.slice(1).join('\n').trim();
+      const lines = structuredBlogPost.split('\n');
+      const title = lines[0].replace(/^#\s*/, '').trim() || "Untitled Article";
+      const content = lines.slice(1).join('\n').trim();
 
-          // Update the document in Firestore
-          await updateDoc(newArticleRef, {
-            title: title,
-            content: content,
-            status: "completed",
-            updatedAt: serverTimestamp(),
-          });
-
-        } catch (aiError) {
-          console.error("AI generation failed:", aiError);
-          // Update doc to show failure
-          await updateDoc(newArticleRef, {
-            status: "failed",
-            title: "Article Generation Failed",
-            updatedAt: serverTimestamp(),
-          });
-        }
-      })();
-
-      // 3. Redirect to dashboard immediately
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 1000);
+      await updateDoc(newArticleRef, {
+        title: title,
+        content: content,
+        status: "completed",
+        updatedAt: serverTimestamp(),
+      });
 
     } catch (err: any) {
-      console.error(err);
+      console.error("Error during article creation:", err);
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
-        description: err.message || 'Could not start article creation.',
+        description: err.message || 'Could not create the article.',
       });
       setRecorderState('recorded');
+
+      // Update doc to show failure if it was created
+      if (newArticleRef) {
+        await updateDoc(newArticleRef, {
+          status: "failed",
+          title: "Article Generation Failed",
+          content: err.message || 'An unknown error occurred during generation.',
+          updatedAt: serverTimestamp(),
+        });
+      }
     }
   };
   
@@ -186,14 +175,15 @@ export function AudioRecorder() {
     setElapsedTime(0);
     setAudioUrl(null);
     audioChunksRef.current = [];
-    if(mediaRecorderRef.current && mediaRecorderRef.current.stream){
-        mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+    if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
     }
   };
 
   if (recorderState === 'idle' || recorderState === 'recording') {
     return (
-      <Card>
+      <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span>Record Your Thoughts</span>
@@ -202,17 +192,14 @@ export function AudioRecorder() {
             )}
           </CardTitle>
           <CardDescription>
-            {recorderState === 'recording' ? "Click the square to stop recording" : "Click the mic to start recording"}
+            {recorderState === 'recording' ? "Click the square to stop recording" : "Click the mic to start recording. Your subscription determines the maximum recording time."}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center gap-6 p-10">
           <Button onClick={recorderState === 'recording' ? handleStopRecording : handleStartRecording} size="icon" className="w-20 h-20 rounded-full">
             {recorderState === 'recording' ? <Square className="h-8 w-8" /> : <Mic className="h-8 w-8" />}
           </Button>
-          <div className="w-full h-16 bg-secondary rounded-lg flex items-center justify-center">
-            {/* We can add a cool visualizer here later */}
-            <p className="text-muted-foreground text-sm">Your subscription determines the maximum recording time.</p>
-          </div>
+          <AudioVisualizer stream={streamRef.current} isRecording={recorderState === 'recording'} />
         </CardContent>
       </Card>
     );
@@ -220,12 +207,9 @@ export function AudioRecorder() {
 
   if (recorderState === 'recorded' || recorderState === 'creating') {
     return (
-      <Card>
+      <Card className="max-w-2xl mx-auto">
         <CardHeader>
-            <Button variant="ghost" size="sm" className="w-fit p-0 h-auto mb-2" onClick={handleReset}>
-                <ArrowLeft className="mr-2 h-4 w-4" /> Back to Recording
-            </Button>
-            <CardTitle>Your Recording</CardTitle>
+            <CardTitle>Review and Create</CardTitle>
             <CardDescription>Review your audio and choose an AI model to generate your article.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -244,21 +228,25 @@ export function AudioRecorder() {
                     </SelectContent>
                 </Select>
             </div>
-            <div className="space-y-2">
+            <div className="flex flex-col sm:flex-row gap-2">
                  <Button onClick={handleCreateArticle} className="w-full" disabled={recorderState === 'creating'}>
                     {recorderState === 'creating' ? (
                         <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Scheduling Creation...
+                            Creating Article...
                         </>
                     ) : (
                         'Create article'
                     )}
                 </Button>
+                <Button variant="outline" className="w-full" onClick={handleReset}>
+                    <RotateCcw className="mr-2 h-4 w-4" />
+                    Record Again
+                </Button>
                 <Button variant="outline" className="w-full" asChild>
                     <a href={audioUrl || '#'} download={`recording-${new Date().toISOString()}.wav`}>
                         <Download className="mr-2 h-4 w-4" />
-                        Download audio
+                        Download
                     </a>
                 </Button>
             </div>

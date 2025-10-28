@@ -96,11 +96,11 @@ export default function DashboardPage() {
               <Button asChild size="lg">
                 <Link href="/dashboard/new-article">
                   <Mic className="mr-2 h-5 w-5" />
-                  Record a new article
+                  Record an article
                 </Link>
               </Button>
               <Button asChild variant="secondary" size="lg">
-                <Link href="#">
+                <Link href="/dashboard/new-article?upload=true">
                   <Upload className="mr-2 h-5 w-5" />
                   Upload an audio file
                 </Link>
@@ -149,7 +149,7 @@ export default function DashboardPage() {
                   <BookOpen className="h-12 w-12 text-muted-foreground mb-4" />
                   <h3 className="font-semibold text-lg">No articles yet</h3>
                   <p className="text-sm text-muted-foreground">
-                    Start recording to see your articles here.
+                    Start by recording or uploading an audio file.
                   </p>
                 </div>
               )}
