@@ -6,3 +6,11 @@ export type BlogPost = {
     createdAt: string;
     updatedAt: string;
 };
+
+export type AiModel = {
+    userId: string;
+    name: string;
+    description?: string;
+    trainingData: string;
+    createdAt: string;
+};

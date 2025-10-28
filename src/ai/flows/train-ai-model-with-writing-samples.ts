@@ -1,8 +1,9 @@
 'use server';
 /**
- * @fileOverview Trains an AI model with user-provided writing samples to mimic their writing style.
+ * @fileOverview Analyzes user-provided writing samples to extract stylistic features
+ * for personalizing AI-generated content.
  *
- * - trainAiModelWithWritingSamples - A function that initiates the AI model training process.
+ * - trainAiModelWithWritingSamples - A function that initiates the style analysis process.
  * - TrainAiModelWithWritingSamplesInput - The input type for the trainAiModelWithWritingSamples function.
  * - TrainAiModelWithWritingSamplesOutput - The return type for the trainAiModelWithWritingSamples function.
  */
@@ -20,7 +21,7 @@ export type TrainAiModelWithWritingSamplesInput = z.infer<
 >;
 
 const TrainAiModelWithWritingSamplesOutputSchema = z.object({
-  message: z.string().describe('Confirmation message that the model has been trained.'),
+  analysis: z.string().describe('A summary of the writing style, tone, and key characteristics found in the samples.'),
 });
 export type TrainAiModelWithWritingSamplesOutput = z.infer<
   typeof TrainAiModelWithWritingSamplesOutputSchema
@@ -36,11 +37,22 @@ const prompt = ai.definePrompt({
   name: 'trainAiModelWithWritingSamplesPrompt',
   input: {schema: TrainAiModelWithWritingSamplesInputSchema},
   output: {schema: TrainAiModelWithWritingSamplesOutputSchema},
-  prompt: `You are an AI model training assistant.  You have received the user's writing samples.  Confirm that training will commence and that it will reflect their writing style.
+  prompt: `You are an expert writing analyst. Analyze the following writing samples and produce a concise, actionable summary of the author's style. 
+
+Focus on the following characteristics:
+- **Tone**: Is it formal, conversational, humorous, academic, etc.?
+- **Sentence Structure**: Are sentences long and complex, or short and punchy? Is there variation?
+- **Vocabulary**: Is the language simple or sophisticated? Are there any recurring domain-specific terms?
+- **Formatting**: Does the author use lists, bolding, italics, or other formatting frequently?
+- **Overall Voice**: Describe the overall feeling or personality that comes through in the writing.
+
+Your analysis will be used as a style guide for an AI to mimic this author. Be descriptive and specific.
 
 Writing Samples:
 {{#each writingSamples}}
+---
 {{{this}}}
+---
 {{/each}}
 `,
 });
