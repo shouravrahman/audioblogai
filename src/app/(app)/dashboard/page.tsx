@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { Wand2, Upload, Mic, BookOpen, PlusCircle, FileText, Loader2, Gem } from 'lucide-react';
+import { Wand2, Upload, Mic, BookOpen, PlusCircle, FileText, Loader2, Gem, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { useFirestore } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
@@ -25,6 +25,18 @@ function ArticleCard({ article }: { article: BlogPost & { id: string } }) {
     router.push(`/dashboard/articles/${article.id}`);
   };
 
+  const getStatusIcon = () => {
+    switch (article.status) {
+      case 'processing':
+        return <Loader2 className="h-5 w-5 animate-spin" />;
+      case 'failed':
+        return <AlertTriangle className="h-5 w-5 text-destructive" />;
+      case 'completed':
+      default:
+        return <FileText className="h-5 w-5" />;
+    }
+  }
+
   return (
     <Card 
       className="flex flex-col cursor-pointer hover:border-primary transition-colors"
@@ -32,11 +44,7 @@ function ArticleCard({ article }: { article: BlogPost & { id: string } }) {
     >
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2">
-          {article.status === 'processing' ? (
-            <Loader2 className="h-5 w-5 animate-spin" />
-          ) : (
-            <FileText className="h-5 w-5" />
-          )}
+          {getStatusIcon()}
           <span className="truncate">{article.title || 'Untitled Article'}</span>
         </CardTitle>
       </CardHeader>
@@ -46,6 +54,10 @@ function ArticleCard({ article }: { article: BlogPost & { id: string } }) {
             <p className="text-sm text-muted-foreground">Generating your article...</p>
             <Progress value={50} className="w-full" />
           </>
+        ) : article.status === 'failed' ? (
+            <p className="text-sm text-destructive">
+                Article generation failed. Click to see details.
+            </p>
         ) : (
           <p className="text-sm text-muted-foreground line-clamp-3">
             {article.content
