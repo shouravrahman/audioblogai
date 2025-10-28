@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Mic, Square, Download, Loader2, ArrowLeft, RotateCcw } from 'lucide-react';
+import { Mic, Square, Download, Loader2, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
@@ -11,15 +11,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { transcribeAudioToText } from '@/ai/flows/transcribe-audio-to-text';
-import { generateStructuredBlogPost } from '@/ai/flows/generate-structured-blog-post';
-import { useUser, useFirestore, useDoc, useMemoFirebase, useCollection } from '@/firebase';
-import { addDoc, collection, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
+import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { blobToBase64 } from '@/lib/utils';
 import { AudioVisualizer } from './audio-visualizer';
 import type { AiModel } from '@/lib/types';
+import { createArticle } from '@/app/actions';
 
 type RecorderState = 'idle' | 'recording' | 'recorded' | 'creating';
 
@@ -39,13 +38,6 @@ export function AudioRecorder() {
   const firestore = useFirestore();
   const router = useRouter();
   const { toast } = useToast();
-
-  const preferencesRef = useMemoFirebase(() => {
-    if (!user) return null;
-    return doc(firestore, 'userPreferences', user.uid);
-  }, [firestore, user]);
-
-  const { data: savedPreferences } = useDoc(preferencesRef);
 
   const modelsQuery = useMemoFirebase(() => {
     if (!user) return null;
@@ -120,76 +112,42 @@ export function AudioRecorder() {
     if (!audioUrl || !user || !firestore) return;
     setRecorderState('creating');
 
-    let newArticleRef;
     try {
-      // 1. Create a placeholder document in Firestore
       const articlesCollection = collection(firestore, `users/${user.uid}/blogPosts`);
-      newArticleRef = await addDoc(articlesCollection, {
+      const newArticleRef = await addDoc(articlesCollection, {
         userId: user.uid,
-        title: "Generating your new article...",
+        title: "Preparing your article...",
         content: "",
         status: "processing",
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
-      
-      toast({
-        title: "Article Creation Started",
-        description: "Your article is being generated. Please wait.",
-      });
 
-      // 2. Start the AI generation process (blocking for the user)
       const audioBlob = await fetch(audioUrl).then(res => res.blob());
       const audioDataUri = await blobToBase64(audioBlob);
-      
-      const transcriptionResult = await transcribeAudioToText({ audioDataUri });
-      const transcribedText = transcriptionResult.transcription;
 
-      if (!transcribedText) {
-        throw new Error("Transcription failed. The audio might be silent or unclear.");
-      }
-
-      const customModel = aiModels?.find(model => model.id === selectedModel);
-
-      const blogPostResult = await generateStructuredBlogPost({ 
-        transcribedText,
-        preferences: savedPreferences || {},
-        styleGuide: customModel?.trainingData,
+      await createArticle({
+        articleId: newArticleRef.id,
+        userId: user.uid,
+        audioDataUri,
+        selectedModel,
       });
-      const structuredBlogPost = blogPostResult.structuredBlogPost;
 
-      const lines = structuredBlogPost.split('\n');
-      const title = lines[0].replace(/^#\s*/, '').trim() || "Untitled Article";
-      const content = lines.slice(1).join('\n').trim();
-
-      await updateDoc(newArticleRef, {
-        title: title,
-        content: content,
-        status: "completed",
-        updatedAt: serverTimestamp(),
+      toast({
+        title: "Article generation started!",
+        description: "Your article is being created in the background. You'll see it on your dashboard.",
       });
-      
-      // Redirect on success
-      router.push(`/dashboard/articles/${newArticleRef.id}`);
+
+      router.push('/dashboard');
 
     } catch (err: any) {
-      console.error("Error during article creation:", err);
+      console.error("Error triggering article creation:", err);
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
-        description: err.message || 'Could not create the article.',
+        description: err.message || 'Could not start the article creation process.',
       });
-      setRecorderState('recorded');
-
-      // Update doc to show failure if it was created
-      if (newArticleRef) {
-        await updateDoc(newArticleRef, {
-          status: "failed",
-          title: "Article Generation Failed",
-          content: err.message || 'An unknown error occurred during generation.',
-          updatedAt: serverTimestamp(),
-        });
-      }
+      setRecorderState('recorded'); // Revert state on failure
     }
   };
   
