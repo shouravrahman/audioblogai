@@ -10,9 +10,9 @@ import { Input } from '../ui/input';
 import { Plus } from 'lucide-react';
 
 const writingExamples = [
-  'https://www.eddyvinck.com/blog/how-to-test-apple-pay-for-web',
-  'https://www.eddyvinck.com/blog/dont-make-these-3-mistakes-building-a-computer',
-  'https://www.eddyvinck.com/blog/how-to-study-for-the-aws-developer-associate-exam',
+  'https://your-blog.com/post-1',
+  'https://your-blog.com/post-2',
+  'https://your-blog.com/post-3',
 ];
 
 export function PersonalizedAi() {
@@ -20,19 +20,18 @@ export function PersonalizedAi() {
     <section id="personalized-ai">
       <div className="container grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div>
-          <h2 className="text-3xl md:text-4xl font-bold">Personalized AI Models</h2>
+          <h2 className="text-3xl md:text-4xl font-bold">Your Style, Amplified</h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Train your own AI model with 3 to 10 articles you already have, or use
-            the articles you wrote using Blog Recorder to make it sound just like you.
+            Train a custom AI model on your own writing. Provide 3-10 articles, and the AI will learn to write in your unique voice.
           </p>
-          <Button className="mt-6">Create new writing AI</Button>
+          <Button className="mt-6">Create Your Writing AI</Button>
         </div>
         <div className="flex items-center justify-center">
           <Card className="w-full max-w-md shadow-lg">
             <CardHeader>
-              <CardTitle>Eddy’s AI Model</CardTitle>
+              <CardTitle>My Custom AI Model</CardTitle>
               <CardDescription>
-                Add 3 to 10 writing examples.
+                Add 3 to 10 writing samples.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

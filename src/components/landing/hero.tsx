@@ -29,21 +29,19 @@ export function Hero() {
               ))}
             </div>
             <p className="text-sm font-medium text-muted-foreground">
-              316 HAPPY USERS
+              JOIN THOUSANDS OF CREATORS
             </p>
           </div>
           <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
-            Create blog posts 10x faster by talking out loud
+            Turn your voice into compelling articles
           </h1>
           <p className="mt-4 max-w-[600px] mx-auto md:mx-0 text-lg text-muted-foreground md:text-xl">
-            Get rid of writer&apos;s block and start publishing more often. Audio gets
-            turned into structured blog posts you can edit, export, and publish
-            anywhere.
+            Conquer writer's block and publish more content. Your audio is transformed into structured blog posts, ready for you to edit, export, and share.
           </p>
           <div className="mt-8 flex flex-col items-center md:items-start gap-4">
-            <Button size="lg">Start with 3 free articles</Button>
+            <Button size="lg">Start for Free</Button>
             <p className="text-xs text-muted-foreground">
-              Try for free. Cancel anytime. No credit card required.
+              No credit card required.
             </p>
           </div>
         </div>

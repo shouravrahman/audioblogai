@@ -7,11 +7,10 @@ export function Comparison() {
     <section className="container">
       <div className="text-center mb-16">
         <h2 className="text-3xl md:text-4xl font-bold">
-          Start publishing without writer&apos;s block
+          Publish faster, without the friction
         </h2>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          Save countless hours by using Blog Recorder to create your articles
-          faster than ever before.
+          Use AudioScribe AI to get your ideas out of your head and onto the page faster than ever.
         </p>
       </div>
 
@@ -20,11 +19,11 @@ export function Comparison() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Pencil className="h-5 w-5" />
-              Traditional content writing
+              Old-school Writing
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <h3 className="font-semibold">Without ChatGPT</h3>
+            <h3 className="font-semibold">Manual Writing</h3>
             <ul className="space-y-2 text-muted-foreground">
               {comparisonFeatures.without.traditional.map((item, i) => (
                 <li key={i} className="flex items-start gap-2">
@@ -33,7 +32,7 @@ export function Comparison() {
                 </li>
               ))}
             </ul>
-            <h3 className="font-semibold pt-4">With ChatGPT</h3>
+            <h3 className="font-semibold pt-4">Generic AI Tools</h3>
             <ul className="space-y-2 text-muted-foreground">
               {comparisonFeatures.without.chatGPT.map((item, i) => (
                 <li key={i} className="flex items-start gap-2">
@@ -49,7 +48,7 @@ export function Comparison() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-primary">
               <Mic className="h-5 w-5" />
-              With Blog Recorder
+              With AudioScribe AI
             </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">

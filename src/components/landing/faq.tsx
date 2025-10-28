@@ -14,8 +14,7 @@ export function Faq() {
           Frequently Asked Questions
         </h2>
         <p className="mt-4 text-lg text-muted-foreground">
-          Answers to common questions about Blog Recorder and our professional
-          blog posts generated from voice recordings
+          Common questions about AudioScribe AI and how we turn voice into text.
         </p>
       </div>
       <Accordion type="single" collapsible className="w-full">

@@ -53,11 +53,10 @@ export function Features() {
     <section id="features">
       <div className="container text-center mb-16">
         <h2 className="text-3xl md:text-4xl font-bold">
-          How your voice gets turned into blog posts
+          How your voice becomes an article
         </h2>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          Save countless hours by using Blog Recorder to create your articles
-          faster than ever before.
+          Our process is simple. Just talk, and let our AI handle the heavy lifting.
         </p>
       </div>
 
@@ -65,9 +64,9 @@ export function Features() {
         <FeatureCard {...features[0]}>
           <Card className="w-full max-w-md shadow-lg">
             <CardHeader>
-              <CardTitle>Your thoughts, spoken</CardTitle>
+              <CardTitle>Speak Your Mind</CardTitle>
               <CardDescription>
-                Simply start recording and speak freely.
+                Start recording and capture your ideas as they come.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -81,7 +80,7 @@ export function Features() {
         <FeatureCard {...features[1]}>
           <Card className="w-full max-w-md shadow-lg">
             <CardHeader>
-              <CardTitle>Recorder</CardTitle>
+              <CardTitle>AI Transcription</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -95,7 +94,7 @@ export function Features() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="personal">Your personal AI model</SelectItem>
-                  <SelectItem value="default">Blog Recorder default</SelectItem>
+                  <SelectItem value="default">AudioScribe AI default</SelectItem>
                   <SelectItem value="conversational">
                     Conversational and friendly
                   </SelectItem>
@@ -111,23 +110,21 @@ export function Features() {
         <FeatureCard {...features[2]}>
           <Card className="w-full max-w-md shadow-lg">
             <CardHeader>
-              <CardTitle>How AI Can Help You Write Better Blog Posts</CardTitle>
+              <CardTitle>From Speech to Structure</CardTitle>
               <CardDescription>
-                If you&apos;re a blogger, marketeer, or content creator, then you&apos;ve
-                probably wondered how AI can help your writing process.
+                Our AI organizes your transcript into a polished article.
               </CardDescription>
             </CardHeader>
             <CardContent className="prose prose-sm text-sm">
-              <h4>Three Ways AI Can Boost Your Blogging</h4>
+              <h4>Key Takeaways</h4>
               <ul>
-                <li>Let AI write the entire post for you</li>
-                <li>Use AI to generate ideas or outlines</li>
-                <li>Feed your draft to AI for feedback and suggestions</li>
+                <li>AI drafts the post for you</li>
+                <li>Generate outlines and ideas</li>
+                <li>Get feedback on your drafts</li>
               </ul>
-              <h4>Types of AI Writing Tools</h4>
+              <h4>Writing Tools</h4>
               <p>
-                <strong>ChatGPT: The Jack of All Trades.</strong> ChatGPT is
-                probably the most well-known AI tool out there.
+                <strong>Smart Editor:</strong> It's more than just text. It's a full-featured editor.
               </p>
             </CardContent>
           </Card>
@@ -136,9 +133,9 @@ export function Features() {
         <FeatureCard {...features[3]}>
           <Card className="w-full max-w-md shadow-lg">
             <CardHeader>
-              <CardTitle>Export Your Article</CardTitle>
+              <CardTitle>Export Anywhere</CardTitle>
               <CardDescription>
-                Copy and paste to any platform.
+                Copy and paste to any platform, hassle-free.
               </CardDescription>
             </CardHeader>
             <CardContent>

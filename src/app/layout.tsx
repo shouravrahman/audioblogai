@@ -5,8 +5,8 @@ import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Audio Blog AI',
-  description: 'Create blog posts 10x faster by talking out loud.',
+  title: 'AudioScribe AI',
+  description: 'Transform your spoken ideas into polished blog posts effortlessly.',
 };
 
 const ptSans = PT_Sans({

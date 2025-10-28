@@ -12,81 +12,81 @@ function getImage(id: string): ImagePlaceholder {
 export const navLinks = [
   { label: 'Examples', href: '#examples' },
   { label: 'Pricing', href: '#pricing' },
-  { label: 'Roadmap', href: '#' },
+  { label: 'Features', href: '#features' },
   { label: 'Blog', href: '#' },
 ];
 
 export const testimonials = [
   {
-    name: 'Kent C. Dodds',
-    title: 'Software Engineer and Educator',
-    quote: "It's my favorite way to quickly go from disorganized thoughts into an organized post.",
+    name: 'Alex Johnson',
+    title: 'Content Strategist',
+    quote: "This is my go-to for turning scattered thoughts into structured content. It's incredibly fast and intuitive.",
     avatar: getImage('kent-c-dodds-avatar'),
   },
   {
-    name: 'Santosh Yadav',
-    title: 'Software Engineer',
-    quote: "I was able to create a blog post in 10 minutes. This is a game changer.",
+    name: 'Maria Garcia',
+    title: 'Freelance Writer',
+    quote: "I created a full article in under 15 minutes. This has completely changed my workflow.",
     avatar: getImage('santosh-yadav-avatar'),
   },
   {
-    name: 'Scott Spence',
-    title: 'Application Team Lead',
-    quote: 'Just tried Blog Recorder and was really impressed! Just paid the annual subscription so I can start dictating my blog posts!',
+    name: 'David Chen',
+    title: 'Lead Developer',
+    quote: 'Just tried AudioScribe AI and was blown away! Subscribed for the year to dictate all my future posts.',
     avatar: getImage('scott-spence-avatar'),
   },
   {
-    name: 'Anne Bovelett',
-    title: 'Agency Guide for WordPress & Accessibility',
-    quote: 'This is so great! Speak your mind, don\'t think about form. Just like you would tell something to a friend. Or explain it to a customer. It works.',
+    name: 'Sophia Williams',
+    title: 'Digital Marketer & Accessibility Advocate',
+    quote: "It's fantastic. Just speak your mind naturally, like you're talking to a friend. The AI handles the rest.",
     avatar: getImage('anne-bovelett-avatar'),
   },
   {
-    name: 'Marc Backes',
-    title: 'Team Lead',
-    quote: "I'm blown away. Initially I was skeptical \"I don't want an AI to write my thoughts\" but the thing is that it's still my thoughts. It writes it out AND prepares lists, etc. where necessary.",
+    name: 'James Brown',
+    title: 'Engineering Manager',
+    quote: "I was skeptical at first, but it's still my voice. The AI just structures my thoughts into lists and sections where they fit.",
     avatar: getImage('marc-backes-avatar'),
   },
   {
-    name: 'Dominick J. Monaco',
+    name: 'Michael Miller',
     title: 'Software Engineer',
-    quote: 'Blog Recorder took my talking and made it into a succinct blog!',
+    quote: 'AudioScribe AI turned my rambling into a coherent blog post!',
     avatar: getImage('dominick-j-monaco-avatar'),
   },
   {
-    name: 'Nicolas Beaussart',
-    title: 'Staff Software Engineer',
-    quote: 'The new personal AI model is amazing! I want to use it even more. Great job!',
+    name: 'Olivia Martinez',
+    title: 'Senior Software Engineer',
+    quote: 'The personalized AI model is a game-changer. I need to use this more often. Amazing work!',
     avatar: getImage('nicolas-beaussart-avatar'),
   },
   {
-    name: 'Keith Newton, MD',
-    title: 'Doctor',
-    quote: "During a long drive, I used blog recorder to generate drafts for a series of newsletter articles I'm working on. In addition to being very useful, it's therapeutic to talk about your idea, then have it outlined into something cohesive.",
+    name: 'Dr. Emily White',
+    title: 'Physician',
+    quote: "On a long commute, I drafted a whole series of newsletter articles. It's not only useful but also therapeutic to articulate my ideas and see them organized.",
     avatar: getImage('keith-newton-md-avatar'),
   },
   {
-    name: 'Tessa Kriesel',
-    title: 'CEO, Developer Relations Expert',
-    quote: "If you're in Developer Relations you NEED this tool. How awesome is it that you can just speak, be random and rambly, and let Blog Recorder make it amazing?",
+    name: 'Chloe Taylor',
+    title: 'CEO, DevRel Consultant',
+    quote: "If you work in Developer Relations, you need this. It's amazing to just talk freely and let the AI polish it.",
     avatar: getImage('tessa-kriesel-avatar'),
   },
   {
-    name: 'Tim Benniks',
+    name: 'Daniel Anderson',
     title: 'Developer Advocate',
-    quote: 'Blog Recorder added a feature to create a personalized AI for writing the way "you" like to write. This is a killer feature. When I create new post ideas the writing is literally in my voice!',
+    quote: 'The personalized AI feature is killer. When I generate new content, it truly sounds like me!',
     avatar: getImage('tim-benniks-avatar'),
   },
   {
-    name: 'Ellie Zubrowski',
+    name: 'Isabella Rodriguez',
     title: 'Developer Advocate',
-    quote: "Blog recorder is so good! I feel like it's the cure for writers block.",
+    quote: "This tool is so effective. It feels like the ultimate cure for writer's block.",
     avatar: getImage('ellie-zubrowski-avatar'),
   },
   {
-    name: 'Jason Torres',
+    name: 'Ethan Wilson',
     title: 'Developer Advocate',
-    quote: "It was a fantastic experience. I didn't have a specific outline going in and Blog Recorder brought it all together, and it makes actual sense! 10/10",
+    quote: "A fantastic experience. I didn't have an outline, but AudioScribe AI pulled it all together logically. 10/10.",
     avatar: getImage('jason-torres-avatar'),
   },
 ];
@@ -104,92 +104,92 @@ export const happyUsers = [
 export const features = [
     {
       step: 1,
-      title: "Never stare at a blank page again",
-      subtitle: "Talk about your topic",
-      description: "Get to your first draft faster than ever by talking about your topic. Let AI turn your thoughts into the first version of your article.",
-      action: "Start talking"
+      title: "Defeat the Blank Page",
+      subtitle: "Just Start Talking",
+      description: "Get your first draft done in record time by simply speaking your thoughts. Let our AI convert your ideas into a structured article.",
+      action: "Start Recording"
     },
     {
       step: 2,
-      title: "Choose how it sounds",
-      subtitle: "Pick a style",
-      description: "Choose which style your article will be written in by choosing one of the available AI models. You can even train your own AI models.",
-      action: "Start personalizing"
+      title: "Define Your Voice",
+      subtitle: "Select a Style",
+      description: "Choose the tone for your article from various AI models. You can even train a model to write just like you.",
+      action: "Personalize Now"
     },
     {
       step: 3,
-      title: "Add a finishing touch",
-      subtitle: "Edit with ease",
-      description: "Make changes where necessary to make your article sound just right.",
-      action: "Start writing"
+      title: "Refine and Polish",
+      subtitle: "Effortless Editing",
+      description: "Quickly make adjustments to ensure the article perfectly captures your message and voice.",
+      action: "Start Editing"
     },
     {
       step: 4,
-      title: "Post anywhere",
-      subtitle: "Publish on your favorite blogging platform",
-      description: "Multiple export options allow you to easily copy and paste to every platform. Direct connections are coming later.",
-      action: "Start publishing"
+      title: "Share with the World",
+      subtitle: "Publish Everywhere",
+      description: "With multiple export formats, you can easily copy and paste your content to any platform. More integrations are on the way.",
+      action: "Start Publishing"
     }
   ];
   
 export const exampleArticles = [
     {
-        title: "AI is taking your job",
-        author: "Kent C. Dodds",
-        publication: "Kent C. Dodds's Blog",
+        title: "The Future of Work is AI-Powered",
+        author: "Alex Johnson",
+        publication: "TechForward",
         authorAvatar: getImage('kent-c-dodds-avatar'),
         thumbnail: getImage('article-ai-job'),
     },
     {
-        title: "Building a Stripe App: A Step-by-Step Guide to QR Code Generation",
-        author: "Danny Thompson",
-        publication: "This Dot",
+        title: "How to Build a QR Code Generator with Stripe",
+        author: "Samantha Lee",
+        publication: "CodeStream",
         authorAvatar: getImage('danny-thompson-avatar'),
         publicationAvatar: getImage('this-dot-avatar'),
         thumbnail: getImage('article-stripe-app'),
     },
     {
-        title: "My Journey to Building Authority in QA",
-        author: "Steven Boutcher",
-        publication: "Steven Boutcher's Blog",
+        title: "A Guide to Mastering Quality Assurance",
+        author: "Ben Carter",
+        publication: "The QA Hub",
         authorAvatar: getImage('steven-boutcher-avatar'),
         thumbnail: getImage('article-qa-authority'),
     },
     {
-        title: "Embracing Slow Networks: Improving User Experience",
-        author: "Kent C. Dodds",
-        publication: "Epic Web",
+        title: "Optimizing for Slow Connections: A User-First Approach",
+        author: "Alex Johnson",
+        publication: "Web Weekly",
         authorAvatar: getImage('kent-c-dodds-avatar'),
         publicationAvatar: getImage('epic-web-avatar'),
         thumbnail: getImage('article-slow-networks'),
     },
     {
-        title: "Generative AI vs LLMs: Key differences explained",
-        author: "Ellie Zubrowski",
-        publication: "Pieces",
+        title: "GenAI vs. LLMs: What's the Difference?",
+        author: "Isabella Rodriguez",
+        publication: "AI Insights",
         authorAvatar: getImage('ellie-zubrowski-avatar'),
         publicationAvatar: getImage('pieces-avatar'),
         thumbnail: getImage('article-gen-ai-vs-llm'),
     },
     {
-        title: "Quitting caffeine",
-        author: "Keith Newton",
-        publication: "Keith Newton's Blog",
+        title: "My Experience Giving Up Caffeine",
+        author: "Dr. Emily White",
+        publication: "Wellness Journey",
         authorAvatar: getImage('keith-newton-md-avatar'),
         thumbnail: getImage('article-quitting-caffeine'),
     },
     {
-        title: "Three Sectors Leading SPY Back to Offense",
-        author: "Julius de Kempenaer",
-        publication: "StockCharts.com",
+        title: "Market Trends: Three Sectors to Watch",
+        author: "Robert Green",
+        publication: "Finance Today",
         authorAvatar: getImage('julius-de-kempenaer-avatar'),
         publicationAvatar: getImage('stockcharts-com-avatar'),
         thumbnail: getImage('article-spy-sectors'),
     },
     {
-        title: "Different Approaches to Visual Editing in Headless CMS",
-        author: "Tim Benniks",
-        publication: "Tim Benniks's Blog",
+        title: "Visual Editing in Headless CMS: A Comparison",
+        author: "Daniel Anderson",
+        publication: "DevCraft",
         authorAvatar: getImage('tim-benniks-avatar'),
         thumbnail: getImage('article-visual-editing'),
     },
@@ -197,71 +197,64 @@ export const exampleArticles = [
 
 export const comparisonFeatures = {
     with: [
-        "Never stare at a blank page",
-        "Skip the writing block - just talk naturally about your topic and watch as AI transforms your spoken thoughts into a structured article.",
-        "Your creativity with the speed of AI",
-        "Your voice recordings power the content - nothing gets added that you didn't say.",
-        "Content that's uniquely yours",
-        "Unlike ChatGPT, Blog Recorder doesn't pull from a general dataset. It structures and formats only what you've recorded.",
-        "Make it sound just like you",
-        "Train Blog Recorder on your existing articles to make it write just like you.",
-        "Publish anywhere",
-        "Export your articles in multiple formats and publish on any blogging platform.",
+        "Eliminate writer's block",
+        "Simply talk about your topic, and let AI structure your thoughts into a polished draft.",
+        "Your ideas, AI's speed",
+        "The content is 100% yours. The AI only organizes and refines what you say.",
+        "Authentic, original content",
+        "Unlike generic tools, AudioScribe AI crafts articles based solely on your voice recordings.",
+        "Develop your unique AI voice",
+        "Train the AI on your past articles to make it adopt your personal writing style.",
+        "One-click export",
+        "Export your articles to various formats and publish them on any platform.",
     ],
     without: {
-        traditional: ["Writer's block", "Slow", "Expensive", "Or paying someone to write for you (even more expensive)"],
-        chatGPT: ["Anyone can do this", "Every article is created from a general dataset. Other people's articles will be exactly the same.", "Does not sound human", "No export to multiple formats", "It's not a writing tool, editing will be annoying"],
+        traditional: ["Time-consuming", "Prone to writer's block", "Expensive to outsource", "Requires intense focus"],
+        chatGPT: ["Generic, robotic-sounding content", "Lacks personal voice and authenticity", "Not designed as a dedicated writing tool", "Difficult to edit and format"],
     },
 };
 
 export const pricingPlans = [
     {
-        name: 'Starter',
-        priceMonthly: 12,
-        priceYearly: 140 / 12,
-        yearlyBilling: 140,
-        yearlyDiscount: 28,
-        cta: 'Start with 3 free articles →',
+        name: 'Free',
+        priceMonthly: 0,
+        priceYearly: 0,
+        cta: 'Start for free',
         features: [
-            '5 articles per month',
-            '15 minute long recordings',
+            '3 articles per month',
+            '5-minute recordings',
             'Unlimited edits',
-            'Export as Rich text, HTML, Markdown, or plain text',
-            '1 personalized AI model',
-            'Access to Discord community'
+            'Standard AI model',
+            'Export as plain text',
         ]
     },
     {
-        name: 'Blogger',
+        name: 'Pro',
         recommended: true,
-        priceMonthly: 23,
-        priceYearly: 270 / 12,
-        yearlyBilling: 270,
-        yearlyDiscount: 54,
-        cta: 'Start with 3 free articles →',
+        priceMonthly: 9,
+        priceYearly: 7,
+        cta: 'Get Started with Pro',
         features: [
             '15 articles per month',
-            '30 minute long recordings',
+            '15-minute recordings',
             'Unlimited edits',
-            'Export as Rich text, HTML, Markdown, or plain text',
-            '4 personalized AI models',
-            'Access to Discord community'
+            'Advanced AI models',
+            '1 personalized AI model',
+            'Export as Rich text, HTML, Markdown',
         ]
     },
     {
-        name: 'Professional',
-        priceMonthly: 80,
-        priceYearly: 960 / 12,
-        yearlyBilling: 960,
-        yearlyDiscount: 160,
-        cta: 'Start with 3 free articles →',
+        name: 'Ultra',
+        priceMonthly: 25,
+        priceYearly: 20,
+        cta: 'Go Ultra',
         features: [
             '50 articles per month',
-            '60 minute long recordings',
+            '45-minute recordings',
             'Unlimited edits',
-            'Export as Rich text, HTML, Markdown, or plain text',
-            '10 personalized AI models',
-            'Access to Discord community',
+            'Advanced AI models',
+            '5 personalized AI models',
+            'Export as Rich text, HTML, Markdown',
             'Priority support'
         ]
     }
@@ -269,51 +262,42 @@ export const pricingPlans = [
 
 export const faqItems = [
     {
-        question: "What is Blog Recorder?",
-        answer: "Blog Recorder is a tool that helps you create blog articles by talking with the help of AI while still having a human touch. This is because all the content is based on your thoughts. After you have recorded an article, you can then edit the first draft created from your voice recording. This is AI-assisted blog authoring that puts you in the driver's seat."
+        question: "What is AudioScribe AI?",
+        answer: "AudioScribe AI is a tool that transforms your spoken words into well-structured blog posts with the help of AI. It gives you a human-touch draft based on your own thoughts, which you can then edit and publish."
     },
     {
-        question: "What are the differences between ChatGPT and Blog Recorder?",
-        answer: "ChatGPT is a general purpose chat application, not a writing tool. Blog Recorder is a writing tool that offers a great rich text editor with Rich Text, HTML, and Markdown exports, and many other features you need to create your content. With Blog Recorder, you do not need to give text instructions for common actions for every article you write."
+        question: "How is AudioScribe AI different from tools like ChatGPT?",
+        answer: "While ChatGPT is a general chat tool, AudioScribe AI is a specialized writing assistant. It offers a rich text editor, multiple export formats, and other features designed for content creation. Your content is generated from your voice, ensuring it's original and authentic."
     },
     {
-        question: "Who owns my articles?",
-        answer: "You do! All articles are yours to keep for personal and commercial use."
+        question: "Who has ownership of the articles I create?",
+        answer: "You do. All content created with AudioScribe AI is 100% yours for personal or commercial use."
     },
     {
-        question: "Does Blog Recorder offer a free trial?",
-        answer: "Yes, Blog Recorder offers a free trial. You can create 3 articles for free so you can try Blog Recorder before subscribing."
+        question: "Is there a free version?",
+        answer: "Yes, we have a Free plan that allows you to create up to 3 articles per month to test out our platform."
     },
     {
-        question: "How long does it take to create an article?",
-        answer: "It can take between 10 seconds to a minute to generate a blog post depending on how long your audio recording was."
-    },
-    {
-        question: "What does Blog Recorder cost?",
-        answer: "After your free 3 articles, you can continue using Blog Recorder for $14 (and get 2 months free if you pay annually)."
-    },
-    {
-        question: "Is there a roadmap?",
-        answer: "You can find our roadmap here."
+        question: "How much does it cost?",
+        answer: "Our paid plans start at just $9 per month. You can save 20% by opting for an annual subscription."
     },
     {
         question: "What formats can I export my articles in?",
-        answer: "Blog Recorder can export your articles in many formats including plain text, plain HTML, rich text, and Markdown."
+        answer: "You can export your articles in plain text, rich text, HTML, and Markdown, depending on your plan."
     }
 ];
 
 export const footerLinks = {
     product: [
         { label: 'Pricing', href: '#pricing' },
-        { label: 'Roadmap', href: '#' },
+        { label: 'Features', href: '#features' },
     ],
     company: [
         { label: 'Blog', href: '#' },
-        { label: 'Twitter/X', href: '#' },
+        { label: 'About Us', href: '#' },
     ],
     legal: [
-        { label: 'Terms', href: '#' },
+        { label: 'Terms of Service', href: '#' },
         { label: 'Privacy Policy', href: '#' },
-        { label: 'Data Processing Agreement', href: '#' },
     ],
 }

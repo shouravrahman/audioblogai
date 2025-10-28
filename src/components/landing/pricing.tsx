@@ -16,23 +16,22 @@ export function Pricing() {
     <section id="pricing" className="container space-y-8">
       <div className="text-center">
         <h2 className="text-3xl md:text-4xl font-bold">
-          Professional articles written 10x faster
+          Affordable pricing for everyone
         </h2>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          The average cost of a single professional blog post ranges from $150 to
-          $500 per article. Our plans start at just $12 per month.
+          Choose a plan that works for you. Start for free and upgrade when you're ready.
         </p>
       </div>
 
       <div className="flex items-center justify-center space-x-4">
-        <Label htmlFor="billing-cycle" className={cn(!isYearly && "text-primary font-semibold")}>Pay monthly</Label>
+        <Label htmlFor="billing-cycle" className={cn(!isYearly && "text-primary font-semibold")}>Monthly</Label>
         <Switch
           id="billing-cycle"
           checked={isYearly}
           onCheckedChange={setIsYearly}
         />
         <Label htmlFor="billing-cycle" className={cn(isYearly && "text-primary font-semibold")}>
-          Pay yearly <span className="text-green-600">(2 months free)</span>
+          Yearly <span className="text-green-600">(Save 20%)</span>
         </Label>
       </div>
 
@@ -54,13 +53,13 @@ export function Pricing() {
               <CardTitle>{plan.name}</CardTitle>
               <CardDescription>
                 <span className="text-3xl font-bold">
-                  ${isYearly ? plan.priceYearly.toFixed(0) : plan.priceMonthly}
+                  ${isYearly ? plan.priceYearly : plan.priceMonthly}
                 </span>
                 <span className="text-muted-foreground"> / month</span>
               </CardDescription>
               <p className="text-xs text-muted-foreground">
-                {isYearly
-                  ? `Billed annually $${plan.yearlyBilling} (save $${plan.yearlyDiscount})`
+                {isYearly && plan.name !== 'Free'
+                  ? `Billed as $${plan.priceYearly * 12} per year`
                   : 'Billed monthly'}
               </p>
             </CardHeader>

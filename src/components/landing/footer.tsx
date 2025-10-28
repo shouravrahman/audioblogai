@@ -12,7 +12,7 @@ export function Footer() {
           <div className="flex flex-col gap-4">
             <Logo />
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} Blog Recorder. All rights reserved.
+              © {new Date().getFullYear()} AudioScribe AI. All rights reserved.
             </p>
           </div>
 

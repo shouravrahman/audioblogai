@@ -5,7 +5,7 @@ export function Logo({ className }: { className?: string }) {
   return (
     <div className={cn('flex items-center gap-2', className)}>
       <Mic className="h-6 w-6 text-primary" />
-      <span className="text-lg font-bold">Blog Recorder</span>
+      <span className="text-lg font-bold">AudioScribe AI</span>
     </div>
   );
 }
