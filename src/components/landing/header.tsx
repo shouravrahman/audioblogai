@@ -11,8 +11,11 @@ import {
 } from '@/components/ui/sheet';
 import { Logo } from '@/components/logo';
 import { navLinks } from '@/lib/data';
+import { useUser } from '@/firebase';
 
 export function Header() {
+  const { user, isUserLoading } = useUser();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
@@ -73,12 +76,22 @@ export function Header() {
           </div>
 
           <nav className="flex items-center gap-2">
-            <Button variant="ghost" asChild>
-                <Link href="/login">Login</Link>
-            </Button>
-            <Button asChild>
-                <Link href="/signup">Try for free</Link>
-            </Button>
+            {isUserLoading ? (
+              <Button disabled>Loading...</Button>
+            ) : user ? (
+              <Button asChild>
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" asChild>
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/signup">Try for free</Link>
+                </Button>
+              </>
+            )}
           </nav>
         </div>
       </div>

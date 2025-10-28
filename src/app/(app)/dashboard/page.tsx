@@ -16,9 +16,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { Wand2, Upload, Menu } from 'lucide-react';
+import { Wand2, Upload, Mic, BookOpen, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DashboardPage() {
@@ -71,68 +70,83 @@ export default function DashboardPage() {
         </DropdownMenu>
       </header>
       <main className="flex-1 p-4 md:p-8">
-        <div className="container mx-auto grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-2 space-y-8">
-            <Card className="border-2 border-blue-500 bg-blue-500/10">
-              <CardHeader className="flex flex-row items-center gap-4">
-                <Wand2 className="h-6 w-6 text-blue-400" />
-                <CardTitle>Free trial active</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>You can create 3 articles for free! Enjoy!</p>
-                <Button className="mt-4 bg-blue-500 hover:bg-blue-600 text-white">Subscribe to create more</Button>
-              </CardContent>
-            </Card>
-
-            <div className="space-y-4">
-                 <Button className="w-full">Record a new article</Button>
-                 <Button variant="secondary" className="w-full">
-                    <Upload className="mr-2 h-4 w-4" />
-                    Upload audio file
-                 </Button>
+        <div className="container mx-auto">
+            <div className="mb-8">
+                <h1 className="text-3xl font-bold">Welcome back, {user.displayName || user.email}!</h1>
+                <p className="text-muted-foreground">Here's your personal dashboard.</p>
             </div>
 
-            <div>
-              <Input type="search" placeholder="Search by title..." className="mb-4" />
-              <div className="text-center text-muted-foreground py-8">
-                <p>No articles found.</p>
-              </div>
+            <div className="grid gap-8 lg:grid-cols-3">
+
+                {/* Left Column: Create & Manage */}
+                <div className="lg:col-span-1 space-y-8">
+                    <Card className="h-full flex flex-col">
+                        <CardHeader>
+                            <CardTitle>Get Started</CardTitle>
+                            <CardDescription>Create your next masterpiece.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex-1 flex flex-col justify-center gap-4">
+                             <Button size="lg" className="w-full">
+                                <Mic className="mr-2" />
+                                Record a new article
+                            </Button>
+                             <Button variant="secondary" size="lg" className="w-full">
+                                <Upload className="mr-2" />
+                                Upload an audio file
+                             </Button>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Middle Column: Articles & AI Models */}
+                <div className="lg:col-span-1 space-y-8">
+                    <Card className="h-full flex flex-col">
+                        <CardHeader>
+                            <CardTitle>Your Articles</CardTitle>
+                            <CardDescription>Review and manage your generated content.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex-1 flex flex-col items-center justify-center text-center">
+                            <BookOpen className="h-12 w-12 text-muted-foreground mb-4" />
+                            <h3 className="font-semibold">No articles yet</h3>
+                            <p className="text-sm text-muted-foreground">Start recording to see your articles here.</p>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Right Column: Usage & AI Models */}
+                <div className="lg:col-span-1 space-y-8">
+                    <Card className="border-2 border-blue-500 bg-blue-500/10">
+                        <CardHeader className="pb-4">
+                            <CardTitle className="flex items-center gap-2">
+                                <Wand2 className="h-5 w-5 text-blue-400" />
+                                <span>Free Trial Status</span>
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div>
+                                <p className="font-medium">Recordings</p>
+                                <p className="text-sm text-muted-foreground mb-2">0 / 3 recorded articles this month.</p>
+                                <Progress value={0} />
+                            </div>
+                            <Button size="sm" className="w-full bg-blue-500 hover:bg-blue-600 text-white">Subscribe to Unlock More</Button>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Personalized AI</CardTitle>
+                            <CardDescription>Train the AI to write in your unique style.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Button variant="outline" className="w-full">
+                                <PlusCircle className="mr-2" />
+                                Create your first AI model
+                            </Button>
+                             <p className="text-xs text-muted-foreground mt-2 text-center">Not available on the free trial.</p>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
-          </div>
-          
-          <div className="space-y-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Create your first AI model</CardTitle>
-                <CardDescription>Get better results when recording articles! You can teach the AI to write like you by training it on your content!</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm mb-4">Try it out!</p>
-                <Button variant="outline" asChild>
-                  <Link href="#">Go to AI models</Link>
-                </Button>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Your usage</CardTitle>
-                <CardDescription>You are on the free trial</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                    <p className="font-medium">Recordings</p>
-                    <p className="text-sm text-muted-foreground mb-2">0 / 3 recorded articles this month.</p>
-                    <Progress value={0} />
-                </div>
-                <div>
-                    <p className="font-medium">Personalized AI Models</p>
-                    <p className="text-sm text-muted-foreground">0 / 0 in total (0 / 0 created this month)</p>
-                     <p className="text-xs text-muted-foreground mt-1">Personalized AI models are not available on free trial</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
         </div>
       </main>
     </div>
