@@ -13,12 +13,13 @@ import {
 } from '@/components/ui/select';
 import { transcribeAudioToText } from '@/ai/flows/transcribe-audio-to-text';
 import { generateStructuredBlogPost } from '@/ai/flows/generate-structured-blog-post';
-import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase, useCollection } from '@/firebase';
 import { addDoc, collection, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { blobToBase64 } from '@/lib/utils';
 import { AudioVisualizer } from './audio-visualizer';
+import type { AiModel } from '@/lib/types';
 
 type RecorderState = 'idle' | 'recording' | 'recorded' | 'creating';
 
@@ -26,6 +27,7 @@ export function AudioRecorder() {
   const [recorderState, setRecorderState] = useState<RecorderState>('idle');
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [selectedModel, setSelectedModel] = useState('default');
   
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -44,6 +46,13 @@ export function AudioRecorder() {
   }, [firestore, user]);
 
   const { data: savedPreferences } = useDoc(preferencesRef);
+
+  const modelsQuery = useMemoFirebase(() => {
+    if (!user) return null;
+    return collection(firestore, `users/${user.uid}/aiModels`);
+  }, [firestore, user]);
+
+  const { data: aiModels } = useCollection<AiModel>(modelsQuery);
 
 
   // Timer effect
@@ -143,9 +152,12 @@ export function AudioRecorder() {
         throw new Error("Transcription failed. The audio might be silent or unclear.");
       }
 
+      const customModel = aiModels?.find(model => model.id === selectedModel);
+
       const blogPostResult = await generateStructuredBlogPost({ 
         transcribedText,
         preferences: savedPreferences || {},
+        styleGuide: customModel?.trainingData,
       });
       const structuredBlogPost = blogPostResult.structuredBlogPost;
 
@@ -229,13 +241,17 @@ export function AudioRecorder() {
             )}
              <div>
                 <label className="text-sm font-medium mb-2 block">Choose an AI model</label>
-                <Select defaultValue="default">
+                <Select defaultValue="default" onValueChange={setSelectedModel}>
                     <SelectTrigger>
                         <SelectValue placeholder="Select an AI model" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="default">AudioScribe AI default</SelectItem>
-                        <SelectItem value="personal" disabled>Your Personal AI Model (Coming Soon)</SelectItem>
+                        {aiModels && aiModels.map(model => (
+                            <SelectItem key={model.id} value={model.id}>
+                                {model.name}
+                            </SelectItem>
+                        ))}
                     </SelectContent>
                 </Select>
             </div>
