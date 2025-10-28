@@ -137,12 +137,19 @@ function AppSidebar() {
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!isUserLoading && !user) {
       router.push('/login');
     }
   }, [user, isUserLoading, router]);
+
+  useEffect(() => {
+    if (pathname === '/') {
+        router.replace('/dashboard');
+    }
+  }, [pathname, router]);
 
   const handleSignOut = async () => {
     const auth = getAuth();
