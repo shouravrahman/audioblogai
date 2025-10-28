@@ -1,0 +1,320 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the user account was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "createdAt"
+      ]
+    },
+    "BlogPost": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "BlogPost",
+      "type": "object",
+      "description": "Represents a blog post created by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the blog post."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N BlogPost)"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the blog post."
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the blog post (e.g., HTML, Markdown)."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the blog post was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the blog post was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "title",
+        "content",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AiModel": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AiModel",
+      "type": "object",
+      "description": "Represents an AI model trained by a user for personalized writing style.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the AI model."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N AiModel)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the AI model."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the AI model."
+        },
+        "trainingData": {
+          "type": "string",
+          "description": "Reference (e.g., URL) to training data used for the model.  Could be a pointer to a file system or cloud storage location."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the AI model was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "name",
+        "description",
+        "trainingData",
+        "createdAt"
+      ]
+    },
+    "SubscriptionPlan": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SubscriptionPlan",
+      "type": "object",
+      "description": "Represents a subscription plan for the application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the subscription plan."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the subscription plan (e.g., Starter, Blogger, Professional)."
+        },
+        "monthlyPrice": {
+          "type": "number",
+          "description": "Monthly price of the subscription plan."
+        },
+        "annualPrice": {
+          "type": "number",
+          "description": "Annual price of the subscription plan."
+        },
+        "articleLimit": {
+          "type": "number",
+          "description": "Number of articles allowed per month."
+        },
+        "recordingLimit": {
+          "type": "number",
+          "description": "Maximum length of recordings allowed (in minutes)."
+        },
+        "aiModelLimit": {
+          "type": "number",
+          "description": "Number of personalized AI models allowed."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "monthlyPrice",
+        "annualPrice",
+        "articleLimit",
+        "recordingLimit",
+        "aiModelLimit"
+      ]
+    },
+    "UserSubscription": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserSubscription",
+      "type": "object",
+      "description": "Represents a user's subscription to a specific plan.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user subscription."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N UserSubscription)"
+        },
+        "subscriptionPlanId": {
+          "type": "string",
+          "description": "Reference to SubscriptionPlan. (Relationship: SubscriptionPlan 1:N UserSubscription)"
+        },
+        "startDate": {
+          "type": "string",
+          "description": "Date when the subscription started.",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "Date when the subscription ends.",
+          "format": "date-time"
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Details on payment, for example the payment processor id. This would be a string since payment details are handled by the payment processor"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "subscriptionPlanId",
+        "startDate",
+        "endDate",
+        "paymentMethod"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profile data.  Top-level collection to allow easy querying of all users (e.g., for admin purposes).",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/blogPosts/{blogPostId}",
+        "definition": {
+          "entityName": "BlogPost",
+          "schema": {
+            "$ref": "#/backend/entities/BlogPost"
+          },
+          "description": "Stores blog posts created by a user. Path-based ownership ensures that only the user can access their own blog posts.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "blogPostId",
+              "description": "The unique identifier for the blog post."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/aiModels/{aiModelId}",
+        "definition": {
+          "entityName": "AiModel",
+          "schema": {
+            "$ref": "#/backend/entities/AiModel"
+          },
+          "description": "Stores AI models trained by a user. Path-based ownership ensures that only the user can access their own AI models.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "aiModelId",
+              "description": "The unique identifier for the AI model."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/subscriptionPlans/{subscriptionPlanId}",
+        "definition": {
+          "entityName": "SubscriptionPlan",
+          "schema": {
+            "$ref": "#/backend/entities/SubscriptionPlan"
+          },
+          "description": "Stores subscription plan details. Accessible for reading by all users, but writable only by authorized admins.",
+          "params": [
+            {
+              "name": "subscriptionPlanId",
+              "description": "The unique identifier for the subscription plan."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/userSubscriptions/{userSubscriptionId}",
+        "definition": {
+          "entityName": "UserSubscription",
+          "schema": {
+            "$ref": "#/backend/entities/UserSubscription"
+          },
+          "description": "Stores user subscription information. Path-based ownership ensures that only the user can access their own subscription details.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "userSubscriptionId",
+              "description": "The unique identifier for the user subscription."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{userId}",
+        "definition": {
+          "entityName": "AdminRole",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Documents in this collection denote admin privileges. Existence of a document for a user ID grants admin rights.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to ensure authorization independence, clarity, and scalability for the 'Audio Blog AI' application.  It leverages path-based ownership for user-specific data (BlogPosts, AiModels, UserSubscriptions) and structural segregation to maintain homogeneous security postures within collections.\n\n**Authorization Independence:**  The structure avoids `get()` calls in security rules by using path-based ownership. For example, BlogPosts and AiModels are stored under `/users/{userId}`, making authorization dependent solely on the authenticated user's ID (`request.auth.uid`) matching the `userId` in the path. This denormalization of ownership eliminates hierarchical authorization dependencies and enables atomic operations.\n\n**QAPs (Rules are not Filters):** The path-based ownership (`/users/{userId}/blogPosts/{blogPostId}`) inherently supports secure `list` operations.  Security rules can efficiently check if `request.auth.uid == userId` to allow listing only the current user's blog posts. Global roles are managed in the `/roles_admin/{uid}` collection, enabling simple existence-based checks for admin privileges.\n\n**Structural Segregation:**  The design segregates data with different access requirements. User-specific data (BlogPosts, AiModels, UserSubscriptions) are stored under the `/users/{userId}` path, ensuring that only the authenticated user has access.  SubscriptionPlans are stored in a separate `/subscriptionPlans` collection, accessible for reading by all users but only writable by authorized admins.\n\n**Invariants:** Timestamps (`createdAt`, `updatedAt`) within documents can be enforced using security rules to maintain data integrity. User ownership is enforced by the path structure and the `userId` field within the documents."
+  }
+}

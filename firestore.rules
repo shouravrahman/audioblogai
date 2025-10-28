@@ -1,0 +1,141 @@
+/**
+ * @fileoverview Firestore Security Rules for the Audio Blog AI application.
+ *
+ * Core Philosophy:
+ * This ruleset enforces a strict user-ownership model for user-generated content (blog posts, AI models, subscriptions)
+ * and role-based access control for administrative data (subscription plans). It leverages path-based authorization and
+ * denormalization to minimize rule complexity and maximize performance.
+ *
+ * Data Structure:
+ * - /users/{userId}: Stores user profile data.
+ * - /users/{userId}/blogPosts/{blogPostId}: Stores blog posts created by a user.
+ * - /users/{userId}/aiModels/{aiModelId}: Stores AI models trained by a user.
+ * - /subscriptionPlans/{subscriptionPlanId}: Stores subscription plan details.
+ * - /users/{userId}/userSubscriptions/{userSubscriptionId}: Stores user subscription information.
+ * - /roles_admin/{userId}: Documents in this collection grant admin privileges.
+ *
+ * Key Security Decisions:
+ * - User-generated content is strictly owned and accessible only by the creating user.
+ * - Subscription plans are publicly readable but only writable by admins.
+ * - Admin privileges are granted by the existence of a document in the `/roles_admin/{userId}` collection.
+ * - Data validation is limited to authorization-critical fields to enable rapid prototyping.
+ *
+ * Denormalization for Authorization:
+ * - User ownership is enforced through path-based access control (e.g., /users/{userId}/blogPosts/{blogPostId}).
+ * - Admin privileges are checked by verifying the existence of a document in the /roles_admin/{userId} collection.
+ *
+ * Structural Segregation:
+ * - User-specific data (BlogPosts, AiModels, UserSubscriptions) are stored under the /users/{userId} path.
+ * - SubscriptionPlans are stored in a separate /subscriptionPlans collection.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description: Secure access to user profile data. Users can only read and write their own profile.
+     * @path: /users/{userId}
+     * @allow: Signed-in user with ID 'user123' (create, update, get)
+     * @deny: Signed-in user with ID 'user456' trying to access 'user123' data (create, update, get). Unauthenticated users.
+     * @principle: Enforces document ownership for writes, restricts access to a user's own data tree.
+     */
+    match /users/{userId} {
+      function isOwner(userId) {
+        return request.auth != null && request.auth.uid == userId;
+      }
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isOwner(userId) && resource.data.id == userId;
+      allow delete: if false;
+    }
+
+    /**
+     * @description: Secure access to blog posts. Users can only read, write, and delete their own blog posts.
+     * @path: /users/{userId}/blogPosts/{blogPostId}
+     * @allow: Signed-in user 'user123' creating a new blog post under /users/user123/blogPosts/post456 (create), updating (update), reading (get), listing (list)
+     * @deny: Signed-in user 'user456' trying to create a blog post under /users/user123/blogPosts/post789 (create). Unauthenticated users.
+     * @principle: Enforces document ownership for writes, restricts access to a user's own data tree.
+     */
+    match /users/{userId}/blogPosts/{blogPostId} {
+      function isOwner(userId) {
+        return request.auth != null && request.auth.uid == userId;
+      }
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.userId == userId;
+      allow update: if isOwner(userId) && resource.data.userId == userId;
+      allow delete: if isOwner(userId);
+    }
+
+    /**
+     * @description: Secure access to AI models. Users can only read, write, and delete their own AI models.
+     * @path: /users/{userId}/aiModels/{aiModelId}
+     * @allow: Signed-in user 'user123' creating a new AI model under /users/user123/aiModels/model456 (create), updating (update), reading (get), listing (list)
+     * @deny: Signed-in user 'user456' trying to create an AI model under /users/user123/aiModels/model789 (create). Unauthenticated users.
+     * @principle: Enforces document ownership for writes, restricts access to a user's own data tree.
+     */
+    match /users/{userId}/aiModels/{aiModelId} {
+      function isOwner(userId) {
+        return request.auth != null && request.auth.uid == userId;
+      }
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.userId == userId;
+      allow update: if isOwner(userId) && resource.data.userId == userId;
+      allow delete: if isOwner(userId);
+    }
+
+    /**
+     * @description: Secure access to subscription plans. Readable by all, writable only by admins.
+     * @path: /subscriptionPlans/{subscriptionPlanId}
+     * @allow: Any user reading subscription plans (get, list). Admin user writing subscription plans (create, update, delete).
+     * @deny: Non-admin user writing subscription plans (create, update, delete).
+     * @principle: Role-based access control for administrative data.
+     */
+    match /subscriptionPlans/{subscriptionPlanId} {
+      function isAdmin() {
+          return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+      }
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * @description: Secure access to user subscriptions. Users can only read, write, and delete their own subscriptions.
+     * @path: /users/{userId}/userSubscriptions/{userSubscriptionId}
+     * @allow: Signed-in user 'user123' creating a new subscription under /users/user123/userSubscriptions/sub456 (create), updating (update), reading (get), listing (list)
+     * @deny: Signed-in user 'user456' trying to create a subscription under /users/user123/userSubscriptions/sub789 (create). Unauthenticated users.
+     * @principle: Enforces document ownership for writes, restricts access to a user's own data tree.
+     */
+    match /users/{userId}/userSubscriptions/{userSubscriptionId} {
+      function isOwner(userId) {
+        return request.auth != null && request.auth.uid == userId;
+      }
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.userId == userId;
+      allow update: if isOwner(userId) && resource.data.userId == userId;
+      allow delete: if isOwner(userId);
+    }
+
+     /**
+      * @description Grants admin privileges based on the existence of a document with the user's ID.
+      * @path /roles_admin/{userId}
+      * @allow create: if isAdmin()
+      * @deny create: if !isAdmin()
+      */
+     match /roles_admin/{userId} {
+        function isAdmin() {
+           return request.auth.uid == userId;
+        }
+        allow get: if isAdmin();
+        allow list: if false;
+        allow create: if isAdmin();
+        allow update: if false;
+        allow delete: if false;
+     }
+  }
+}
