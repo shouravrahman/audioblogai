@@ -40,28 +40,16 @@ import {
   LifeBuoy,
   LogOut,
   Gem,
+  PanelLeft,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
-const menuItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: Home },
-  { href: '/ai-models', label: 'AI models', icon: Bot },
-  { href: '/preferences', label: 'Preferences', icon: Settings },
-];
 
-const accountMenuItems = [
-  { href: '/account', label: 'My account', icon: UserIcon },
-  { href: '/subscription', label: 'Update subscription', icon: Gem },
-  { href: '/billing', label: 'Manage billing', icon: CreditCard },
-];
-
-const helpMenuItems = [
-  { href: '/support', label: 'Support / feedback', icon: LifeBuoy },
-];
-
-function SidebarNav({ user }: { user: any }) {
+function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const isMobile = useIsMobile();
 
   const handleSignOut = async () => {
     const auth = getAuth();
@@ -69,119 +57,79 @@ function SidebarNav({ user }: { user: any }) {
     router.push('/');
   };
 
+  const mainNav = (
+    <SidebarGroup>
+      <SidebarGroupLabel>Menu</SidebarGroupLabel>
+      <SidebarMenuItem>
+        <SidebarMenuButton href="/dashboard" isActive={pathname === '/dashboard'} asChild>
+          <Link href="/dashboard"><Home /><span>Dashboard</span></Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <SidebarMenuButton href="/ai-models" isActive={pathname.startsWith('/ai-models')} asChild>
+          <Link href="#"><Bot /><span>AI models</span></Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <SidebarMenuButton href="/preferences" isActive={pathname.startsWith('/preferences')} asChild>
+          <Link href="#"><Settings /><span>Preferences</span></Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarGroup>
+  );
+
+  const accountNav = (
+    <SidebarGroup>
+      <SidebarGroupLabel>Account</SidebarGroupLabel>
+      <SidebarMenuItem>
+        <SidebarMenuButton href="/account" isActive={pathname.startsWith('/account')} asChild>
+          <Link href="#"><UserIcon /><span>My account</span></Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <SidebarMenuButton href="/subscription" isActive={pathname.startsWith('/subscription')} asChild>
+          <Link href="#"><Gem /><span>Update subscription</span></Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <SidebarMenuButton href="/billing" isActive={pathname.startsWith('/billing')} asChild>
+          <Link href="#"><CreditCard /><span>Manage billing</span></Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarGroup>
+  );
+  
+  const helpNav = (
+     <SidebarGroup>
+      <SidebarGroupLabel>Help</SidebarGroupLabel>
+      <SidebarMenuItem>
+        <SidebarMenuButton href="/support" isActive={pathname.startsWith('/support')} asChild>
+          <Link href="#"><LifeBuoy /><span>Support / feedback</span></Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarGroup>
+  )
+
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="flex items-center gap-2">
-          <Logo />
-        </div>
+        <Logo />
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
-          <SidebarGroup>
-            <SidebarGroupLabel>My Account</SidebarGroupLabel>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                href="/dashboard"
-                isActive={pathname === '/dashboard'}
-                asChild
-              >
-                <Link href="/dashboard">
-                  <Home />
-                  <span>Dashboard</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                href="/ai-models"
-                isActive={pathname.startsWith('/ai-models')}
-                asChild
-              >
-                <Link href="#">
-                  <Bot />
-                  <span>AI models</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-             <SidebarMenuItem>
-              <SidebarMenuButton
-                href="/preferences"
-                isActive={pathname.startsWith('/preferences')}
-                asChild
-              >
-                <Link href="#">
-                  <Settings />
-                  <span>Preferences</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarGroup>
-
-          <SidebarGroup>
-             <SidebarMenuItem>
-              <SidebarMenuButton
-                href="/account"
-                isActive={pathname.startsWith('/account')}
-                asChild
-              >
-                <Link href="#">
-                  <UserIcon />
-                  <span>My account</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-             <SidebarMenuItem>
-              <SidebarMenuButton
-                href="/subscription"
-                isActive={pathname.startsWith('/subscription')}
-                asChild
-              >
-                <Link href="#">
-                  <Gem />
-                  <span>Update subscription</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-             <SidebarMenuItem>
-              <SidebarMenuButton
-                href="/billing"
-                isActive={pathname.startsWith('/billing')}
-                asChild
-              >
-                <Link href="#">
-                  <CreditCard />
-                  <span>Manage billing</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarGroup>
-
-           <SidebarGroup>
-             <SidebarMenuItem>
-              <SidebarMenuButton
-                href="/support"
-                isActive={pathname.startsWith('/support')}
-                asChild
-              >
-                <Link href="#">
-                  <LifeBuoy />
-                  <span>Support / feedback</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarGroup>
-
+          {mainNav}
+          {accountNav}
+          {helpNav}
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
-            <SidebarMenuItem>
-                 <SidebarMenuButton onClick={handleSignOut}>
-                    <LogOut />
-                    <span>Log out</span>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton onClick={handleSignOut}>
+              <LogOut />
+              <span>Log out</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
@@ -191,7 +139,6 @@ function SidebarNav({ user }: { user: any }) {
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
-  const [open, setOpen] = useState(true);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -214,11 +161,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <SidebarProvider defaultOpen={true} open={open} onOpenChange={setOpen}>
-      <SidebarNav user={user} />
+    <SidebarProvider>
+      <AppSidebar />
       <SidebarInset>
         <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 md:px-6">
-          <SidebarTrigger className="md:hidden" />
+          <SidebarTrigger className="md:hidden">
+            <PanelLeft />
+            <span className="sr-only">Toggle Menu</span>
+          </SidebarTrigger>
           <div className="flex-1" />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -226,7 +176,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <Avatar>
                   <AvatarImage
                     src={user.photoURL || undefined}
-                    alt={user.email || ''}
+                    alt={user.email || 'User Avatar'}
                   />
                   <AvatarFallback>
                     {user.email ? user.email.charAt(0).toUpperCase() : 'U'}
@@ -235,10 +185,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="#">Settings</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="#">Support</Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSignOut}>
                 Sign Out
