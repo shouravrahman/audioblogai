@@ -13,8 +13,8 @@ import {
 } from '@/components/ui/select';
 import { transcribeAudioToText } from '@/ai/flows/transcribe-audio-to-text';
 import { generateStructuredBlogPost } from '@/ai/flows/generate-structured-blog-post';
-import { useUser, useFirestore } from '@/firebase';
-import { addDoc, collection, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { addDoc, collection, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { blobToBase64 } from '@/lib/utils';
@@ -37,6 +37,14 @@ export function AudioRecorder() {
   const firestore = useFirestore();
   const router = useRouter();
   const { toast } = useToast();
+
+  const preferencesRef = useMemoFirebase(() => {
+    if (!user) return null;
+    return doc(firestore, 'userPreferences', user.uid);
+  }, [firestore, user]);
+
+  const { data: savedPreferences } = useDoc(preferencesRef);
+
 
   // Timer effect
   useEffect(() => {
@@ -135,7 +143,10 @@ export function AudioRecorder() {
         throw new Error("Transcription failed. The audio might be silent or unclear.");
       }
 
-      const blogPostResult = await generateStructuredBlogPost({ transcribedText });
+      const blogPostResult = await generateStructuredBlogPost({ 
+        transcribedText,
+        preferences: savedPreferences || {},
+      });
       const structuredBlogPost = blogPostResult.structuredBlogPost;
 
       const lines = structuredBlogPost.split('\n');
