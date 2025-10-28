@@ -65,7 +65,7 @@ function AppSidebar() {
       </SidebarMenuItem>
       <SidebarMenuItem>
         <SidebarMenuButton href="/dashboard/ai-models" isActive={pathname.startsWith('/dashboard/ai-models')} asChild>
-          <Link href="#"><Bot /><span>AI models</span></Link>
+          <Link href="/dashboard/ai-models"><Bot /><span>AI models</span></Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
       <SidebarMenuItem>
@@ -146,6 +146,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }, [user, isUserLoading, router]);
 
   useEffect(() => {
+    // Redirect from root of (app) group to dashboard
     if (pathname === '/') {
         router.replace('/dashboard');
     }
