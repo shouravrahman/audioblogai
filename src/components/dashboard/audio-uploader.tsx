@@ -86,13 +86,10 @@ export function AudioUploader() {
       
       toast({
         title: "Article Creation Started",
-        description: "Your article is being generated. You will be redirected shortly.",
+        description: "Your article is being generated. Please wait.",
       });
 
-      // Redirect to dashboard immediately
-      router.push('/dashboard');
-
-      // 2. Start the AI generation process (non-blocking)
+      // 2. Start the AI generation process (blocking for the user)
       const audioDataUri = await blobToBase64(audioFile);
       
       const transcriptionResult = await transcribeAudioToText({ audioDataUri });
@@ -121,6 +118,9 @@ export function AudioUploader() {
         status: "completed",
         updatedAt: serverTimestamp(),
       });
+
+      // Redirect on success
+      router.push(`/dashboard/articles/${newArticleRef.id}`);
 
     } catch (err: any) {
       console.error("Error during article creation:", err);
@@ -154,7 +154,7 @@ export function AudioUploader() {
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle>Upload an Audio File</CardTitle>
-          <CardDescription>Upload an existing audio file to get started. Your subscription determines the maximum file size and duration.</CardDescription>
+          <CardDescription>Upload an existing audio file to get started.</CardDescription>
         </CardHeader>
         <CardContent>
           <div

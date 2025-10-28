@@ -99,7 +99,7 @@ export function AudioRecorder() {
             stream.getTracks().forEach(track => track.stop()); // Stop the mic access
         };
         mediaRecorderRef.current.start();
-    } catch (err) {
+    } catch (err: any) {
         console.error("Error accessing microphone:", err);
         toast({
             variant: 'destructive',
@@ -135,13 +135,10 @@ export function AudioRecorder() {
       
       toast({
         title: "Article Creation Started",
-        description: "Your article is being generated. You will be redirected shortly.",
+        description: "Your article is being generated. Please wait.",
       });
 
-      // Redirect to dashboard immediately
-      router.push('/dashboard');
-
-      // 2. Start the AI generation process (non-blocking)
+      // 2. Start the AI generation process (blocking for the user)
       const audioBlob = await fetch(audioUrl).then(res => res.blob());
       const audioDataUri = await blobToBase64(audioBlob);
       
@@ -171,6 +168,9 @@ export function AudioRecorder() {
         status: "completed",
         updatedAt: serverTimestamp(),
       });
+      
+      // Redirect on success
+      router.push(`/dashboard/articles/${newArticleRef.id}`);
 
     } catch (err: any) {
       console.error("Error during article creation:", err);
@@ -215,7 +215,7 @@ export function AudioRecorder() {
             )}
           </CardTitle>
           <CardDescription>
-            {recorderState === 'recording' ? "Click the square to stop recording" : "Click the mic to start recording. Your subscription determines the maximum recording time."}
+            {recorderState === 'recording' ? "Click the square to stop recording" : "Click the mic to start recording."}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center gap-6 p-10">
