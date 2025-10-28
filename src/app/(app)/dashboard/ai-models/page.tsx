@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Check, Bot, Sparkles, Plus, Loader2, Wand2 } from 'lucide-react';
+import { Check, Bot, Sparkles, Plus, Loader2, Wand2, ArrowLeft, UploadCloud, FileAudio, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -16,14 +16,27 @@ import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebas
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { trainAiModelWithWritingSamples } from '@/ai/flows/train-ai-model-with-writing-samples';
 import type { AiModel } from '@/lib/types';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useDropzone } from 'react-dropzone';
+import { blobToBase64 } from '@/lib/utils';
+import { transcribeAudioToText } from '@/ai/flows/transcribe-audio-to-text';
 
 const modelFormSchema = z.object({
   name: z.string().min(3, 'Model name must be at least 3 characters.'),
   description: z.string().optional(),
-  sample1: z.string().min(100, 'Please provide at least 100 characters for the writing sample.'),
-  sample2: z.string().min(100, 'Please provide at least 100 characters for the writing sample.'),
-  sample3: z.string().min(100, 'Please provide at least 100 characters for the writing sample.'),
+  sample1: z.string().optional(),
+  sample2: z.string().optional(),
+  sample3: z.string().optional(),
+  audioSamples: z.array(z.instanceof(File)).max(3).optional(),
+}).refine(data => {
+    const textSamples = [data.sample1, data.sample2, data.sample3].filter(s => s && s.length >= 100).length;
+    const audioSamples = data.audioSamples?.length || 0;
+    return (textSamples + audioSamples) >= 3;
+}, {
+    message: "Please provide at least 3 total samples (text or audio). Text samples must be at least 100 characters.",
+    path: ['sample1'], // You can associate the error with a specific field if you want
 });
+
 
 type ModelFormValues = z.infer<typeof modelFormSchema>;
 
@@ -49,7 +62,59 @@ function AiModelCard({ model }: { model: AiModel & { id: string } }) {
     );
 }
 
-function CreateModelForm({ onModelCreated }: { onModelCreated: () => void }) {
+function AudioSampleUploader({ field }: { field: any }) {
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop: (acceptedFiles) => {
+            const currentFiles = field.value || [];
+            const newFiles = [...currentFiles, ...acceptedFiles].slice(0, 3);
+            field.onChange(newFiles);
+        },
+        accept: { 'audio/*': ['.mp3', '.wav', '.m4a', '.flac', '.ogg'] },
+        maxFiles: 3,
+    });
+
+    const removeFile = (index: number) => {
+        const currentFiles = field.value || [];
+        const newFiles = currentFiles.filter((_: any, i: number) => i !== index);
+        field.onChange(newFiles);
+    };
+
+    return (
+        <div className="space-y-4">
+            <div
+                {...getRootProps()}
+                className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+                isDragActive ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'
+                }`}
+            >
+                <input {...getInputProps()} />
+                <UploadCloud className="mx-auto h-10 w-10 text-muted-foreground" />
+                <p className="mt-4 text-muted-foreground text-sm">
+                {isDragActive ? 'Drop the files here...' : "Drag 'n' drop up to 3 audio samples, or click to select"}
+                </p>
+            </div>
+            {field.value && field.value.length > 0 && (
+                <div className="space-y-2">
+                    <p className="text-sm font-medium">Uploaded Files:</p>
+                    {field.value.map((file: File, index: number) => (
+                        <div key={index} className="flex items-center justify-between p-2 bg-secondary rounded-md">
+                            <div className="flex items-center gap-3 truncate">
+                                <FileAudio className="h-5 w-5 shrink-0" />
+                                <span className="truncate text-sm">{file.name}</span>
+                            </div>
+                            <Button variant="ghost" size="icon" onClick={() => removeFile(index)}>
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
+
+
+function CreateModelForm({ onModelCreated, onBack }: { onModelCreated: () => void, onBack: () => void }) {
   const { toast } = useToast();
   const { user } = useUser();
   const firestore = useFirestore();
@@ -63,6 +128,7 @@ function CreateModelForm({ onModelCreated }: { onModelCreated: () => void }) {
       sample1: '',
       sample2: '',
       sample3: '',
+      audioSamples: [],
     },
   });
 
@@ -71,8 +137,26 @@ function CreateModelForm({ onModelCreated }: { onModelCreated: () => void }) {
     setIsCreating(true);
 
     try {
-        const writingSamples = [data.sample1, data.sample2, data.sample3];
-        const trainingResult = await trainAiModelWithWritingSamples({ writingSamples });
+        const textSamples = [data.sample1, data.sample2, data.sample3].filter(s => s && s.length >= 100);
+        
+        const audioTranscriptions = [];
+        if (data.audioSamples && data.audioSamples.length > 0) {
+            toast({ title: 'Transcribing audio samples...', description: 'This may take a moment.' });
+            for (const audioFile of data.audioSamples) {
+                const audioDataUri = await blobToBase64(audioFile);
+                const result = await transcribeAudioToText({ audioDataUri });
+                audioTranscriptions.push(result.transcription);
+            }
+        }
+
+        const allWritingSamples = [...textSamples, ...audioTranscriptions];
+
+        if (allWritingSamples.length < 3) {
+            throw new Error("Insufficient samples. Please provide at least 3 valid text or audio samples.");
+        }
+        
+        toast({ title: 'Training AI model...', description: 'Analyzing your writing style.' });
+        const trainingResult = await trainAiModelWithWritingSamples({ writingSamples: allWritingSamples });
 
         const modelsCollection = collection(firestore, `users/${user.uid}/aiModels`);
         await addDoc(modelsCollection, {
@@ -91,6 +175,7 @@ function CreateModelForm({ onModelCreated }: { onModelCreated: () => void }) {
         form.reset();
 
     } catch (error: any) {
+        console.error(error);
         toast({
             variant: 'destructive',
             title: 'Uh oh! Something went wrong.',
@@ -104,8 +189,16 @@ function CreateModelForm({ onModelCreated }: { onModelCreated: () => void }) {
   return (
     <Card>
         <CardHeader>
-            <CardTitle>Create a New AI Model</CardTitle>
-            <CardDescription>Provide at least 3 writing samples for the AI to learn your style. The more text, the better the results.</CardDescription>
+             <div className="flex items-center justify-between">
+                <div>
+                    <CardTitle>Create a New AI Model</CardTitle>
+                    <CardDescription>Provide at least 3 writing samples (text or audio) for the AI to learn your style.</CardDescription>
+                </div>
+                <Button variant="outline" onClick={onBack}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to Models
+                </Button>
+            </div>
         </CardHeader>
         <CardContent>
             <Form {...form}>
@@ -138,45 +231,75 @@ function CreateModelForm({ onModelCreated }: { onModelCreated: () => void }) {
                             )}
                         />
                     </div>
-                     <FormField
-                        control={form.control}
-                        name="sample1"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Writing Sample 1</FormLabel>
-                                <FormControl>
-                                    <Textarea placeholder="Paste a blog post, article, or newsletter you've written..." {...field} rows={6} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                     <FormField
-                        control={form.control}
-                        name="sample2"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Writing Sample 2</FormLabel>
-                                <FormControl>
-                                    <Textarea placeholder="Paste another sample..." {...field} rows={6} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                     <FormField
-                        control={form.control}
-                        name="sample3"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Writing Sample 3</FormLabel>
-                                <FormControl>
-                                    <Textarea placeholder="And one more..." {...field} rows={6} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    
+                    <Tabs defaultValue="text">
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="text">Text Samples</TabsTrigger>
+                            <TabsTrigger value="audio">Audio Samples</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="text" className="pt-4">
+                             <div className="space-y-4">
+                                <FormField
+                                    control={form.control}
+                                    name="sample1"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Writing Sample 1</FormLabel>
+                                            <FormControl>
+                                                <Textarea placeholder="Paste a blog post, article, or newsletter you've written... (min 100 chars)" {...field} rows={6} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="sample2"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Writing Sample 2</FormLabel>
+                                            <FormControl>
+                                                <Textarea placeholder="Paste another sample... (min 100 chars)" {...field} rows={6} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="sample3"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Writing Sample 3</FormLabel>
+                                            <FormControl>
+                                                <Textarea placeholder="And one more... (min 100 chars)" {...field} rows={6} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                             </div>
+                        </TabsContent>
+                        <TabsContent value="audio" className="pt-4">
+                            <FormField
+                                control={form.control}
+                                name="audioSamples"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <AudioSampleUploader field={field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </TabsContent>
+                    </Tabs>
+                    
+                    {form.formState.errors.sample1 && (
+                         <p className="text-sm font-medium text-destructive">{form.formState.errors.sample1.message}</p>
+                    )}
+
                     <Button type="submit" disabled={isCreating}>
                         {isCreating ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Creating Model...</> : <><Plus className="mr-2 h-4 w-4"/>Create Model</>}
                     </Button>
@@ -218,7 +341,7 @@ function SubscribedView() {
             </div>
 
             {showForm ? (
-                <CreateModelForm onModelCreated={() => setShowForm(false)} />
+                <CreateModelForm onModelCreated={() => setShowForm(false)} onBack={() => setShowForm(false)}/>
             ) : (
                 <>
                     {isLoading && <p>Loading models...</p>}
@@ -306,3 +429,5 @@ export default function AiModelsPage() {
     </div>
   );
 }
+
+    
