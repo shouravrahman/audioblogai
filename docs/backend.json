@@ -202,6 +202,55 @@
         "endDate",
         "paymentMethod"
       ]
+    },
+    "UserPreferences": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserPreferences",
+      "type": "object",
+      "description": "Stores user-specific writing preferences for AI generation.",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The unique identifier for the user."
+        },
+        "titleTone": {
+          "type": "string",
+          "description": "The desired tone for article titles."
+        },
+        "specialChars": {
+          "type": "string",
+          "description": "Preference for using special characters in headings."
+        },
+        "headingCasing": {
+          "type": "string",
+          "description": "The casing style for headings."
+        },
+        "headingFrequency": {
+          "type": "string",
+          "description": "How often headings should appear."
+        },
+        "titleEmoji": {
+          "type": "string",
+          "description": "Preference for using emojis in titles."
+        },
+        "bodyEmoji": {
+          "type": "string",
+          "description": "Preference for using emojis in the article body."
+        },
+        "postBodyTone": {
+          "type": "string",
+          "description": "The desired tone for the article body."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp for when the preferences were last updated."
+        }
+      },
+      "required": [
+        "userId",
+        "updatedAt"
+      ]
     }
   },
   "auth": {
@@ -305,6 +354,22 @@
         }
       },
       {
+        "path": "/userPreferences/{userId}",
+        "definition": {
+          "entityName": "UserPreferences",
+          "schema": {
+            "$ref": "#/backend/entities/UserPreferences"
+          },
+          "description": "Stores user-specific writing preferences. Path-based ownership ensures only the user can read/write their own preferences.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user, matching the document ID."
+            }
+          ]
+        }
+      },
+      {
         "path": "/roles_admin/{userId}",
         "definition": {
           "entityName": "AdminRole",
@@ -321,6 +386,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore data structure is designed to ensure authorization independence, clarity, and scalability for the 'Audio Blog AI' application.  It leverages path-based ownership for user-specific data (BlogPosts, AiModels, UserSubscriptions) and structural segregation to maintain homogeneous security postures within collections.\n\n**Authorization Independence:**  The structure avoids `get()` calls in security rules by using path-based ownership. For example, BlogPosts and AiModels are stored under `/users/{userId}`, making authorization dependent solely on the authenticated user's ID (`request.auth.uid`) matching the `userId` in the path. This denormalization of ownership eliminates hierarchical authorization dependencies and enables atomic operations.\n\n**QAPs (Rules are not Filters):** The path-based ownership (`/users/{userId}/blogPosts/{blogPostId}`) inherently supports secure `list` operations.  Security rules can efficiently check if `request.auth.uid == userId` to allow listing only the current user's blog posts. Global roles are managed in the `/roles_admin/{uid}` collection, enabling simple existence-based checks for admin privileges.\n\n**Structural Segregation:**  The design segregates data with different access requirements. User-specific data (BlogPosts, AiModels, UserSubscriptions) are stored under the `/users/{userId}` path, ensuring that only the authenticated user has access.  SubscriptionPlans are stored in a separate `/subscriptionPlans` collection, accessible for reading by all users but only writable by authorized admins.\n\n**Invariants:** Timestamps (`createdAt`, `updatedAt`) within documents can be enforced using security rules to maintain data integrity. User ownership is enforced by the path structure and the `userId` field within the documents."
+    "reasoning": "The Firestore data structure is designed to ensure authorization independence, clarity, and scalability for the 'Audio Blog AI' application.  It leverages path-based ownership for user-specific data (BlogPosts, AiModels, UserSubscriptions, UserPreferences) and structural segregation to maintain homogeneous security postures within collections.\n\n**Authorization Independence:**  The structure avoids `get()` calls in security rules by using path-based ownership. For example, BlogPosts and AiModels are stored under `/users/{userId}`, making authorization dependent solely on the authenticated user's ID (`request.auth.uid`) matching the `userId` in the path. This denormalization of ownership eliminates hierarchical authorization dependencies and enables atomic operations.\n\n**QAPs (Rules are not Filters):** The path-based ownership (`/users/{userId}/blogPosts/{blogPostId}`) inherently supports secure `list` operations.  Security rules can efficiently check if `request.auth.uid == userId` to allow listing only the current user's blog posts. Global roles are managed in the `/roles_admin/{uid}` collection, enabling simple existence-based checks for admin privileges.\n\n**Structural Segregation:**  The design segregates data with different access requirements. User-specific data (BlogPosts, AiModels, UserSubscriptions, UserPreferences) are stored under user-specific paths, ensuring that only the authenticated user has access.  SubscriptionPlans are stored in a separate `/subscriptionPlans` collection, accessible for reading by all users but only writable by authorized admins.\n\n**Invariants:** Timestamps (`createdAt`, `updatedAt`) within documents can be enforced using security rules to maintain data integrity. User ownership is enforced by the path structure and the `userId` field within the documents."
   }
 }

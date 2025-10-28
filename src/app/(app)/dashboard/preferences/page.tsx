@@ -1,4 +1,3 @@
-
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,6 +23,9 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { useEffect } from 'react';
 
 const preferencesFormSchema = z.object({
   titleTone: z.string().min(1, 'Please select a title tone.'),
@@ -37,22 +39,65 @@ const preferencesFormSchema = z.object({
 
 type PreferencesFormValues = z.infer<typeof preferencesFormSchema>;
 
-const defaultValues: Partial<PreferencesFormValues> = {};
-
 export default function PreferencesPage() {
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const preferencesRef = useMemoFirebase(() => {
+    if (!user) return null;
+    // Use the user's UID as the document ID for their preferences
+    return doc(firestore, 'userPreferences', user.uid);
+  }, [firestore, user]);
+
+  const { data: savedPreferences, isLoading: preferencesLoading } = useDoc<PreferencesFormValues>(preferencesRef);
 
   const form = useForm<PreferencesFormValues>({
     resolver: zodResolver(preferencesFormSchema),
-    defaultValues,
+    defaultValues: {
+      titleTone: '',
+      specialChars: '',
+      headingCasing: '',
+      headingFrequency: '',
+      titleEmoji: '',
+      bodyEmoji: '',
+      postBodyTone: '',
+    },
   });
 
-  function onSubmit(data: PreferencesFormValues) {
-    console.log(data);
-    toast({
-      title: 'Preferences Saved',
-      description: 'Your default writing preferences have been updated.',
-    });
+  useEffect(() => {
+    if (savedPreferences) {
+      form.reset(savedPreferences);
+    }
+  }, [savedPreferences, form]);
+
+  async function onSubmit(data: PreferencesFormValues) {
+    if (!preferencesRef) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'You must be logged in to save preferences.',
+      });
+      return;
+    }
+
+    try {
+      await setDoc(preferencesRef, {
+        ...data,
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
+
+      toast({
+        title: 'Preferences Saved',
+        description: 'Your default writing preferences have been updated.',
+      });
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: error.message || 'Could not save preferences.',
+      });
+    }
   }
 
   return (
@@ -63,7 +108,7 @@ export default function PreferencesPage() {
           Configure your default writing preferences for blog post generation.
           These settings will be used when generating posts with the default AI
           model or{' '}
-          <Link href="#" className="underline text-primary">
+          <Link href="/dashboard/ai-models" className="underline text-primary">
             custom models
           </Link>{' '}
           that don&apos;t have their own preferences configured.
@@ -85,7 +130,8 @@ export default function PreferencesPage() {
                       <FormLabel>Tone of the title</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
+                        disabled={preferencesLoading}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -119,7 +165,8 @@ export default function PreferencesPage() {
                         <FormLabel>Special characters in headings</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
+                          disabled={preferencesLoading}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -147,7 +194,8 @@ export default function PreferencesPage() {
                         <FormLabel>Heading casing style</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
+                          disabled={preferencesLoading}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -171,7 +219,8 @@ export default function PreferencesPage() {
                         <FormLabel>Heading frequency</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
+                          disabled={preferencesLoading}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -203,7 +252,8 @@ export default function PreferencesPage() {
                           <FormLabel>Emoji usage in titles</FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            value={field.value}
+                            disabled={preferencesLoading}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -227,7 +277,8 @@ export default function PreferencesPage() {
                           <FormLabel>Emoji usage in article body</FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            value={field.value}
+                            disabled={preferencesLoading}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -257,7 +308,8 @@ export default function PreferencesPage() {
                         <FormLabel>Tone and style of the article body</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
+                          disabled={preferencesLoading}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -280,7 +332,9 @@ export default function PreferencesPage() {
           </Card>
           
            <div className="flex justify-start">
-             <Button type="submit">Save Default Preferences</Button>
+             <Button type="submit" disabled={form.formState.isSubmitting || preferencesLoading}>
+              {form.formState.isSubmitting ? 'Saving...' : 'Save Default Preferences'}
+             </Button>
           </div>
         </form>
       </Form>
@@ -292,7 +346,7 @@ export default function PreferencesPage() {
                 <li>These preferences apply to all blog posts generated with the default AI model</li>
                 <li>Custom AI models can have their own specific preferences that override these defaults</li>
                 <li>When creating new custom AI models, they will initially inherit these default settings</li>
-                <li>You can configure model-specific preferences from the <Link href="#" className="underline text-primary">AI Training section</Link></li>
+                <li>You can configure model-specific preferences from the <Link href="/dashboard/ai-models" className="underline text-primary">AI Training section</Link></li>
             </ul>
         </CardContent>
       </Card>
