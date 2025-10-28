@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { getAuth, signOut } from 'firebase/auth';
 import { Logo } from '@/components/logo';
+import { AudioRecorder } from '@/components/dashboard/audio-recorder';
 
 export default function DashboardPage() {
   const { user, isUserLoading } = useUser();
@@ -45,10 +46,13 @@ export default function DashboardPage() {
           </Button>
         </div>
       </header>
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-4 md:p-8">
         <div className="container">
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome, {user.email}</p>
+          <div className="text-center mb-12">
+            <h1 className="text-3xl md:text-4xl font-bold">Dashboard</h1>
+            <p className="text-muted-foreground mt-2">Welcome, {user.email}</p>
+          </div>
+          <AudioRecorder />
         </div>
       </main>
     </div>
