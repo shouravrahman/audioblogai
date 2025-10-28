@@ -50,8 +50,14 @@ const prompt = ai.definePrompt({
   name: 'generateStructuredBlogPostPrompt',
   input: {schema: GenerateStructuredBlogPostInputSchema},
   output: {schema: GenerateStructuredBlogPostOutputSchema},
-  prompt: `You are an AI expert in structuring blog posts. Take the following transcribed text and transform it into a well-organized blog post with section headings and lists where appropriate.
+  prompt: `You are an expert copywriter and editor. Your task is to transform the provided raw audio transcription into a well-written, engaging, and publish-ready blog post.
 
+Your process should be as follows:
+1.  **Humanize the Content**: Convert the conversational, spoken-word transcription into clean, readable, and engaging written content. Fix grammatical errors, remove filler words (like 'um', 'ah', 'you know'), and restructure sentences for clarity and flow.
+2.  **Structure the Article**: Organize the content logically. Add a compelling title, a brief introduction to hook the reader, clear section headings to break up the text, and a concluding summary. Use lists (bulleted or numbered) where appropriate to make information digestible.
+3.  **Apply Styling Rules**: Adhere strictly to the styling and voice guidelines provided below.
+
+**Styling and Voice Guidelines:**
 {{#if styleGuide}}
 IMPORTANT: You MUST adhere to the following comprehensive style guide, which reflects the author's unique voice. This guide overrides any other conflicting preferences.
 <styleGuide>
@@ -82,8 +88,7 @@ Adhere to the following user preferences for writing style:
 {{/if}}
 {{/if}}
 
-
-Transcribed Text:
+**Raw Transcription:**
 {{{transcribedText}}}
 `,
 });
