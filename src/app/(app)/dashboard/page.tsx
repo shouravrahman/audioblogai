@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { Wand2, Upload, Mic, BookOpen, PlusCircle, FileText, Loader2 } from 'lucide-react';
+import { Wand2, Upload, Mic, BookOpen, PlusCircle, FileText, Loader2, Gem } from 'lucide-react';
 import Link from 'next/link';
 import { useFirestore } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
@@ -83,6 +83,23 @@ export default function DashboardPage() {
         </h1>
         <p className="text-muted-foreground">Here's your personal dashboard.</p>
       </div>
+
+      <Card className="mb-8 border-primary/50 bg-secondary/30">
+        <CardContent className="p-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+            <div className="flex-1 space-y-1">
+              <div className="flex items-center gap-2">
+                <Gem className="h-5 w-5 text-primary" />
+                <h3 className="font-semibold text-lg">Free trial active</h3>
+              </div>
+              <p className="text-muted-foreground">You can create 3 articles for free! Enjoy!</p>
+            </div>
+            <Button asChild>
+              <Link href="/dashboard/subscription">Subscribe to create more</Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-3">
         {/* Column 1: Get Started & Usage */}
