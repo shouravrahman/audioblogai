@@ -83,16 +83,16 @@ function AppSidebar() {
       <SidebarGroupLabel>Account</SidebarGroupLabel>
       <SidebarMenuItem>
         <SidebarMenuButton href="/account" isActive={pathname.startsWith('/account')} asChild>
-          <Link href="#"><UserIcon /><span>My account</span></Link>
+          <Link href="/account"><UserIcon /><span>My account</span></Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
       <SidebarMenuItem>
         <SidebarMenuButton href="/subscription" isActive={pathname.startsWith('/subscription')} asChild>
-          <Link href="#"><Gem /><span>Update subscription</span></Link>
+          <Link href="/subscription"><Gem /><span>Update subscription</span></Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
       <SidebarMenuItem>
-        <SidebarMenuButton href="/billing" isActive={pathname.startsWith('/billing')} asChild>
+        <SidebarMenuButton href="#" asChild>
           <Link href="#"><CreditCard /><span>Manage billing</span></Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
