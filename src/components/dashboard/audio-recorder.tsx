@@ -211,7 +211,7 @@ export function AudioRecorder() {
           </Button>
           <div className="w-full h-16 bg-secondary rounded-lg flex items-center justify-center">
             {/* We can add a cool visualizer here later */}
-            <p className="text-muted-foreground text-sm">Recording time: max 5 minutes</p>
+            <p className="text-muted-foreground text-sm">Your subscription determines the maximum recording time.</p>
           </div>
         </CardContent>
       </Card>
