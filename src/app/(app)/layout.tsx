@@ -72,7 +72,7 @@ function AppSidebar() {
       </SidebarMenuItem>
       <SidebarMenuItem>
         <SidebarMenuButton href="/preferences" isActive={pathname.startsWith('/preferences')} asChild>
-          <Link href="#"><Settings /><span>Preferences</span></Link>
+          <Link href="/preferences"><Settings /><span>Preferences</span></Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarGroup>
@@ -188,7 +188,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="#">Settings</Link>
+                <Link href="/preferences">Settings</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="#">Support</Link>
