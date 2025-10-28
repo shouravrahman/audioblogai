@@ -2,7 +2,7 @@
 
 import { useUser } from '@/firebase';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { getAuth, signOut } from 'firebase/auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -42,14 +42,12 @@ import {
   Gem,
   PanelLeft,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 
 function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const isMobile = useIsMobile();
 
   const handleSignOut = async () => {
     const auth = getAuth();
@@ -66,13 +64,13 @@ function AppSidebar() {
         </SidebarMenuButton>
       </SidebarMenuItem>
       <SidebarMenuItem>
-        <SidebarMenuButton href="/ai-models" isActive={pathname.startsWith('/ai-models')} asChild>
+        <SidebarMenuButton href="/dashboard/ai-models" isActive={pathname.startsWith('/dashboard/ai-models')} asChild>
           <Link href="#"><Bot /><span>AI models</span></Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
       <SidebarMenuItem>
-        <SidebarMenuButton href="/preferences" isActive={pathname.startsWith('/preferences')} asChild>
-          <Link href="/preferences"><Settings /><span>Preferences</span></Link>
+        <SidebarMenuButton href="/dashboard/preferences" isActive={pathname.startsWith('/dashboard/preferences')} asChild>
+          <Link href="/dashboard/preferences"><Settings /><span>Preferences</span></Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarGroup>
@@ -82,13 +80,13 @@ function AppSidebar() {
     <SidebarGroup>
       <SidebarGroupLabel>Account</SidebarGroupLabel>
       <SidebarMenuItem>
-        <SidebarMenuButton href="/account" isActive={pathname.startsWith('/account')} asChild>
-          <Link href="/account"><UserIcon /><span>My account</span></Link>
+        <SidebarMenuButton href="/dashboard/account" isActive={pathname.startsWith('/dashboard/account')} asChild>
+          <Link href="/dashboard/account"><UserIcon /><span>My account</span></Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
       <SidebarMenuItem>
-        <SidebarMenuButton href="/subscription" isActive={pathname.startsWith('/subscription')} asChild>
-          <Link href="/subscription"><Gem /><span>Update subscription</span></Link>
+        <SidebarMenuButton href="/dashboard/subscription" isActive={pathname.startsWith('/dashboard/subscription')} asChild>
+          <Link href="/dashboard/subscription"><Gem /><span>Update subscription</span></Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
       <SidebarMenuItem>
@@ -103,7 +101,7 @@ function AppSidebar() {
      <SidebarGroup>
       <SidebarGroupLabel>Help</SidebarGroupLabel>
       <SidebarMenuItem>
-        <SidebarMenuButton href="/support" isActive={pathname.startsWith('/support')} asChild>
+        <SidebarMenuButton href="/dashboard/support" isActive={pathname.startsWith('/dashboard/support')} asChild>
           <Link href="#"><LifeBuoy /><span>Support / feedback</span></Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -188,7 +186,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/preferences">Settings</Link>
+                <Link href="/dashboard/preferences">Settings</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="#">Support</Link>

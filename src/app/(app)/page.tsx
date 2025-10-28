@@ -42,7 +42,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent className="flex-1 flex flex-col justify-center gap-4">
               <Button asChild size="lg">
-                <Link href="/new-article">
+                <Link href="/dashboard/new-article">
                   <Mic className="mr-2 h-5 w-5" />
                   Record a new article
                 </Link>
