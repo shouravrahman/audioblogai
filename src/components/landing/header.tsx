@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, Mic } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/sheet';
 import { Logo } from '@/components/logo';
 import { navLinks } from '@/lib/data';
-import { cn } from '@/lib/utils';
 
 export function Header() {
   return (
@@ -74,8 +73,12 @@ export function Header() {
           </div>
 
           <nav className="flex items-center gap-2">
-            <Button variant="ghost">Login</Button>
-            <Button>Try for free</Button>
+            <Button variant="ghost" asChild>
+                <Link href="/login">Login</Link>
+            </Button>
+            <Button asChild>
+                <Link href="/signup">Try for free</Link>
+            </Button>
           </nav>
         </div>
       </div>

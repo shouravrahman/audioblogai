@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { happyUsers } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -39,7 +40,9 @@ export function Hero() {
             Conquer writer's block and publish more content. Your audio is transformed into structured blog posts, ready for you to edit, export, and share.
           </p>
           <div className="mt-8 flex flex-col items-center md:items-start gap-4">
-            <Button size="lg">Start for Free</Button>
+            <Button size="lg" asChild>
+              <Link href="/signup">Start for Free</Link>
+            </Button>
             <p className="text-xs text-muted-foreground">
               No credit card required.
             </p>

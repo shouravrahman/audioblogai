@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Button } from '../ui/button';
 
 export function FinalCta() {
@@ -9,7 +10,9 @@ export function FinalCta() {
           Start with a free plan. Upgrade when you're ready.
         </p>
         <div className="mt-8 flex flex-col items-center gap-4">
-            <Button size="lg">Start for free</Button>
+            <Button size="lg" asChild>
+                <Link href="/signup">Start for free</Link>
+            </Button>
             <p className="text-xs text-muted-foreground">
               No credit card required.
             </p>
