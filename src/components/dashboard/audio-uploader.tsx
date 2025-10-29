@@ -104,7 +104,10 @@ export function AudioUploader() {
   const handleReset = () => {
     setUploaderState('idle');
     setAudioFile(null);
-    setAudioUrl(null);
+    if (audioUrl) {
+      URL.revokeObjectURL(audioUrl);
+      setAudioUrl(null);
+    }
   };
 
   if (uploaderState === 'idle') {
@@ -187,15 +190,9 @@ export function AudioUploader() {
                 'Create article'
               )}
             </Button>
-            <Button variant="outline" className="w-full" asChild disabled={uploaderState === 'creating'}>
-              <a href={audioUrl || '#'} download={audioFile?.name}>
-                <Download className="mr-2 h-4 w-4" />
-                Download
-              </a>
-            </Button>
              <Button variant="outline" className="w-full" onClick={handleReset} disabled={uploaderState === 'creating'}>
                 <Trash2 className="mr-2 h-4 w-4" />
-                Remove
+                Choose a different file
             </Button>
           </div>
         </CardContent>

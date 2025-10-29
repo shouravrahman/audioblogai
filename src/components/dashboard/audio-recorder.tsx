@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Mic, Square, Download, Loader2, RotateCcw } from 'lucide-react';
+import { Mic, Pause, Square, Download, Loader2, RotateCcw, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
@@ -20,7 +20,7 @@ import { AudioVisualizer } from './audio-visualizer';
 import type { AiModel } from '@/lib/types';
 import { createArticle } from '@/app/actions';
 
-type RecorderState = 'idle' | 'recording' | 'recorded' | 'creating';
+type RecorderState = 'idle' | 'recording' | 'paused' | 'recorded' | 'creating';
 
 export function AudioRecorder() {
   const [recorderState, setRecorderState] = useState<RecorderState>('idle');
@@ -73,7 +73,6 @@ export function AudioRecorder() {
 
   const handleStartRecording = async () => {
     setRecorderState('recording');
-    setElapsedTime(0);
     audioChunksRef.current = [];
 
     try {
@@ -102,9 +101,24 @@ export function AudioRecorder() {
     }
   };
 
+  const handlePauseRecording = () => {
+    if (mediaRecorderRef.current?.state === 'recording') {
+        mediaRecorderRef.current.pause();
+        setRecorderState('paused');
+    }
+  }
+
+  const handleResumeRecording = () => {
+    if (mediaRecorderRef.current?.state === 'paused') {
+        mediaRecorderRef.current.resume();
+        setRecorderState('recording');
+    }
+  }
+
   const handleStopRecording = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
+      setRecorderState('recorded');
     }
   };
 
@@ -162,83 +176,107 @@ export function AudioRecorder() {
     }
   };
 
-  if (recorderState === 'idle' || recorderState === 'recording') {
-    return (
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span>Record Your Thoughts</span>
-            {recorderState === 'recording' && (
-              <span className="text-lg font-mono text-red-500 animate-pulse">{formatTime(elapsedTime)}</span>
-            )}
-          </CardTitle>
-          <CardDescription>
-            {recorderState === 'recording' ? "Click the square to stop recording" : "Click the mic to start recording."}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col items-center justify-center gap-6 p-10">
-          <Button onClick={recorderState === 'recording' ? handleStopRecording : handleStartRecording} size="icon" className="w-20 h-20 rounded-full">
-            {recorderState === 'recording' ? <Square className="h-8 w-8" /> : <Mic className="h-8 w-8" />}
-          </Button>
-          <AudioVisualizer stream={streamRef.current} isRecording={recorderState === 'recording'} />
-        </CardContent>
-      </Card>
-    );
-  }
+  return (
+    <Card className="max-w-2xl mx-auto">
+      {recorderState === 'idle' && (
+         <>
+          <CardHeader>
+            <CardTitle>Record Your Thoughts</CardTitle>
+            <CardDescription>Click the mic to start recording.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center justify-center gap-6 p-10">
+            <Button onClick={handleStartRecording} size="icon" className="w-20 h-20 rounded-full">
+              <Mic className="h-8 w-8" />
+            </Button>
+            <div className="h-16 w-full bg-secondary rounded-lg" />
+          </CardContent>
+        </>
+      )}
 
-  if (recorderState === 'recorded' || recorderState === 'creating') {
-    return (
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-            <CardTitle>Review and Create</CardTitle>
-            <CardDescription>Review your audio and choose an AI model to generate your article.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-            {audioUrl && (
-                <audio ref={audioRef} src={audioUrl} controls className="w-full" />
-            )}
-             <div>
-                <label className="text-sm font-medium mb-2 block">Choose an AI model</label>
-                <Select defaultValue="default" onValueChange={setSelectedModel}>
-                    <SelectTrigger>
-                        <SelectValue placeholder="Select an AI model" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="default">AudioScribe AI default</SelectItem>
-                        {aiModels && aiModels.map(model => (
-                            <SelectItem key={model.id} value={model.id}>
-                                {model.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-2">
-                 <Button onClick={handleCreateArticle} className="w-full" disabled={recorderState === 'creating'}>
-                    {recorderState === 'creating' ? (
-                        <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Creating Article...
-                        </>
+      {(recorderState === 'recording' || recorderState === 'paused') && (
+        <>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>
+                  {recorderState === 'recording' ? 'Recording...' : 'Paused'}
+                </span>
+                <span className="text-lg font-mono text-red-500">{formatTime(elapsedTime)}</span>
+              </CardTitle>
+              <CardDescription>
+                {recorderState === 'recording' ? 'Click pause or stop when you are done.' : 'Resume recording or finish.'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center justify-center gap-6 p-10">
+                <div className="flex items-center gap-4">
+                    {recorderState === 'recording' ? (
+                        <Button onClick={handlePauseRecording} size="icon" variant="outline" className="w-16 h-16 rounded-full">
+                            <Pause className="h-7 w-7" />
+                        </Button>
                     ) : (
-                        'Create article'
+                        <Button onClick={handleResumeRecording} size="icon" variant="outline" className="w-16 h-16 rounded-full">
+                            <Play className="h-7 w-7" />
+                        </Button>
                     )}
-                </Button>
-                <Button variant="outline" className="w-full" onClick={handleReset}>
-                    <RotateCcw className="mr-2 h-4 w-4" />
-                    Record Again
-                </Button>
-                <Button variant="outline" className="w-full" asChild>
-                    <a href={audioUrl || '#'} download={`recording-${new Date().toISOString()}.wav`}>
-                        <Download className="mr-2 h-4 w-4" />
-                        Download
-                    </a>
-                </Button>
-            </div>
-        </CardContent>
-      </Card>
-    )
-  }
+                    <Button onClick={handleStopRecording} size="icon" className="w-20 h-20 rounded-full bg-red-500 hover:bg-red-600">
+                        <Square className="h-8 w-8" />
+                    </Button>
+                </div>
+                <AudioVisualizer stream={streamRef.current} isRecording={recorderState === 'recording'} />
+            </CardContent>
+        </>
+      )}
 
-  return null;
+      {(recorderState === 'recorded' || recorderState === 'creating') && (
+        <>
+            <CardHeader>
+                <CardTitle>Review and Create</CardTitle>
+                <CardDescription>Review your audio and choose an AI model to generate your article.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                {audioUrl && (
+                    <audio ref={audioRef} src={audioUrl} controls className="w-full" />
+                )}
+                <div>
+                    <label className="text-sm font-medium mb-2 block">Choose an AI model</label>
+                    <Select defaultValue="default" onValueChange={setSelectedModel}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select an AI model" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="default">AudioScribe AI default</SelectItem>
+                            {aiModels && aiModels.map(model => (
+                                <SelectItem key={model.id} value={model.id}>
+                                    {model.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2">
+                    <Button onClick={handleCreateArticle} className="w-full" disabled={recorderState === 'creating'}>
+                        {recorderState === 'creating' ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Creating Article...
+                            </>
+                        ) : (
+                            'Create article'
+                        )}
+                    </Button>
+                    <Button variant="outline" className="w-full" onClick={handleReset}>
+                        <RotateCcw className="mr-2 h-4 w-4" />
+                        Record Again
+                    </Button>
+                    <Button variant="outline" className="w-full" asChild>
+                        <a href={audioUrl || '#'} download={`recording-${new Date().toISOString()}.wav`}>
+                            <Download className="mr-2 h-4 w-4" />
+                            Download
+                        </a>
+                    </Button>
+                </div>
+            </CardContent>
+        </>
+      )}
+    </Card>
+  );
 }
