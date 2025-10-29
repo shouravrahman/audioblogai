@@ -23,7 +23,7 @@ export type UserSubscription = {
     orderId: number;
     name: string;
     email: string;
-    status: string;
+    status: 'active' | 'cancelled' | 'expired' | 'past_due' | 'on_trial' | 'unpaid' | 'paused';
     renewsAt: string | null;
     endsAt: string | null;
     trialEndsAt: string | null;

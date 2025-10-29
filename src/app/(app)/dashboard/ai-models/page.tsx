@@ -360,7 +360,7 @@ function SubscribedView({ onShowForm, isFormVisible }: { onShowForm: () => void,
     )
 }
 
-function UpsellView({ isTrial }: { isTrial: boolean }) {
+function UpsellView({ planName }: { planName: string }) {
     return (
         <div>
             <div className="mb-8">
@@ -370,7 +370,7 @@ function UpsellView({ isTrial }: { isTrial: boolean }) {
                 </p>
             </div>
             
-            <Card className="bg-primary/10 border-primary/50">
+            <Card className="bg-primary/10 border-primary/20">
                 <CardHeader>
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-primary/20 rounded-full">
@@ -381,7 +381,7 @@ function UpsellView({ isTrial }: { isTrial: boolean }) {
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <p className="text-muted-foreground">
-                        You are currently on the {isTrial ? 'Pro trial' : 'Free'} plan. Upgrade to a paid plan to train personalized AI models and generate content that perfectly matches your unique style and tone.
+                        You are currently on the <strong>{planName}</strong> plan. Personalized AI models are a premium feature. Upgrade to a paid plan to train the AI on your unique style and tone.
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         <div className="flex items-start gap-2">
@@ -439,9 +439,9 @@ export default function AiModelsPage() {
 
     const activeSubscription = subscriptions?.[0];
     const isPaid = activeSubscription && activeSubscription.status === 'active';
-    const isTrial = activeSubscription && activeSubscription.status === 'on_trial';
+    const planName = activeSubscription?.name || 'Free';
     
-    // A user can create models if they have a paid subscription.
+    // A user can create models if they have a paid (active) subscription.
     // They cannot create models on a trial or free plan.
     const canCreateModel = isPaid;
 
@@ -460,7 +460,7 @@ export default function AiModelsPage() {
 
     return (
         <div className="max-w-6xl mx-auto">
-            {canCreateModel ? <SubscribedView onShowForm={handleToggleForm} isFormVisible={showForm} /> : <UpsellView isTrial={isTrial} />}
+            {canCreateModel ? <SubscribedView onShowForm={handleToggleForm} isFormVisible={showForm} /> : <UpsellView planName={planName} />}
         </div>
     );
 }

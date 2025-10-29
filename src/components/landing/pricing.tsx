@@ -112,7 +112,7 @@ export function Pricing() {
             <CardFooter>
               <Button 
                 className="w-full"
-                onClick={() => handleCheckout(planId)}
+                onClick={() => planId && handleCheckout(planId)}
                 disabled={plan.name === 'Free' || isLoading}
                 variant={plan.recommended ? 'default' : 'secondary'}
               >

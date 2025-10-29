@@ -1,6 +1,16 @@
-# Audio Blog AI
+# AudioScribe
 
-This is a Next.js application built with Firebase and Genkit. It allows users to record audio, transcribe it to text, and then transform the text into a structured blog post using AI.
+This is a Next.js application built with Firebase and Genkit. It allows users to record audio, transcribe it to text, and then transform the text into a structured, AI-enhanced blog post complete with a cover image.
+
+## Features
+
+- **Audio-to-Article:** Record or upload audio and have AI generate a well-structured blog post.
+- **Multi-Language Support:** Transcribe and generate content in multiple languages.
+- **Personalized AI Models:** Train a custom AI on your writing style for authentic content.
+- **AI Research Assistant:** Enrich articles with factual data and sources.
+- **SEO Analysis:** Get AI-powered suggestions for titles, meta descriptions, and keywords.
+- **Automatic Cover Images:** AI generates a relevant cover image for each article.
+- **Subscription Management:** Built-in pricing tiers and payment processing with Lemon Squeezy.
 
 ## Deployment Guide (Frontend on Cloudflare)
 

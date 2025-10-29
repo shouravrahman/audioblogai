@@ -17,6 +17,7 @@ import {
 import { Slider } from '../ui/slider';
 import { Check, Dot } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const FeatureCard = ({
   step,
@@ -133,6 +134,9 @@ export function Features() {
             <CardContent className="space-y-4">
               <Button>Enrich with Research</Button>
                <Button variant="secondary">Analyze SEO</Button>
+               <div className="relative aspect-video w-full rounded-lg overflow-hidden border">
+                <Image src="https://picsum.photos/seed/feature3/600/400" alt="Generated blog cover" layout="fill" objectFit="cover" data-ai-hint="blog cover" />
+               </div>
             </CardContent>
           </Card>
         </FeatureCard>
