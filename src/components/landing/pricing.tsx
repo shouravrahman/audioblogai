@@ -12,6 +12,7 @@ import { useUser } from '@/firebase';
 import { createCheckout } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import { Check } from 'lucide-react';
 
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(true);
@@ -47,7 +48,7 @@ export function Pricing() {
     <section id="pricing" className="container space-y-8">
       <div className="text-center">
         <h2 className="text-3xl md:text-4xl font-bold">
-          Affordable pricing for everyone
+          Flexible Pricing for Every Creator
         </h2>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
           Choose a plan that works for you. Start for free and upgrade when you're ready.
@@ -66,7 +67,7 @@ export function Pricing() {
         </Label>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
         {pricingPlans.map((plan) => {
            const planId = isYearly ? plan.variantIdYearly : plan.variantIdMonthly;
            const isLoading = isRedirecting === planId;
@@ -76,7 +77,7 @@ export function Pricing() {
             key={plan.name}
             className={cn(
               'flex flex-col',
-              plan.recommended && 'border-2 border-primary'
+              plan.recommended && 'border-2 border-primary shadow-2xl shadow-primary/20'
             )}
           >
             {plan.recommended && (
@@ -102,20 +103,7 @@ export function Pricing() {
               <ul className="space-y-2">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-center gap-2">
-                    <svg
-                      className="h-5 w-5 text-primary"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M5 13l4 4L19 7"
-                      ></path>
-                    </svg>
+                    <Check className="h-5 w-5 text-primary shrink-0" />
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -126,6 +114,7 @@ export function Pricing() {
                 className="w-full"
                 onClick={() => handleCheckout(planId)}
                 disabled={plan.name === 'Free' || isLoading}
+                variant={plan.recommended ? 'default' : 'secondary'}
               >
                 {isLoading ? 'Redirecting...' : plan.cta}
               </Button>

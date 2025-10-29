@@ -1,12 +1,10 @@
 import Link from 'next/link';
 import { Logo } from '../logo';
-import { TestimonialsMarquee } from './testimonials-marquee';
 import { footerLinks } from '@/lib/data';
 
 export function Footer() {
   return (
     <footer className="border-t">
-      <TestimonialsMarquee reverse={true} />
       <div className="container py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="flex flex-col gap-4">

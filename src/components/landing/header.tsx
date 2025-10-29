@@ -88,7 +88,7 @@ export function Header() {
                   <Link href="/login">Login</Link>
                 </Button>
                 <Button asChild>
-                  <Link href="/signup">Try for free</Link>
+                  <Link href="/signup">Start For Free</Link>
                 </Button>
               </>
             )}

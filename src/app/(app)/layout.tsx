@@ -89,11 +89,6 @@ function AppSidebar() {
           <Link href="/dashboard/subscription"><Gem /><span>Update subscription</span></Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
-      <SidebarMenuItem>
-        <SidebarMenuButton href="#" asChild>
-          <Link href="#"><CreditCard /><span>Manage billing</span></Link>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
     </SidebarGroup>
   );
   
@@ -167,51 +162,57 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
-          <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 md:px-6">
-            <div className="flex items-center gap-2">
-              <SidebarTrigger className="md:hidden">
-                  <PanelLeft />
-                  <span className="sr-only">Toggle Menu</span>
-              </SidebarTrigger>
-              <div className="md:hidden">
-                <Logo />
-              </div>
-            </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <Avatar>
-                    <AvatarImage
-                      src={user.photoURL || undefined}
-                      alt={user.email || 'User Avatar'}
-                    />
-                    <AvatarFallback>
-                      {user.email ? user.email.charAt(0).toUpperCase() : 'U'}
-                    </AvatarFallback>
-                  </Avatar>
+          <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 sm:px-6">
+             <div className="flex items-center gap-2">
+                <SidebarTrigger className="sm:hidden">
+                    <PanelLeft />
+                    <span className="sr-only">Toggle Menu</span>
+                </SidebarTrigger>
+                <div className="sm:hidden">
+                  <Logo />
+                </div>
+             </div>
+            
+            <div className='flex items-center gap-4'>
+                <Button variant="outline" asChild>
+                    <Link href="/dashboard/new-article">Create New Article</Link>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard/preferences">Settings</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="#">Support</Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut}>
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full">
+                      <Avatar>
+                        <AvatarImage
+                          src={user.photoURL || undefined}
+                          alt={user.email || 'User Avatar'}
+                        />
+                        <AvatarFallback>
+                          {user.email ? user.email.charAt(0).toUpperCase() : 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href="/dashboard/preferences">Settings</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="#">Support</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut}>
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
           </header>
-          <main className="flex-1 p-4 md:p-8">{children}</main>
+          <main className="flex-1 p-4 sm:p-6">{children}</main>
         </SidebarInset>
       </SidebarProvider>
     </div>

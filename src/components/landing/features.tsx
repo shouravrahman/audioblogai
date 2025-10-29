@@ -8,12 +8,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { features } from '@/lib/data';
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs';
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -21,6 +15,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Slider } from '../ui/slider';
+import { Check, Dot } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const FeatureCard = ({
   step,
@@ -40,7 +36,6 @@ const FeatureCard = ({
       </p>
       <h2 className="mt-1 text-2xl font-semibold text-muted-foreground">{title}</h2>
       <p className="mt-4 text-lg text-muted-foreground">{description}</p>
-      <Button className="mt-6">{action}</Button>
     </div>
     <div className="md:order-1 flex items-center justify-center">
       {children}
@@ -49,15 +44,44 @@ const FeatureCard = ({
 );
 
 export function Features() {
+  const steps = [
+    'Record', 'Transcribe', 'Structure', 'Edit', 'Publish'
+  ]
+  const currentStep = 'Structure';
+
   return (
     <section id="features">
       <div className="container text-center mb-16">
         <h2 className="text-3xl md:text-4xl font-bold">
-          How your voice becomes an article
+          How It Works
         </h2>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
           Our process is simple. Just talk, and let our AI handle the heavy lifting.
         </p>
+      </div>
+
+      <div className="container max-w-4xl mb-16">
+        <div className="flex justify-between items-center relative">
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-border -z-10" />
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1/2 h-0.5 bg-primary -z-10" />
+          {steps.map((step, index) => {
+            const isCompleted = steps.indexOf(currentStep) > index;
+            const isCurrent = steps.indexOf(currentStep) === index;
+
+            return (
+              <div key={step} className="flex flex-col items-center gap-2 z-0">
+                <div className={cn("w-8 h-8 rounded-full flex items-center justify-center transition-all", 
+                  isCompleted ? "bg-primary text-primary-foreground" : 
+                  isCurrent ? "bg-primary text-primary-foreground ring-4 ring-primary/30" : 
+                  "bg-muted text-muted-foreground"
+                )}>
+                  {isCompleted ? <Check className="w-5 h-5" /> : <Dot className="w-6 h-6" />}
+                </div>
+                 <p className={cn("text-sm font-semibold", isCurrent && "text-primary")}>{step}</p>
+              </div>
+            )
+          })}
+        </div>
       </div>
 
       <div className="space-y-24 md:space-y-32">
@@ -115,7 +139,7 @@ export function Features() {
                 Our AI organizes your transcript into a polished article.
               </CardDescription>
             </CardHeader>
-            <CardContent className="prose prose-sm text-sm">
+            <CardContent className="prose prose-sm text-sm dark:prose-invert">
               <h4>Key Takeaways</h4>
               <ul>
                 <li>AI drafts the post for you</li>
@@ -139,34 +163,10 @@ export function Features() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="markdown" className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
-                  <TabsTrigger value="richtext">Rich text</TabsTrigger>
-                  <TabsTrigger value="html">HTML</TabsTrigger>
-                  <TabsTrigger value="markdown">Markdown</TabsTrigger>
-                  <TabsTrigger value="text">Plain text</TabsTrigger>
-                </TabsList>
-                <TabsContent value="richtext">
-                  <pre className="mt-2 text-xs p-4 bg-secondary rounded-md overflow-x-auto">
-                    A rich text representation of your blog post...
-                  </pre>
-                </TabsContent>
-                <TabsContent value="html">
-                  <pre className="mt-2 text-xs p-4 bg-secondary rounded-md overflow-x-auto">
-                    <code>{`<h2>Title</h2><p>Paragraph...</p>`}</code>
-                  </pre>
-                </TabsContent>
-                <TabsContent value="markdown">
-                  <pre className="mt-2 text-xs p-4 bg-secondary rounded-md overflow-x-auto">
-                    <code>{`## Title\n\nA paragraph...`}</code>
-                  </pre>
-                </TabsContent>
-                <TabsContent value="text">
-                  <pre className="mt-2 text-xs p-4 bg-secondary rounded-md overflow-x-auto">
-                    A plain text version of your blog post...
-                  </pre>
-                </TabsContent>
-              </Tabs>
+              <div className='flex items-center gap-2'>
+                <Button>Copy as Markdown</Button>
+                <Button variant="secondary">Copy as HTML</Button>
+              </div>
             </CardContent>
           </Card>
         </FeatureCard>

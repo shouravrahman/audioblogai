@@ -10,123 +10,37 @@ function getImage(id: string): ImagePlaceholder {
 }
 
 export const navLinks = [
-  { label: 'Examples', href: '#examples' },
+  { label: 'How it Works', href: '#features' },
   { label: 'Pricing', href: '#pricing' },
-  { label: 'Features', href: '#features' },
-  { label: 'Blog', href: '#' },
+  { label: 'Examples', href: '#examples' },
 ];
-
-export const testimonials = [
-  {
-    name: 'Alex Johnson',
-    title: 'Content Strategist',
-    quote: "This is my go-to for turning scattered thoughts into structured content. It's incredibly fast and intuitive.",
-    avatar: getImage('kent-c-dodds-avatar'),
-  },
-  {
-    name: 'Maria Garcia',
-    title: 'Freelance Writer',
-    quote: "I created a full article in under 15 minutes. This has completely changed my workflow.",
-    avatar: getImage('santosh-yadav-avatar'),
-  },
-  {
-    name: 'David Chen',
-    title: 'Lead Developer',
-    quote: 'Just tried AudioScribe AI and was blown away! Subscribed for the year to dictate all my future posts.',
-    avatar: getImage('scott-spence-avatar'),
-  },
-  {
-    name: 'Sophia Williams',
-    title: 'Digital Marketer & Accessibility Advocate',
-    quote: "It's fantastic. Just speak your mind naturally, like you're talking to a friend. The AI handles the rest.",
-    avatar: getImage('anne-bovelett-avatar'),
-  },
-  {
-    name: 'James Brown',
-    title: 'Engineering Manager',
-    quote: "I was skeptical at first, but it's still my voice. The AI just structures my thoughts into lists and sections where they fit.",
-    avatar: getImage('marc-backes-avatar'),
-  },
-  {
-    name: 'Michael Miller',
-    title: 'Software Engineer',
-    quote: 'AudioScribe AI turned my rambling into a coherent blog post!',
-    avatar: getImage('dominick-j-monaco-avatar'),
-  },
-  {
-    name: 'Olivia Martinez',
-    title: 'Senior Software Engineer',
-    quote: 'The personalized AI model is a game-changer. I need to use this more often. Amazing work!',
-    avatar: getImage('nicolas-beaussart-avatar'),
-  },
-  {
-    name: 'Dr. Emily White',
-    title: 'Physician',
-    quote: "On a long commute, I drafted a whole series of newsletter articles. It's not only useful but also therapeutic to articulate my ideas and see them organized.",
-    avatar: getImage('keith-newton-md-avatar'),
-  },
-  {
-    name: 'Chloe Taylor',
-    title: 'CEO, DevRel Consultant',
-    quote: "If you work in Developer Relations, you need this. It's amazing to just talk freely and let the AI polish it.",
-    avatar: getImage('tessa-kriesel-avatar'),
-  },
-  {
-    name: 'Daniel Anderson',
-    title: 'Developer Advocate',
-    quote: 'The personalized AI feature is killer. When I generate new content, it truly sounds like me!',
-    avatar: getImage('tim-benniks-avatar'),
-  },
-  {
-    name: 'Isabella Rodriguez',
-    title: 'Developer Advocate',
-    quote: "This tool is so effective. It feels like the ultimate cure for writer's block.",
-    avatar: getImage('ellie-zubrowski-avatar'),
-  },
-  {
-    name: 'Ethan Wilson',
-    title: 'Developer Advocate',
-    quote: "A fantastic experience. I didn't have an outline, but AudioScribe AI pulled it all together logically. 10/10.",
-    avatar: getImage('jason-torres-avatar'),
-  },
-];
-
-export const happyUsers = [
-  getImage('kent-c-dodds-avatar'),
-  getImage('santosh-yadav-avatar'),
-  getImage('scott-spence-avatar'),
-  getImage('anne-bovelett-avatar'),
-  getImage('marc-backes-avatar'),
-  getImage('dominick-j-monaco-avatar'),
-];
-
 
 export const features = [
     {
       step: 1,
-      title: "Defeat the Blank Page",
-      subtitle: "Just Start Talking",
+      title: "Just Start Talking",
+      subtitle: "Defeat the Blank Page",
       description: "Get your first draft done in record time by simply speaking your thoughts. Let our AI convert your ideas into a structured article.",
       action: "Start Recording"
     },
     {
       step: 2,
-      title: "Define Your Voice",
-      subtitle: "Select a Style",
+      title: "Select a Style",
+      subtitle: "Define Your Voice",
       description: "Choose the tone for your article from various AI models. You can even train a model to write just like you.",
       action: "Personalize Now"
     },
     {
       step: 3,
-      title: "Refine and Polish",
-      subtitle: "Effortless Editing",
+      title: "Effortless Editing",
+      subtitle: "Refine and Polish",
       description: "Quickly make adjustments to ensure the article perfectly captures your message and voice.",
       action: "Start Editing"
     },
     {
       step: 4,
-      title: "Share with the World",
-      subtitle: "Publish Everywhere",
+      title: "Publish Everywhere",
+      subtitle: "Share with the World",
       description: "With multiple export formats, you can easily copy and paste your content to any platform. More integrations are on the way.",
       action: "Start Publishing"
     }
@@ -269,7 +183,8 @@ export const pricingPlans = [
 export const footerLinks = {
     product: [
         { label: 'Pricing', href: '#pricing' },
-        { label: 'Features', href: '#features' },
+        { label: 'How it Works', href: '#features' },
+        { label: 'Examples', href: '#examples' },
     ],
     company: [
         { label: 'Blog', href: '#' },
