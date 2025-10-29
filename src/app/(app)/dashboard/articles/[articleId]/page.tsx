@@ -2,12 +2,12 @@
 
 import { useDoc, useMemoFirebase, useUser } from '@/firebase';
 import { useFirestore } from '@/firebase/provider';
-import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, updateDoc, serverTimestamp, deleteDoc } from 'firebase/firestore';
 import { useParams, useRouter } from 'next/navigation';
 import type { BlogPost } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle, Info, Save, Copy, FileDown } from 'lucide-react';
+import { AlertTriangle, Info, Save, Copy, FileDown, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useRef, useState, useEffect } from 'react';
@@ -17,7 +17,19 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import TurndownService from 'turndown';
 
 
@@ -30,6 +42,7 @@ export default function ArticlePage() {
   
   const contentRef = useRef<HTMLDivElement>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [turndownService, setTurndownService] = useState<TurndownService | null>(null);
 
   useEffect(() => {
@@ -76,6 +89,26 @@ export default function ArticlePage() {
       setIsSaving(false);
     }
   };
+
+  const handleDelete = async () => {
+    if (!articleRef) return;
+    setIsDeleting(true);
+    try {
+      await deleteDoc(articleRef);
+      toast({
+        title: 'Article Deleted',
+        description: 'The article has been successfully deleted.',
+      });
+      router.push('/dashboard');
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Delete Failed',
+        description: error.message || 'Could not delete the article.',
+      });
+       setIsDeleting(false);
+    }
+  }
   
   const handleExport = (format: 'html' | 'text' | 'markdown') => {
     if (!contentRef.current) return;
@@ -200,19 +233,43 @@ export default function ArticlePage() {
               <Save className="mr-2 h-4 w-4" />
               {isSaving ? 'Saving...' : 'Save Changes'}
             </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  <FileDown className="mr-2 h-4 w-4" />
-                  Export
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => handleExport('text')}>Copy as Plain Text</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleExport('html')}>Copy as HTML</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleExport('markdown')}>Copy as Markdown</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+             <AlertDialog>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">
+                      <FileDown className="mr-2 h-4 w-4" />
+                      Actions
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => handleExport('text')}>Copy as Plain Text</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExport('html')}>Copy as HTML</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExport('markdown')}>Copy as Markdown</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                     <AlertDialogTrigger asChild>
+                        <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive">
+                            <Trash2 className="mr-2 h-4 w-4"/>
+                            Delete Article
+                        </DropdownMenuItem>
+                    </AlertDialogTrigger>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                 <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete your
+                        article and remove your data from our servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
+                        {isDeleting ? "Deleting..." : "Yes, delete article"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+            </AlertDialog>
          </div>
       </div>
 
