@@ -34,7 +34,7 @@ const modelFormSchema = z.object({
     return (textSamples + audioSamples) >= 3;
 }, {
     message: "Please provide at least 3 total samples (text or audio). Text samples must be at least 100 characters.",
-    path: ['sample1'], // You can associate the error with a specific field if you want
+    path: ['sample1'],
 });
 
 
@@ -160,7 +160,7 @@ function CreateModelForm({ onModelCreated, onBack }: { onModelCreated: () => voi
             userId: user.uid,
             name: data.name,
             description: data.description,
-            trainingData: trainingResult.analysis, // Store the analysis
+            trainingData: trainingResult.analysis,
             createdAt: serverTimestamp(),
         });
 
@@ -308,8 +308,7 @@ function CreateModelForm({ onModelCreated, onBack }: { onModelCreated: () => voi
 }
 
 
-function SubscribedView() {
-    const [showForm, setShowForm] = useState(false);
+function SubscribedView({ onShowForm, isFormVisible }: { onShowForm: () => void, isFormVisible: boolean }) {
     const { user } = useUser();
     const firestore = useFirestore();
 
@@ -329,16 +328,16 @@ function SubscribedView() {
                         Manage your custom writing styles to generate content that sounds just like you.
                     </p>
                 </div>
-                {!showForm && (
-                     <Button onClick={() => setShowForm(true)}>
+                {!isFormVisible && (
+                     <Button onClick={onShowForm}>
                         <Plus className="mr-2 h-4 w-4" />
                         Create New Model
                     </Button>
                 )}
             </div>
 
-            {showForm ? (
-                <CreateModelForm onModelCreated={() => setShowForm(false)} onBack={() => setShowForm(false)}/>
+            {isFormVisible ? (
+                <CreateModelForm onModelCreated={() => onShowForm()} onBack={() => onShowForm()}/>
             ) : (
                 <>
                     {isLoading && <p>Loading models...</p>}
@@ -422,6 +421,7 @@ function UpsellView({ isTrial }: { isTrial: boolean }) {
 export default function AiModelsPage() {
     const { user } = useUser();
     const firestore = useFirestore();
+    const [showForm, setShowForm] = useState(false);
 
     const subscriptionQuery = useMemoFirebase(() => {
         if (!user) return null;
@@ -440,10 +440,27 @@ export default function AiModelsPage() {
     const activeSubscription = subscriptions?.[0];
     const isPaid = activeSubscription && activeSubscription.status === 'active';
     const isTrial = activeSubscription && activeSubscription.status === 'on_trial';
+    
+    // A user can create models if they have a paid subscription.
+    // They cannot create models on a trial or free plan.
+    const canCreateModel = isPaid;
+
+    const handleToggleForm = () => {
+        if (canCreateModel) {
+            setShowForm(prev => !prev);
+        } else {
+             useToast().toast({
+                title: "Upgrade Required",
+                description: "You need a Pro or Ultra plan to create personalized AI models.",
+                action: <Button asChild><Link href="/dashboard/subscription">Upgrade</Link></Button>
+            })
+        }
+    }
+
 
     return (
         <div className="max-w-6xl mx-auto">
-            {isPaid ? <SubscribedView /> : <UpsellView isTrial={isTrial} />}
+            {canCreateModel ? <SubscribedView onShowForm={handleToggleForm} isFormVisible={showForm} /> : <UpsellView isTrial={isTrial} />}
         </div>
     );
 }
