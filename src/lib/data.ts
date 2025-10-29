@@ -279,4 +279,31 @@ export const footerLinks = {
         { label: 'Terms of Service', href: '#' },
         { label: 'Privacy Policy', href: '#' },
     ],
-}
+};
+
+export const faqItems = [
+    {
+        question: "How does the AI transcription work?",
+        answer: "We use a state-of-the-art AI model to convert your audio into text. It's designed to handle various accents and background noise, ensuring high accuracy."
+    },
+    {
+        question: "Can I train the AI to write in my own style?",
+        answer: "Absolutely! With our Pro and Ultra plans, you can provide samples of your writing (like blog posts or articles), and the AI will learn to mimic your unique voice, tone, and style."
+    },
+    {
+        question: "What formats can I export my articles in?",
+        answer: "You can export your finished articles as plain text, HTML, or Markdown, making it easy to publish on any platform like WordPress, Medium, or your personal website."
+    },
+    {
+        question: "Is there a limit on the length of audio I can record or upload?",
+        answer: "Yes, the limits depend on your plan. The Free plan allows up to 5-minute recordings, Pro allows 15 minutes, and Ultra allows up to 45 minutes per article."
+    },
+    {
+        question: "How is my data and privacy handled?",
+        answer: "We take your privacy seriously. Your audio files and generated content are yours alone. We do not use your data for any purpose other than providing the service to you. All data is securely stored and protected."
+    },
+    {
+        question: "Can I cancel my subscription at any time?",
+        answer: "Yes, you can cancel your subscription at any time through the billing management portal. You will retain access to your plan's features until the end of the current billing cycle."
+    }
+];

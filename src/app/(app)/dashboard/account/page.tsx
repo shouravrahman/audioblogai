@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
@@ -14,14 +13,21 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { collection, query, where } from 'firebase/firestore';
-import type { UserSubscription } from '@/lib/types';
+import { collection, query, where, getCountFromServer } from 'firebase/firestore';
+import type { UserSubscription, AiModel, BlogPost } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
+import { useEffect, useState } from 'react';
+import { pricingPlans } from '@/lib/data';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function AccountPage() {
   const { user } = useUser();
   const firestore = useFirestore();
 
+  const [usage, setUsage] = useState({ articles: 0, models: 0 });
+  const [usageLoading, setUsageLoading] = useState(true);
+
+  // Memoized query for the user's active subscription
   const subscriptionQuery = useMemoFirebase(() => {
     if (!user) return null;
     return query(
@@ -33,9 +39,45 @@ export default function AccountPage() {
   const { data: subscriptions, isLoading: isSubscriptionLoading } = useCollection<UserSubscription>(subscriptionQuery);
   const activeSubscription = subscriptions?.[0];
 
+  useEffect(() => {
+    if (!user || !firestore || !activeSubscription) {
+      setUsageLoading(false);
+      return;
+    };
+
+    const fetchUsage = async () => {
+      setUsageLoading(true);
+      try {
+        const articlesCollection = collection(firestore, `users/${user.uid}/blogPosts`);
+        const modelsCollection = collection(firestore, `users/${user.uid}/aiModels`);
+        
+        const articlesSnapshot = await getCountFromServer(articlesCollection);
+        const modelsSnapshot = await getCountFromServer(modelsCollection);
+        
+        setUsage({
+          articles: articlesSnapshot.data().count,
+          models: modelsSnapshot.data().count
+        });
+
+      } catch (error) {
+        console.error("Error fetching usage data:", error);
+      } finally {
+        setUsageLoading(false);
+      }
+    };
+    
+    fetchUsage();
+  }, [user, firestore, activeSubscription]);
+
+
   if (!user) {
     return null;
   }
+  
+  const currentPlan = pricingPlans.find(p => p.variantIdMonthly === activeSubscription?.planId.toString() || p.variantIdYearly === activeSubscription?.planId.toString()) || pricingPlans[0];
+  const articleLimit = currentPlan.features.find(f => f.includes('article'))?.split(' ')[0] || 3;
+  const modelLimit = currentPlan.features.find(f => f.includes('personalized AI model'))?.split(' ')[0] || 0;
+
 
   const getPlanName = () => {
     if (isSubscriptionLoading) return 'Loading...';
@@ -51,6 +93,56 @@ export default function AccountPage() {
     }
     return 'Free plan';
   };
+
+  const UsageCard = () => {
+     if (usageLoading || isSubscriptionLoading) {
+      return (
+         <Card className="h-full">
+            <CardHeader>
+              <CardTitle>Your usage</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+               <div>
+                  <Skeleton className="h-4 w-1/4 mb-2" />
+                  <Skeleton className="h-2 w-full" />
+                  <Skeleton className="h-3 w-3/4 mt-2" />
+               </div>
+                <div>
+                  <Skeleton className="h-4 w-1/3 mb-2" />
+                  <Skeleton className="h-2 w-full" />
+                  <Skeleton className="h-3 w-3/4 mt-2" />
+               </div>
+            </CardContent>
+        </Card>
+      )
+    }
+
+    return (
+       <Card className="h-full">
+            <CardHeader>
+              <CardTitle>Your usage</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+               <div>
+                <p className="text-sm font-semibold">Recordings</p>
+                <Progress value={(usage.articles / Number(articleLimit)) * 100} className="my-2" />
+                <p className="text-sm text-muted-foreground">{usage.articles}/{articleLimit} articles created this month.</p>
+              </div>
+               <div>
+                <p className="text-sm font-semibold">Personalized AI Models</p>
+                 <Progress value={(usage.models / Number(modelLimit)) * 100} className="my-2" />
+                 <p className="text-sm text-muted-foreground">{usage.models}/{modelLimit} models created.</p>
+                 {currentPlan.name === 'Free' && (
+                    <p className="text-xs text-muted-foreground mt-1">Personalized AI models are not available on the free plan.</p>
+                 )}
+                 {activeSubscription?.status === 'on_trial' && currentPlan.name !== 'Free' && (
+                    <p className="text-xs text-muted-foreground mt-1">Personalized AI models are not available on free trial.</p>
+                 )}
+              </div>
+            </CardContent>
+          </Card>
+    )
+  }
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -97,8 +189,8 @@ export default function AccountPage() {
                   <Button asChild>
                     <Link href="/dashboard/subscription">Update subscription</Link>
                   </Button>
-                  <Button variant="outline" asChild>
-                     <Link href="#">Manage billing</Link>
+                  <Button variant="outline" asChild disabled={!activeSubscription?.customerPortalUrl}>
+                     <Link href={activeSubscription?.customerPortalUrl || '#'} target="_blank">Manage billing</Link>
                   </Button>
                 </div>
               </div>
@@ -109,24 +201,7 @@ export default function AccountPage() {
         
         {/* Usage Card */}
         <div className="md:col-span-1">
-          <Card className="h-full">
-            <CardHeader>
-              <CardTitle>Your usage</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-               <div>
-                <p className="text-sm font-semibold">Recordings</p>
-                <Progress value={33} className="my-2" />
-                <p className="text-sm text-muted-foreground">1/3 recorded articles this month.</p>
-              </div>
-               <div>
-                <p className="text-sm font-semibold">Personalized AI Models</p>
-                <Progress value={0} className="my-2" />
-                <p className="text-sm text-muted-foreground">0/0 in total (0/0 created this month)</p>
-                <p className="text-xs text-muted-foreground mt-1">Personalized AI models are not available on free trial</p>
-              </div>
-            </CardContent>
-          </Card>
+          <UsageCard />
         </div>
 
       </div>

@@ -10,7 +10,9 @@ export function Footer() {
       <div className="container py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="flex flex-col gap-4">
-            <Logo />
+            <Link href="/" aria-label="Home">
+                <Logo />
+            </Link>
             <p className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} AudioScribe AI. All rights reserved.
             </p>

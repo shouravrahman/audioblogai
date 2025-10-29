@@ -14,9 +14,11 @@ import { Button } from '@/components/ui/button';
 import { Wand2, Upload, Mic, BookOpen, PlusCircle, FileText, Loader2, Gem, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { useFirestore } from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
-import type { BlogPost } from '@/lib/types';
-
+import { collection, query, orderBy, where, getCountFromServer } from 'firebase/firestore';
+import type { BlogPost, UserSubscription, AiModel } from '@/lib/types';
+import { useEffect, useState } from 'react';
+import { pricingPlans } from '@/lib/data';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function ArticleCard({ article }: { article: BlogPost & { id: string } }) {
   const router = useRouter();
@@ -70,6 +72,101 @@ function ArticleCard({ article }: { article: BlogPost & { id: string } }) {
   );
 }
 
+function UsageCard() {
+    const { user } = useUser();
+    const firestore = useFirestore();
+    const [usage, setUsage] = useState({ articles: 0, models: 0 });
+    const [usageLoading, setUsageLoading] = useState(true);
+
+    const subscriptionQuery = useMemoFirebase(() => {
+        if (!user) return null;
+        return query(
+          collection(firestore, `users/${user.uid}/subscriptions`),
+          where('status', 'in', ['active', 'on_trial'])
+        );
+      }, [firestore, user]);
+    
+    const { data: subscriptions, isLoading: isSubscriptionLoading } = useCollection<UserSubscription>(subscriptionQuery);
+    const activeSubscription = subscriptions?.[0];
+
+    useEffect(() => {
+        if (!user || !firestore) return;
+        
+        const fetchUsage = async () => {
+            setUsageLoading(true);
+            try {
+                const articlesCollection = collection(firestore, `users/${user.uid}/blogPosts`);
+                const modelsCollection = collection(firestore, `users/${user.uid}/aiModels`);
+                
+                const articlesSnapshot = await getCountFromServer(articlesCollection);
+                const modelsSnapshot = await getCountFromServer(modelsCollection);
+                
+                setUsage({
+                  articles: articlesSnapshot.data().count,
+                  models: modelsSnapshot.data().count
+                });
+
+            } catch (error) {
+                console.error("Error fetching usage data:", error);
+            } finally {
+                setUsageLoading(false);
+            }
+        };
+        fetchUsage();
+    }, [user, firestore]);
+
+    if (usageLoading || isSubscriptionLoading) {
+      return (
+        <Card>
+            <CardHeader>
+              <CardTitle>Your usage</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+               <div>
+                  <Skeleton className="h-4 w-1/4 mb-2" />
+                  <Skeleton className="h-2 w-full" />
+                  <Skeleton className="h-3 w-3/4 mt-2" />
+               </div>
+                <div>
+                  <Skeleton className="h-4 w-1/3 mb-2" />
+                  <Skeleton className="h-2 w-full" />
+                  <Skeleton className="h-3 w-3/4 mt-2" />
+               </div>
+            </CardContent>
+        </Card>
+      )
+    }
+
+    const currentPlan = pricingPlans.find(p => p.variantIdMonthly === activeSubscription?.planId.toString() || p.variantIdYearly === activeSubscription?.planId.toString()) || pricingPlans[0];
+    const articleLimit = currentPlan.features.find(f => f.includes('article'))?.split(' ')[0] || 3;
+    const modelLimit = currentPlan.features.find(f => f.includes('personalized AI model'))?.split(' ')[0] || 0;
+
+    return (
+        <Card>
+            <CardHeader>
+              <CardTitle>Your usage</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+               <div>
+                <p className="text-sm font-semibold">Recordings</p>
+                <Progress value={(usage.articles / Number(articleLimit)) * 100} className="my-2" />
+                <p className="text-sm text-muted-foreground">{usage.articles}/{articleLimit} articles created this month.</p>
+              </div>
+               <div>
+                <p className="text-sm font-semibold">Personalized AI Models</p>
+                <Progress value={(usage.models / Number(modelLimit)) * 100} className="my-2" />
+                <p className="text-sm text-muted-foreground">{usage.models}/{modelLimit} models created.</p>
+                {currentPlan.name === 'Free' && (
+                    <p className="text-xs text-muted-foreground mt-1">Personalized AI models are not available on the free plan.</p>
+                 )}
+                 {activeSubscription?.status === 'on_trial' && currentPlan.name !== 'Free' && (
+                    <p className="text-xs text-muted-foreground mt-1">Personalized AI models are not available on free trial.</p>
+                 )}
+              </div>
+            </CardContent>
+          </Card>
+    );
+}
 
 export default function DashboardPage() {
   const { user } = useUser();
@@ -87,6 +184,17 @@ export default function DashboardPage() {
     return null;
   }
 
+  const { data: subscriptions, isLoading: isSubscriptionLoading } = useCollection<UserSubscription>(
+    useMemoFirebase(() => {
+      if (!user) return null;
+      return query(
+        collection(firestore, `users/${user.uid}/subscriptions`),
+        where('status', 'in', ['active', 'on_trial'])
+      );
+    }, [firestore, user])
+  );
+  const isFreeTrial = subscriptions?.[0]?.status === 'on_trial' || !subscriptions || subscriptions.length === 0;
+
   return (
     <div className="container mx-auto p-0">
       <div className="mb-8">
@@ -96,22 +204,27 @@ export default function DashboardPage() {
         <p className="text-muted-foreground">Here's your personal dashboard.</p>
       </div>
 
-      <Card className="mb-8 border-primary/50 bg-secondary/30">
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-            <div className="flex-1 space-y-1">
-              <div className="flex items-center gap-2">
-                <Gem className="h-5 w-5 text-primary" />
-                <h3 className="font-semibold text-lg">Free trial active</h3>
+      {isFreeTrial && (
+        <Card className="mb-8 border-primary/50 bg-secondary/30">
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+              <div className="flex-1 space-y-1">
+                <div className="flex items-center gap-2">
+                  <Gem className="h-5 w-5 text-primary" />
+                  <h3 className="font-semibold text-lg">
+                    {subscriptions?.[0]?.status === 'on_trial' ? 'Pro Trial Active' : 'Free Plan'}
+                  </h3>
+                </div>
+                <p className="text-muted-foreground">You can create up to 3 articles for free. Enjoy!</p>
               </div>
-              <p className="text-muted-foreground">You can create 3 articles for free! Enjoy!</p>
+              <Button asChild>
+                <Link href="/dashboard/subscription">Subscribe to create more</Link>
+              </Button>
             </div>
-            <Button asChild>
-              <Link href="/dashboard/subscription">Subscribe to create more</Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
+
 
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-3">
         {/* Column 1: Get Started & Usage */}
@@ -136,24 +249,7 @@ export default function DashboardPage() {
               </Button>
             </CardContent>
           </Card>
-           <Card>
-            <CardHeader>
-              <CardTitle>Your usage</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-               <div>
-                <p className="text-sm font-semibold">Recordings</p>
-                <Progress value={33} className="my-2" />
-                <p className="text-sm text-muted-foreground">1/3 recorded articles this month.</p>
-              </div>
-               <div>
-                <p className="text-sm font-semibold">Personalized AI Models</p>
-                <Progress value={0} className="my-2" />
-                <p className="text-sm text-muted-foreground">0/0 in total (0/0 created this month)</p>
-                <p className="text-xs text-muted-foreground mt-1">Personalized AI models are not available on free trial</p>
-              </div>
-            </CardContent>
-          </Card>
+           <UsageCard />
         </div>
 
         {/* Column 2 & 3: Your Articles */}
@@ -173,8 +269,8 @@ export default function DashboardPage() {
                     <ArticleCard key={article.id} article={article} />
                   ))}
                 </div>
-              ) : (
-                 <div className="flex-1 flex flex-col items-center justify-center text-center h-full py-12">
+              ) : !articlesLoading && (
+                 <div className="flex-1 flex flex-col items-center justify-center text-center h-full py-12 border-2 border-dashed rounded-lg">
                   <BookOpen className="h-12 w-12 text-muted-foreground mb-4" />
                   <h3 className="font-semibold text-lg">No articles yet</h3>
                   <p className="text-sm text-muted-foreground">

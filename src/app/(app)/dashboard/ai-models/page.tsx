@@ -361,7 +361,7 @@ function SubscribedView() {
     )
 }
 
-function UpsellView() {
+function UpsellView({ isTrial }: { isTrial: boolean }) {
     return (
         <div>
             <div className="mb-8">
@@ -382,7 +382,7 @@ function UpsellView() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <p className="text-muted-foreground">
-                        You are currently on the free-trial plan. Upgrade to a paid plan to train personalized AI models and generate content that perfectly matches your unique style and tone.
+                        You are currently on the {isTrial ? 'Pro trial' : 'Free'} plan. Upgrade to a paid plan to train personalized AI models and generate content that perfectly matches your unique style and tone.
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         <div className="flex items-start gap-2">
@@ -437,11 +437,13 @@ export default function AiModelsPage() {
         return <p>Loading subscription status...</p>
     }
 
-    const isSubscribed = subscriptions && subscriptions.length > 0;
+    const activeSubscription = subscriptions?.[0];
+    const isPaid = activeSubscription && activeSubscription.status === 'active';
+    const isTrial = activeSubscription && activeSubscription.status === 'on_trial';
 
     return (
         <div className="max-w-6xl mx-auto">
-            {isSubscribed ? <SubscribedView /> : <UpsellView />}
+            {isPaid ? <SubscribedView /> : <UpsellView isTrial={isTrial} />}
         </div>
     );
 }

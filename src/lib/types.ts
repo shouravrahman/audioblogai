@@ -26,4 +26,5 @@ export type UserSubscription = {
     endsAt: string | null;
     trialEndsAt: string | null;
     planId: number;
+    customerPortalUrl: string | null;
 };

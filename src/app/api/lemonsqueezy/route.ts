@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
       endsAt: data.attributes.ends_at,
       trialEndsAt: data.attributes.trial_ends_at,
       planId: data.attributes.variant_id,
+      customerPortalUrl: data.attributes.urls?.customer_portal,
       lastUpdated: serverTimestamp(),
     };
 
