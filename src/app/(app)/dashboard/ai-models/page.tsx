@@ -13,9 +13,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp, query, where } from 'firebase/firestore';
 import { trainAiModelWithWritingSamples } from '@/ai/flows/train-ai-model-with-writing-samples';
-import type { AiModel } from '@/lib/types';
+import type { AiModel, UserSubscription } from '@/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useDropzone } from 'react-dropzone';
 import { blobToBase64 } from '@/lib/utils';
@@ -39,9 +39,6 @@ const modelFormSchema = z.object({
 
 
 type ModelFormValues = z.infer<typeof modelFormSchema>;
-
-// Mock subscription status
-const isSubscribed = true; 
 
 function AiModelCard({ model }: { model: AiModel & { id: string } }) {
     return (
@@ -423,11 +420,28 @@ function UpsellView() {
 }
 
 export default function AiModelsPage() {
-  return (
-    <div className="max-w-6xl mx-auto">
-        {isSubscribed ? <SubscribedView /> : <UpsellView />}
-    </div>
-  );
-}
+    const { user } = useUser();
+    const firestore = useFirestore();
 
-    
+    const subscriptionQuery = useMemoFirebase(() => {
+        if (!user) return null;
+        return query(
+            collection(firestore, `users/${user.uid}/subscriptions`),
+            where('status', 'in', ['active', 'on_trial'])
+        );
+    }, [firestore, user]);
+
+    const { data: subscriptions, isLoading } = useCollection<UserSubscription>(subscriptionQuery);
+
+    if (isLoading) {
+        return <p>Loading subscription status...</p>
+    }
+
+    const isSubscribed = subscriptions && subscriptions.length > 0;
+
+    return (
+        <div className="max-w-6xl mx-auto">
+            {isSubscribed ? <SubscribedView /> : <UpsellView />}
+        </div>
+    );
+}

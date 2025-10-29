@@ -226,7 +226,9 @@ export const pricingPlans = [
             'Unlimited edits',
             'Standard AI model',
             'Export as plain text',
-        ]
+        ],
+        variantIdMonthly: '',
+        variantIdYearly: '',
     },
     {
         name: 'Pro',
@@ -241,7 +243,9 @@ export const pricingPlans = [
             'Advanced AI models',
             '1 personalized AI model',
             'Export as Rich text, HTML, Markdown',
-        ]
+        ],
+        variantIdMonthly: '468987',
+        variantIdYearly: '468988',
     },
     {
         name: 'Ultra',
@@ -256,34 +260,9 @@ export const pricingPlans = [
             '5 personalized AI models',
             'Export as Rich text, HTML, Markdown',
             'Priority support'
-        ]
-    }
-];
-
-export const faqItems = [
-    {
-        question: "What is AudioScribe AI?",
-        answer: "AudioScribe AI is a tool that transforms your spoken words into well-structured blog posts with the help of AI. It gives you a human-touch draft based on your own thoughts, which you can then edit and publish."
-    },
-    {
-        question: "How is AudioScribe AI different from tools like ChatGPT?",
-        answer: "While ChatGPT is a general chat tool, AudioScribe AI is a specialized writing assistant. It offers a rich text editor, multiple export formats, and other features designed for content creation. Your content is generated from your voice, ensuring it's original and authentic."
-    },
-    {
-        question: "Who has ownership of the articles I create?",
-        answer: "You do. All content created with AudioScribe AI is 100% yours for personal or commercial use."
-    },
-    {
-        question: "Is there a free version?",
-        answer: "Yes, we have a Free plan that allows you to create up to 3 articles per month to test out our platform."
-    },
-    {
-        question: "How much does it cost?",
-        answer: "Our paid plans start at just $9 per month. You can save 20% by opting for an annual subscription."
-    },
-    {
-        question: "What formats can I export my articles in?",
-        answer: "You can export your articles in plain text, rich text, HTML, and Markdown, depending on your plan."
+        ],
+        variantIdMonthly: '468989',
+        variantIdYearly: '468990',
     }
 ];
 

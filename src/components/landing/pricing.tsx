@@ -8,9 +8,40 @@ import { pricingPlans } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { Switch } from '../ui/switch';
 import { Label } from '../ui/label';
+import { useUser } from '@/firebase';
+import { createCheckout } from '@/app/actions';
+import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(true);
+  const [isRedirecting, setIsRedirecting] = useState<string | null>(null);
+  const { user } = useUser();
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const handleCheckout = async (planId: string) => {
+    if (!user) {
+      router.push('/login?redirect=/dashboard/subscription');
+      return;
+    }
+    
+    setIsRedirecting(planId);
+    try {
+      await createCheckout({
+        planId,
+        userEmail: user.email!,
+        userId: user.uid,
+      });
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Checkout Error',
+        description: error.message || 'Could not create checkout session.',
+      });
+      setIsRedirecting(null);
+    }
+  }
 
   return (
     <section id="pricing" className="container space-y-8">
@@ -36,7 +67,11 @@ export function Pricing() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {pricingPlans.map((plan) => (
+        {pricingPlans.map((plan) => {
+           const planId = isYearly ? plan.variantIdYearly : plan.variantIdMonthly;
+           const isLoading = isRedirecting === planId;
+          
+          return (
           <Card
             key={plan.name}
             className={cn(
@@ -87,10 +122,16 @@ export function Pricing() {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button className="w-full">{plan.cta}</Button>
+              <Button 
+                className="w-full"
+                onClick={() => handleCheckout(planId)}
+                disabled={plan.name === 'Free' || isLoading}
+              >
+                {isLoading ? 'Redirecting...' : plan.cta}
+              </Button>
             </CardFooter>
           </Card>
-        ))}
+        )})}
       </div>
     </section>
   );

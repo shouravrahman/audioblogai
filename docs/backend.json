@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "User": {
@@ -116,91 +117,64 @@
         "createdAt"
       ]
     },
-    "SubscriptionPlan": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "SubscriptionPlan",
-      "type": "object",
-      "description": "Represents a subscription plan for the application.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the subscription plan."
-        },
-        "name": {
-          "type": "string",
-          "description": "Name of the subscription plan (e.g., Starter, Blogger, Professional)."
-        },
-        "monthlyPrice": {
-          "type": "number",
-          "description": "Monthly price of the subscription plan."
-        },
-        "annualPrice": {
-          "type": "number",
-          "description": "Annual price of the subscription plan."
-        },
-        "articleLimit": {
-          "type": "number",
-          "description": "Number of articles allowed per month."
-        },
-        "recordingLimit": {
-          "type": "number",
-          "description": "Maximum length of recordings allowed (in minutes)."
-        },
-        "aiModelLimit": {
-          "type": "number",
-          "description": "Number of personalized AI models allowed."
-        }
-      },
-      "required": [
-        "id",
-        "name",
-        "monthlyPrice",
-        "annualPrice",
-        "articleLimit",
-        "recordingLimit",
-        "aiModelLimit"
-      ]
-    },
     "UserSubscription": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "UserSubscription",
       "type": "object",
-      "description": "Represents a user's subscription to a specific plan.",
+      "description": "Represents a user's subscription, synced from Lemon Squeezy.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the user subscription."
-        },
         "userId": {
           "type": "string",
-          "description": "Reference to User. (Relationship: User 1:N UserSubscription)"
+          "description": "The user ID in our system."
         },
-        "subscriptionPlanId": {
+        "lemonSqueezyId": {
           "type": "string",
-          "description": "Reference to SubscriptionPlan. (Relationship: SubscriptionPlan 1:N UserSubscription)"
+          "description": "The subscription ID from Lemon Squeezy."
         },
-        "startDate": {
-          "type": "string",
-          "description": "Date when the subscription started.",
-          "format": "date-time"
+        "orderId": {
+          "type": "number",
+          "description": "The order ID from Lemon Squeezy."
         },
-        "endDate": {
+        "name": {
           "type": "string",
-          "description": "Date when the subscription ends.",
-          "format": "date-time"
+          "description": "The name of the subscribed product."
         },
-        "paymentMethod": {
+        "email": {
           "type": "string",
-          "description": "Details on payment, for example the payment processor id. This would be a string since payment details are handled by the payment processor"
+          "description": "The email associated with the subscription."
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the subscription (e.g., active, cancelled, expired, on_trial)."
+        },
+        "renewsAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the subscription will renew."
+        },
+        "endsAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the subscription ends."
+        },
+        "trialEndsAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the trial ends."
+        },
+        "planId": {
+            "type": "number",
+            "description": "The variant ID of the plan from Lemon Squeezy."
         }
       },
       "required": [
-        "id",
         "userId",
-        "subscriptionPlanId",
-        "startDate",
-        "endDate",
-        "paymentMethod"
+        "lemonSqueezyId",
+        "orderId",
+        "name",
+        "email",
+        "status",
+        "planId"
       ]
     },
     "UserPreferences": {
@@ -318,37 +292,21 @@
         }
       },
       {
-        "path": "/subscriptionPlans/{subscriptionPlanId}",
-        "definition": {
-          "entityName": "SubscriptionPlan",
-          "schema": {
-            "$ref": "#/backend/entities/SubscriptionPlan"
-          },
-          "description": "Stores subscription plan details. Accessible for reading by all users, but writable only by authorized admins.",
-          "params": [
-            {
-              "name": "subscriptionPlanId",
-              "description": "The unique identifier for the subscription plan."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/users/{userId}/userSubscriptions/{userSubscriptionId}",
+        "path": "/users/{userId}/subscriptions/{subscriptionId}",
         "definition": {
           "entityName": "UserSubscription",
           "schema": {
             "$ref": "#/backend/entities/UserSubscription"
           },
-          "description": "Stores user subscription information. Path-based ownership ensures that only the user can access their own subscription details.",
+          "description": "Stores user subscription information, synced from Lemon Squeezy via webhooks. Path-based ownership ensures only the user can see their subscription, but it is only writable by the server (webhook).",
           "params": [
             {
               "name": "userId",
               "description": "The unique identifier for the user."
             },
             {
-              "name": "userSubscriptionId",
-              "description": "The unique identifier for the user subscription."
+              "name": "subscriptionId",
+              "description": "The unique identifier for the subscription, typically from Lemon Squeezy."
             }
           ]
         }
@@ -368,24 +326,8 @@
             }
           ]
         }
-      },
-      {
-        "path": "/roles_admin/{userId}",
-        "definition": {
-          "entityName": "AdminRole",
-          "schema": {
-            "$ref": "#/backend/entities/User"
-          },
-          "description": "Documents in this collection denote admin privileges. Existence of a document for a user ID grants admin rights.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier for the user."
-            }
-          ]
-        }
       }
     ],
-    "reasoning": "The Firestore data structure is designed to ensure authorization independence, clarity, and scalability for the 'Audio Blog AI' application.  It leverages path-based ownership for user-specific data (BlogPosts, AiModels, UserSubscriptions, UserPreferences) and structural segregation to maintain homogeneous security postures within collections.\n\n**Authorization Independence:**  The structure avoids `get()` calls in security rules by using path-based ownership. For example, BlogPosts and AiModels are stored under `/users/{userId}`, making authorization dependent solely on the authenticated user's ID (`request.auth.uid`) matching the `userId` in the path. This denormalization of ownership eliminates hierarchical authorization dependencies and enables atomic operations.\n\n**QAPs (Rules are not Filters):** The path-based ownership (`/users/{userId}/blogPosts/{blogPostId}`) inherently supports secure `list` operations.  Security rules can efficiently check if `request.auth.uid == userId` to allow listing only the current user's blog posts. Global roles are managed in the `/roles_admin/{uid}` collection, enabling simple existence-based checks for admin privileges.\n\n**Structural Segregation:**  The design segregates data with different access requirements. User-specific data (BlogPosts, AiModels, UserSubscriptions, UserPreferences) are stored under user-specific paths, ensuring that only the authenticated user has access.  SubscriptionPlans are stored in a separate `/subscriptionPlans` collection, accessible for reading by all users but only writable by authorized admins.\n\n**Invariants:** Timestamps (`createdAt`, `updatedAt`) within documents can be enforced using security rules to maintain data integrity. User ownership is enforced by the path structure and the `userId` field within the documents."
+    "reasoning": "The Firestore data structure is designed to ensure authorization independence, clarity, and scalability for the 'Audio Blog AI' application.  It leverages path-based ownership for user-specific data (BlogPosts, AiModels, UserSubscriptions, UserPreferences) and structural segregation to maintain homogeneous security postures within collections.\n\n**Authorization Independence:**  The structure avoids `get()` calls in security rules by using path-based ownership. For example, BlogPosts and AiModels are stored under `/users/{userId}`, making authorization dependent solely on the authenticated user's ID (`request.auth.uid`) matching the `userId` in the path. This denormalization of ownership eliminates hierarchical authorization dependencies and enables atomic operations.\n\n**QAPs (Rules are not Filters):** The path-based ownership (`/users/{userId}/blogPosts/{blogPostId}`) inherently supports secure `list` operations.  Security rules can efficiently check if `request.auth.uid == userId` to allow listing only the current user's blog posts. Global roles are managed in the `/roles_admin/{uid}` collection, enabling simple existence-based checks for admin privileges.\n\n**Structural Segregation:**  The design segregates data with different access requirements. User-specific data (BlogPosts, AiModels, UserSubscriptions, UserPreferences) are stored under user-specific paths, ensuring that only the authenticated user has access.  SubscriptionPlans are stored in a separate `/subscriptionPlans` collection, accessible for reading by all users but only writable by authorized admins."
   }
 }

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useUser } from '@/firebase';
+import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import {
   Card,
   CardContent,
@@ -14,13 +14,43 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { collection, query, where } from 'firebase/firestore';
+import type { UserSubscription } from '@/lib/types';
+import { Badge } from '@/components/ui/badge';
 
 export default function AccountPage() {
   const { user } = useUser();
+  const firestore = useFirestore();
+
+  const subscriptionQuery = useMemoFirebase(() => {
+    if (!user) return null;
+    return query(
+      collection(firestore, `users/${user.uid}/subscriptions`),
+      where('status', 'in', ['active', 'on_trial'])
+    );
+  }, [firestore, user]);
+
+  const { data: subscriptions, isLoading: isSubscriptionLoading } = useCollection<UserSubscription>(subscriptionQuery);
+  const activeSubscription = subscriptions?.[0];
 
   if (!user) {
     return null;
   }
+
+  const getPlanName = () => {
+    if (isSubscriptionLoading) return 'Loading...';
+    if (activeSubscription) {
+      return (
+        <>
+          {activeSubscription.name} plan{' '}
+          <Badge variant={activeSubscription.status === 'on_trial' ? 'secondary' : 'default'} className="ml-2">
+            {activeSubscription.status.replace('_', ' ')}
+          </Badge>
+        </>
+      );
+    }
+    return 'Free plan';
+  };
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -60,8 +90,8 @@ export default function AccountPage() {
               <div>
                 <h3 className="text-xl font-semibold mb-2">Subscription</h3>
                 <p className="text-muted-foreground mb-4">
-                  You are currently subscribed to the{' '}
-                  <span className="font-semibold text-primary">free-trial plan.</span>
+                  You are currently on the{' '}
+                  <span className="font-semibold text-primary">{getPlanName()}</span>
                 </p>
                 <div className="flex gap-2">
                   <Button asChild>

@@ -14,3 +14,16 @@ export type AiModel = {
     trainingData: string;
     createdAt: string;
 };
+
+export type UserSubscription = {
+    userId: string;
+    lemonSqueezyId: string;
+    orderId: number;
+    name: string;
+    email: string;
+    status: string;
+    renewsAt: string | null;
+    endsAt: string | null;
+    trialEndsAt: string | null;
+    planId: number;
+};
