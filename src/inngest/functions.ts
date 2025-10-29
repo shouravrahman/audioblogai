@@ -4,6 +4,7 @@ import { generateStructuredBlogPost } from '@/ai/flows/generate-structured-blog-
 import { getFirebaseAdmin } from '@/app/firebase-admin';
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import type { AiModel } from '@/lib/types';
+import { generateBlogCoverImage } from '@/ai/flows/generate-blog-cover-image';
 
 
 export const generateArticle = inngest.createFunction(
@@ -43,17 +44,28 @@ export const generateArticle = inngest.createFunction(
           return { preferences, styleGuide };
       });
 
-      const structuredPost = await step.run('generate-blog-post', async () => {
-        const blogPostResult = await generateStructuredBlogPost({
-          transcribedText,
-          language,
-          preferences,
-          styleGuide,
-          blogType,
-          wordCount,
-        });
-        return blogPostResult.structuredBlogPost;
+      const [structuredPost, imageUrl] = await step.run('generate-content-and-image', async () => {
+        // Run text and image generation in parallel
+        const [blogPostResult, imageResult] = await Promise.all([
+          generateStructuredBlogPost({
+            transcribedText,
+            language,
+            preferences,
+            styleGuide,
+            blogType,
+            wordCount,
+          }),
+          generateBlogCoverImage({
+            articleContent: transcribedText, // Use transcription for image prompt context
+          })
+        ]);
+        
+        return [
+          blogPostResult.structuredBlogPost,
+          imageResult.coverImageUrl
+        ];
       });
+
 
       const lines = structuredPost.split('\n');
       const title = lines[0].replace(/^#\s*/, '').trim() || 'Untitled Article';
@@ -63,6 +75,7 @@ export const generateArticle = inngest.createFunction(
         await updateDoc(articleRef, {
           title,
           content,
+          coverImageUrl: imageUrl,
           status: 'completed',
           updatedAt: serverTimestamp(),
         });
@@ -85,5 +98,3 @@ export const generateArticle = inngest.createFunction(
     }
   }
 );
-
-    

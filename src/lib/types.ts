@@ -6,6 +6,7 @@ export type BlogPost = {
     language: string;
     createdAt: string;
     updatedAt: string;
+    coverImageUrl?: string;
 };
 
 export type AiModel = {
@@ -29,5 +30,3 @@ export type UserSubscription = {
     planId: number;
     customerPortalUrl: string | null;
 };
-
-    

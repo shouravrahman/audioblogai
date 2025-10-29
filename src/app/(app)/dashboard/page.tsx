@@ -11,14 +11,16 @@ import {
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { Wand2, Upload, Mic, BookOpen, PlusCircle, FileText, Loader2, Gem, AlertTriangle } from 'lucide-react';
+import { Upload, Mic, BookOpen, Loader2, Gem, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { useFirestore } from '@/firebase';
 import { collection, query, orderBy, where, getCountFromServer } from 'firebase/firestore';
-import type { BlogPost, UserSubscription, AiModel } from '@/lib/types';
+import type { BlogPost, UserSubscription } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { pricingPlans } from '@/lib/data';
 import { Skeleton } from '@/components/ui/skeleton';
+import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 function ArticleCard({ article }: { article: BlogPost & { id: string } }) {
   const router = useRouter();
@@ -26,47 +28,58 @@ function ArticleCard({ article }: { article: BlogPost & { id: string } }) {
   const handleClick = () => {
     router.push(`/dashboard/articles/${article.id}`);
   };
+  
+  const articlePlaceholder = PlaceHolderImages.find(p => p.id === 'demo-video-thumbnail');
 
-  const getStatusIcon = () => {
+  const getStatusContent = () => {
     switch (article.status) {
       case 'processing':
-        return <Loader2 className="h-5 w-5 animate-spin" />;
+        return (
+          <div className="flex flex-col items-center justify-center h-full text-center p-4">
+            <Loader2 className="h-8 w-8 animate-spin mb-2" />
+            <p className="text-sm font-semibold">Generating your article...</p>
+          </div>
+        );
       case 'failed':
-        return <AlertTriangle className="h-5 w-5 text-destructive" />;
+        return (
+           <div className="flex flex-col items-center justify-center h-full text-center p-4">
+            <AlertTriangle className="h-8 w-8 text-destructive mb-2" />
+            <p className="text-sm font-semibold text-destructive">Generation Failed</p>
+            <p className="text-xs text-destructive/80">Click to see details.</p>
+          </div>
+        );
       case 'completed':
       default:
-        return <FileText className="h-5 w-5" />;
+        return (
+          <Image 
+            src={article.coverImageUrl || articlePlaceholder?.imageUrl || ''} 
+            alt={article.title} 
+            fill 
+            className="object-cover transition-transform group-hover:scale-105"
+            data-ai-hint="blog post cover"
+          />
+        );
     }
   }
 
   return (
     <Card 
-      className="flex flex-col cursor-pointer hover:border-primary transition-colors"
+      className="flex flex-col cursor-pointer hover:border-primary transition-colors group overflow-hidden"
       onClick={handleClick}
     >
-      <CardHeader>
-        <CardTitle className="text-lg flex items-center gap-2">
-          {getStatusIcon()}
-          <span className="truncate">{article.title || 'Untitled Article'}</span>
+      <CardHeader className="relative aspect-video p-0">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10" />
+        {getStatusContent()}
+         <CardTitle className="absolute bottom-0 left-0 p-4 text-lg text-white z-20">
+          <span className="line-clamp-2">{article.title || 'Untitled Article'}</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 space-y-2">
-        {article.status === 'processing' ? (
-          <>
-            <p className="text-sm text-muted-foreground">Generating your article...</p>
-            <Progress value={50} className="w-full" />
-          </>
-        ) : article.status === 'failed' ? (
-            <p className="text-sm text-destructive">
-                Article generation failed. Click to see details.
-            </p>
-        ) : (
+      <CardContent className="p-4 flex-1">
           <p className="text-sm text-muted-foreground line-clamp-3">
-            {article.content
-              ? article.content.substring(0, 100) + '...'
-              : 'No content yet.'}
+            {article.status === 'completed' 
+              ? (article.content ? new DOMParser().parseFromString(article.content, "text/html").body.textContent?.substring(0, 120) + '...' : 'No content yet.')
+              : 'Content is being generated...'}
           </p>
-        )}
       </CardContent>
     </Card>
   );
@@ -184,7 +197,7 @@ export default function DashboardPage() {
     return null;
   }
 
-  const { data: subscriptions, isLoading: isSubscriptionLoading } = useCollection<UserSubscription>(
+  const { data: subscriptions } = useCollection<UserSubscription>(
     useMemoFirebase(() => {
       if (!user) return null;
       return query(
@@ -193,7 +206,8 @@ export default function DashboardPage() {
       );
     }, [firestore, user])
   );
-  const isFreeTrial = subscriptions?.[0]?.status === 'on_trial' || !subscriptions || subscriptions.length === 0;
+  const isFreeTier = !subscriptions || subscriptions.length === 0 || subscriptions[0].name === 'Free';
+
 
   return (
     <div className="container mx-auto p-0">
@@ -204,7 +218,7 @@ export default function DashboardPage() {
         <p className="text-muted-foreground">Here's your personal dashboard.</p>
       </div>
 
-      {isFreeTrial && (
+      {isFreeTier && (
         <Card className="mb-8 border-primary/50 bg-secondary/30">
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
@@ -212,13 +226,13 @@ export default function DashboardPage() {
                 <div className="flex items-center gap-2">
                   <Gem className="h-5 w-5 text-primary" />
                   <h3 className="font-semibold text-lg">
-                    {subscriptions?.[0]?.status === 'on_trial' ? 'Pro Trial Active' : 'Free Plan'}
+                    {subscriptions?.[0]?.status === 'on_trial' ? 'Pro Trial Active' : 'You are on the Free Plan'}
                   </h3>
                 </div>
-                <p className="text-muted-foreground">You can create up to 3 articles for free. Enjoy!</p>
+                <p className="text-muted-foreground">You can create up to 3 articles for free. Upgrade to unlock more features and higher limits.</p>
               </div>
               <Button asChild>
-                <Link href="/dashboard/subscription">Subscribe to create more</Link>
+                <Link href="/dashboard/subscription">Subscribe to Pro</Link>
               </Button>
             </div>
           </CardContent>

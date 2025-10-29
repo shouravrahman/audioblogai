@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useRef, useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import Image from 'next/image';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -191,6 +192,7 @@ export default function ArticlePage() {
     return (
       <div className="max-w-4xl mx-auto space-y-8">
         <Skeleton className="h-12 w-3/4" />
+         <Skeleton className="h-64 w-full rounded-xl" />
         <div className="space-y-4">
           <Skeleton className="h-6 w-full" />
           <Skeleton className="h-6 w-full" />
@@ -225,7 +227,7 @@ export default function ArticlePage() {
                         <AlertDescription>
                             <p className="mb-4">The AI generation process failed. This can happen for a variety of reasons, including issues with the uploaded audio or a problem with the AI service.</p>
                              <p className="text-xs bg-black/20 p-2 rounded-md overflow-x-auto">
-                                The AI generation process failed. This can happen due to an invalid API key, network issues, or problems with the underlying AI service. Please verify your setup and try again.
+                                {article.content}
                             </p>
                         </AlertDescription>
                     </Alert>
@@ -252,7 +254,7 @@ export default function ArticlePage() {
                <Card>
                 <CardContent className='p-6'>
                     <div className="flex items-center justify-center space-x-2">
-                        <Info className="h-5 w-5 text-primary" />
+                        <Loader2 className="h-5 w-5 text-primary animate-spin" />
                         <p>Please wait a few moments. You can safely leave this page and come back later.</p>
                     </div>
                 </CardContent>
@@ -274,7 +276,7 @@ export default function ArticlePage() {
          </div>
          <div className="flex gap-2">
             <Button onClick={handleSave} disabled={isSaving}>
-              <Save className="mr-2 h-4 w-4" />
+              {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Save className="mr-2 h-4 w-4" />}
               {isSaving ? 'Saving...' : 'Save Changes'}
             </Button>
              <AlertDialog>
@@ -325,13 +327,25 @@ export default function ArticlePage() {
             </AlertDialog>
          </div>
       </div>
+      
+      {article.coverImageUrl && (
+        <div className="relative aspect-video w-full rounded-xl overflow-hidden mb-8 shadow-lg">
+            <Image 
+                src={article.coverImageUrl}
+                alt={article.title}
+                fill
+                className="object-cover"
+                data-ai-hint="blog post cover"
+            />
+        </div>
+      )}
 
-      <article className="prose prose-invert max-w-none">
+      <article className="prose dark:prose-invert max-w-none">
         <div
             ref={contentRef}
             contentEditable={true}
             suppressContentEditableWarning={true}
-            className="p-4 rounded-lg bg-card focus:outline-none focus:ring-2 focus:ring-primary"
+            className="p-4 rounded-lg bg-card focus:outline-none focus:ring-2 focus:ring-primary min-h-[200px]"
             dangerouslySetInnerHTML={{ __html: article.content.replace(/\n/g, '<br />') }} 
         />
       </article>

@@ -1,0 +1,346 @@
+
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the user account was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "createdAt"
+      ]
+    },
+    "BlogPost": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "BlogPost",
+      "type": "object",
+      "description": "Represents a blog post created by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the blog post."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N BlogPost)"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the blog post."
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the blog post (e.g., HTML, Markdown)."
+        },
+        "coverImageUrl": {
+          "type": "string",
+          "description": "URL of the AI-generated cover image for the blog post."
+        },
+        "status": {
+          "type": "string",
+          "description": "The processing status of the blog post.",
+          "enum": ["processing", "completed", "failed"]
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the blog post."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the blog post was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the blog post was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "title",
+        "content",
+        "status",
+        "language",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AiModel": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AiModel",
+      "type": "object",
+      "description": "Represents an AI model trained by a user for personalized writing style.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the AI model."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N AiModel)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the AI model."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the AI model."
+        },
+        "trainingData": {
+          "type": "string",
+          "description": "Reference (e.g., URL) to training data used for the model.  Could be a pointer to a file system or cloud storage location."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the AI model was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "name",
+        "description",
+        "trainingData",
+        "createdAt"
+      ]
+    },
+    "UserSubscription": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserSubscription",
+      "type": "object",
+      "description": "Represents a user's subscription, synced from Lemon Squeezy.",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The user ID in our system."
+        },
+        "lemonSqueezyId": {
+          "type": "string",
+          "description": "The subscription ID from Lemon Squeezy."
+        },
+        "orderId": {
+          "type": "number",
+          "description": "The order ID from Lemon Squeezy."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the subscribed product."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email associated with the subscription."
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the subscription (e.g., active, cancelled, expired, on_trial)."
+        },
+        "renewsAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the subscription will renew."
+        },
+        "endsAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the subscription ends."
+        },
+        "trialEndsAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the trial ends."
+        },
+        "planId": {
+            "type": "number",
+            "description": "The variant ID of the plan from Lemon Squeezy."
+        }
+      },
+      "required": [
+        "userId",
+        "lemonSqueezyId",
+        "orderId",
+        "name",
+        "email",
+        "status",
+        "planId"
+      ]
+    },
+    "UserPreferences": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserPreferences",
+      "type": "object",
+      "description": "Stores user-specific writing preferences for AI generation.",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The unique identifier for the user."
+        },
+        "language": {
+          "type": "string",
+          "description": "The user's default language for transcription and generation."
+        },
+        "titleTone": {
+          "type": "string",
+          "description": "The desired tone for article titles."
+        },
+        "specialChars": {
+          "type": "string",
+          "description": "Preference for using special characters in headings."
+        },
+        "headingCasing": {
+          "type": "string",
+          "description": "The casing style for headings."
+        },
+        "headingFrequency": {
+          "type": "string",
+          "description": "How often headings should appear."
+        },
+        "titleEmoji": {
+          "type": "string",
+          "description": "Preference for using emojis in titles."
+        },
+        "bodyEmoji": {
+          "type": "string",
+          "description": "Preference for using emojis in the article body."
+        },
+        "postBodyTone": {
+          "type": "string",
+          "description": "The desired tone for the article body."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp for when the preferences were last updated."
+        }
+      },
+      "required": [
+        "userId",
+        "updatedAt"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profile data.  Top-level collection to allow easy querying of all users (e.g., for admin purposes).",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/blogPosts/{blogPostId}",
+        "definition": {
+          "entityName": "BlogPost",
+          "schema": {
+            "$ref": "#/backend/entities/BlogPost"
+          },
+          "description": "Stores blog posts created by a user. Path-based ownership ensures that only the user can access their own blog posts.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "blogPostId",
+              "description": "The unique identifier for the blog post."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/aiModels/{aiModelId}",
+        "definition": {
+          "entityName": "AiModel",
+          "schema": {
+            "$ref": "#/backend/entities/AiModel"
+          },
+          "description": "Stores AI models trained by a user. Path-based ownership ensures that only the user can access their own AI models.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "aiModelId",
+              "description": "The unique identifier for the AI model."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/subscriptions/{subscriptionId}",
+        "definition": {
+          "entityName": "UserSubscription",
+          "schema": {
+            "$ref": "#/backend/entities/UserSubscription"
+          },
+          "description": "Stores user subscription information, synced from Lemon Squeezy via webhooks. Path-based ownership ensures only the user can see their subscription, but it is only writable by the server (webhook).",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "subscriptionId",
+              "description": "The unique identifier for the subscription, typically from Lemon Squeezy."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/userPreferences/{userId}",
+        "definition": {
+          "entityName": "UserPreferences",
+          "schema": {
+            "$ref": "#/backend/entities/UserPreferences"
+          },
+          "description": "Stores user-specific writing preferences. Path-based ownership ensures only the user can read/write their own preferences.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user, matching the document ID."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to ensure authorization independence, clarity, and scalability for the 'AudioScribe' application.  It leverages path-based ownership for user-specific data (BlogPosts, AiModels, UserSubscriptions, UserPreferences) and structural segregation to maintain homogeneous security postures within collections.\n\n**Authorization Independence:**  The structure avoids `get()` calls in security rules by using path-based ownership. For example, BlogPosts and AiModels are stored under `/users/{userId}`, making authorization dependent solely on the authenticated user's ID (`request.auth.uid`) matching the `userId` in the path. This denormalization of ownership eliminates hierarchical authorization dependencies and enables atomic operations.\n\n**QAPs (Rules are not Filters):** The path-based ownership (`/users/{userId}/blogPosts/{blogPostId}`) inherently supports secure `list` operations.  Security rules can efficiently check if `request.auth.uid == userId` to allow listing only the current user's blog posts. Global roles are managed in the `/roles_admin/{uid}` collection, enabling simple existence-based checks for admin privileges.\n\n**Structural Segregation:**  The design segregates data with different access requirements. User-specific data (BlogPosts, AiModels, UserSubscriptions, UserPreferences) are stored under user-specific paths, ensuring that only the authenticated user has access.  SubscriptionPlans are stored in a separate `/subscriptionPlans` collection, accessible for reading by all users but only writable by authorized admins."
+  }
+}
