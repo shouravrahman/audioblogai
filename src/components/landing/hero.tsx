@@ -13,8 +13,8 @@ export function Hero() {
   return (
     <section className="container py-12 md:py-20 text-center">
       <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-        The End of Writer's Block <br />
-        is a Conversation Away.
+        Go from Raw Ideas to<br />
+        Polished Articles in Minutes.
       </h1>
       <p className="mt-6 max-w-[700px] mx-auto text-lg text-muted-foreground md:text-xl">
         Stop staring at a blank page. Just talk about your ideas, and let our AI transform your voice into a well-structured, ready-to-publish blog post in minutes.

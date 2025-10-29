@@ -13,21 +13,7 @@ export function Logo({ className }: { className?: string }) {
         className="text-primary"
       >
         <path
-          d="M12 18V21"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M5 21H19"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M12 3C9.23858 3 7 5.23858 7 8V14C7 16.7614 9.23858 19 12 19C14.7614 19 17 16.7614 17 14V8C17 5.23858 14.7614 3 12 3Z"
+          d="M12 18.5V21M5 21H19M12 3C9.23858 3 7 5.23858 7 8V14C7 16.7614 9.23858 19 12 19C14.7614 19 17 16.7614 17 14V8C17 5.23858 14.7614 3 12 3Z"
           stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"

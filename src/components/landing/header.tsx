@@ -36,45 +36,44 @@ export function Header() {
           </nav>
         </div>
 
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <div className="md:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle Menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left">
-                <div className="p-4">
-                  <SheetClose asChild>
-                    <Link href="/" className="mb-8">
-                      <Logo />
-                    </Link>
-                  </SheetClose>
-                  <nav className="flex flex-col space-y-4">
-                    {navLinks.map((link) => (
-                      <SheetClose asChild key={link.href}>
-                        <Link
-                          href={link.href}
-                          className="text-lg font-medium"
-                        >
-                          {link.label}
-                        </Link>
-                      </SheetClose>
-                    ))}
-                  </nav>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-
-          <div className="w-full flex-1 md:w-auto md:flex-none">
-            <div className="flex justify-center md:hidden">
+        <div className="flex flex-1 items-center justify-between md:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle Menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+              <div className="p-4">
+                <SheetClose asChild>
+                  <Link href="/" className="mb-8 block">
+                    <Logo />
+                  </Link>
+                </SheetClose>
+                <nav className="flex flex-col space-y-4">
+                  {navLinks.map((link) => (
+                    <SheetClose asChild key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-lg font-medium"
+                      >
+                        {link.label}
+                      </Link>
+                    </SheetClose>
+                  ))}
+                </nav>
+              </div>
+            </SheetContent>
+          </Sheet>
+          <div className="flex justify-center">
+            <Link href="/" aria-label="Home">
                 <Logo />
-            </div>
+            </Link>
           </div>
-
+        </div>
+        
+        <div className="flex flex-1 justify-end">
           <nav className="flex items-center gap-2">
             {isUserLoading ? (
               <Button disabled>Loading...</Button>
