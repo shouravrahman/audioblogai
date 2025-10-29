@@ -1,8 +1,8 @@
 import { inngest } from './client';
 import { transcribeAudioToText } from '@/ai/flows/transcribe-audio-to-text';
 import { generateStructuredBlogPost } from '@/ai/flows/generate-structured-blog-post';
-import { initializeFirebase } from '@/firebase';
-import { doc, getDoc, updateDoc, serverTimestamp, collection, getDocs } from 'firebase/firestore';
+import { getFirebaseAdmin } from '@/app/firebase-admin';
+import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import type { AiModel } from '@/lib/types';
 
 
@@ -10,14 +10,14 @@ export const generateArticle = inngest.createFunction(
   { id: 'generate-article-from-audio' },
   { event: 'app/article.generate' },
   async ({ event, step }) => {
-    const { firestore } = initializeFirebase();
-    const { articleId, userId, audioDataUri, selectedModel } = event.data;
+    const { firestore } = getFirebaseAdmin();
+    const { articleId, userId, audioDataUri, selectedModel, language } = event.data;
 
     const articleRef = doc(firestore, `users/${userId}/blogPosts`, articleId);
 
     try {
       const transcribedText = await step.run('transcribe-audio', async () => {
-        const transcriptionResult = await transcribeAudioToText({ audioDataUri });
+        const transcriptionResult = await transcribeAudioToText({ audioDataUri, language });
         if (!transcriptionResult.transcription) {
           throw new Error('Transcription failed or returned empty.');
         }
@@ -46,6 +46,7 @@ export const generateArticle = inngest.createFunction(
       const structuredPost = await step.run('generate-blog-post', async () => {
         const blogPostResult = await generateStructuredBlogPost({
           transcribedText,
+          language,
           preferences,
           styleGuide,
         });
@@ -82,3 +83,5 @@ export const generateArticle = inngest.createFunction(
     }
   }
 );
+
+    

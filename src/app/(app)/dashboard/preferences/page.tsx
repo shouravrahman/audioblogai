@@ -26,8 +26,10 @@ import Link from 'next/link';
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { useEffect } from 'react';
+import { languages } from '@/lib/data';
 
 const preferencesFormSchema = z.object({
+  language: z.string().min(1, 'Please select a default language.'),
   titleTone: z.string().min(1, 'Please select a title tone.'),
   specialChars: z.string().min(1, 'Please select a preference.'),
   headingCasing: z.string().min(1, 'Please select a casing style.'),
@@ -55,6 +57,7 @@ export default function PreferencesPage() {
   const form = useForm<PreferencesFormValues>({
     resolver: zodResolver(preferencesFormSchema),
     defaultValues: {
+      language: 'en-US',
       titleTone: '',
       specialChars: '',
       headingCasing: '',
@@ -119,6 +122,40 @@ export default function PreferencesPage() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <Card>
             <CardContent className="p-6 space-y-6">
+              {/* Language Section */}
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Language</h3>
+                 <FormField
+                  control={form.control}
+                  name="language"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Default Language</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        disabled={preferencesLoading}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a language" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {languages.map(lang => (
+                             <SelectItem key={lang.code} value={lang.code}>{lang.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                       <p className="text-xs text-muted-foreground">
+                          This will be your default language for transcription and generation.
+                        </p>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               {/* Writing Style Section */}
               <div>
                 <h3 className="text-xl font-semibold mb-4">Writing Style</h3>
@@ -354,3 +391,5 @@ export default function PreferencesPage() {
     </div>
   );
 }
+
+    

@@ -222,3 +222,18 @@ export const faqItems = [
         answer: "Yes, you can cancel your subscription at any time through the billing management portal. You will retain access to your plan's features until the end of the current billing cycle."
     }
 ];
+
+export const languages = [
+  { name: 'English (US)', code: 'en-US' },
+  { name: 'Spanish (Spain)', code: 'es-ES' },
+  { name: 'French (France)', code: 'fr-FR' },
+  { name: 'German (Germany)', code: 'de-DE' },
+  { name: 'Italian (Italy)', code: 'it-IT' },
+  { name: 'Portuguese (Portugal)', code: 'pt-PT' },
+  { name: 'Dutch (Netherlands)', code: 'nl-NL' },
+  { name: 'Russian (Russia)', code: 'ru-RU' },
+  { name: 'Japanese (Japan)', code: 'ja-JP' },
+  { name: 'Chinese (Mandarin, Simplified)', code: 'zh-CN' },
+];
+
+    

@@ -55,6 +55,10 @@
           "description": "The processing status of the blog post.",
           "enum": ["processing", "completed", "failed"]
         },
+        "language": {
+          "type": "string",
+          "description": "The language of the blog post."
+        },
         "createdAt": {
           "type": "string",
           "description": "Timestamp indicating when the blog post was created.",
@@ -72,6 +76,7 @@
         "title",
         "content",
         "status",
+        "language",
         "createdAt",
         "updatedAt"
       ]
@@ -186,6 +191,10 @@
         "userId": {
           "type": "string",
           "description": "The unique identifier for the user."
+        },
+        "language": {
+          "type": "string",
+          "description": "The user's default language for transcription and generation."
         },
         "titleTone": {
           "type": "string",
@@ -331,3 +340,5 @@
     "reasoning": "The Firestore data structure is designed to ensure authorization independence, clarity, and scalability for the 'Audio Blog AI' application.  It leverages path-based ownership for user-specific data (BlogPosts, AiModels, UserSubscriptions, UserPreferences) and structural segregation to maintain homogeneous security postures within collections.\n\n**Authorization Independence:**  The structure avoids `get()` calls in security rules by using path-based ownership. For example, BlogPosts and AiModels are stored under `/users/{userId}`, making authorization dependent solely on the authenticated user's ID (`request.auth.uid`) matching the `userId` in the path. This denormalization of ownership eliminates hierarchical authorization dependencies and enables atomic operations.\n\n**QAPs (Rules are not Filters):** The path-based ownership (`/users/{userId}/blogPosts/{blogPostId}`) inherently supports secure `list` operations.  Security rules can efficiently check if `request.auth.uid == userId` to allow listing only the current user's blog posts. Global roles are managed in the `/roles_admin/{uid}` collection, enabling simple existence-based checks for admin privileges.\n\n**Structural Segregation:**  The design segregates data with different access requirements. User-specific data (BlogPosts, AiModels, UserSubscriptions, UserPreferences) are stored under user-specific paths, ensuring that only the authenticated user has access.  SubscriptionPlans are stored in a separate `/subscriptionPlans` collection, accessible for reading by all users but only writable by authorized admins."
   }
 }
+
+    

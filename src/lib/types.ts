@@ -3,6 +3,7 @@ export type BlogPost = {
     title: string;
     content: string;
     status: 'processing' | 'completed' | 'failed';
+    language: string;
     createdAt: string;
     updatedAt: string;
 };
@@ -28,3 +29,5 @@ export type UserSubscription = {
     planId: number;
     customerPortalUrl: string | null;
 };
+
+    

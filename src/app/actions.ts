@@ -12,10 +12,11 @@ const createArticleSchema = z.object({
   userId: z.string(),
   audioDataUri: z.string(),
   selectedModel: z.string(),
+  language: z.string(),
 });
 
 export async function createArticle(input: z.infer<typeof createArticleSchema>) {
-  const { articleId, userId, audioDataUri, selectedModel } = createArticleSchema.parse(input);
+  const { articleId, userId, audioDataUri, selectedModel, language } = createArticleSchema.parse(input);
 
   await inngest.send({
     name: 'app/article.generate',
@@ -24,6 +25,7 @@ export async function createArticle(input: z.infer<typeof createArticleSchema>) 
       userId,
       audioDataUri,
       selectedModel,
+      language,
     },
     user: {
         id: userId,
@@ -71,3 +73,5 @@ export async function createCheckout(input: z.infer<typeof createCheckoutSchema>
   
   redirect(checkout.data.data.attributes.url);
 }
+
+    

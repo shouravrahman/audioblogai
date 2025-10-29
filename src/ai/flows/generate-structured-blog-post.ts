@@ -26,6 +26,7 @@ const GenerateStructuredBlogPostInputSchema = z.object({
   transcribedText: z
     .string()
     .describe('The transcribed text to be transformed into a structured blog post.'),
+  language: z.string().optional().describe('The language of the content in BCP-47 format (e.g., "en-US", "es-ES").'),
   preferences: UserPreferencesSchema.describe("The user's writing style preferences."),
   styleGuide: z.string().optional().describe('An optional, detailed style guide for the AI to follow, derived from a custom model.'),
 });
@@ -50,11 +51,13 @@ const prompt = ai.definePrompt({
   name: 'generateStructuredBlogPostPrompt',
   input: {schema: GenerateStructuredBlogPostInputSchema},
   output: {schema: GenerateStructuredBlogPostOutputSchema},
-  prompt: `You are an expert copywriter and editor. Your task is to transform the provided raw audio transcription into a well-written, engaging, and publish-ready blog post.
+  prompt: `You are an expert copywriter and editor. Your task is to transform the provided raw audio transcription into a well-written, engaging, and publish-ready blog post in the specified language.
+
+**Language for Output:** {{language}}
 
 Your process should be as follows:
 1.  **Humanize the Content**: Convert the conversational, spoken-word transcription into clean, readable, and engaging written content. Fix grammatical errors, remove filler words (like 'um', 'ah', 'you know'), and restructure sentences for clarity and flow.
-2.  **Structure the Article**: Organize the content logically. Add a compelling title, a brief introduction to hook the reader, clear section headings to break up the text, and a concluding summary. Use lists (bulleted or numbered) where appropriate to make information digestible.
+2.  **Structure the Article**: Organize the content logically. Add a compelling title, a brief introduction to hook the reader, clear section headings to break up the text, and a concluding summary. Use lists (bulleted or numbered) where appropriate to make information digestible. All output (title, headings, content) must be in the specified language.
 3.  **Apply Styling Rules**: Adhere strictly to the styling and voice guidelines provided below.
 
 **Styling and Voice Guidelines:**
@@ -104,3 +107,5 @@ const generateStructuredBlogPostFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    

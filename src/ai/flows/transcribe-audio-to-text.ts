@@ -16,6 +16,7 @@ const TranscribeAudioToTextInputSchema = z.object({
     .describe(
       "The audio to transcribe, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
+  language: z.string().optional().describe('The language of the audio in BCP-47 format (e.g., "en-US", "es-ES").'),
 });
 export type TranscribeAudioToTextInput = z.infer<typeof TranscribeAudioToTextInputSchema>;
 
@@ -32,7 +33,7 @@ const prompt = ai.definePrompt({
   name: 'transcribeAudioToTextPrompt',
   input: {schema: TranscribeAudioToTextInputSchema},
   output: {schema: TranscribeAudioToTextOutputSchema},
-  prompt: `Transcribe the following audio to text:\n\n{{media url=audioDataUri}}`,
+  prompt: `Transcribe the following audio to text.{{#if language}} The language of the audio is {{language}}.{{/if}}\n\n{{media url=audioDataUri}}`,
 });
 
 const transcribeAudioToTextFlow = ai.defineFlow(
@@ -46,3 +47,5 @@ const transcribeAudioToTextFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    

@@ -11,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { useUser, useFirestore, useCollection, useMemoFirebase, useDoc } from '@/firebase';
+import { addDoc, collection, serverTimestamp, doc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { blobToBase64 } from '@/lib/utils';
@@ -20,6 +20,7 @@ import { AudioVisualizer } from './audio-visualizer';
 import type { AiModel } from '@/lib/types';
 import { createArticle } from '@/app/actions';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { languages } from '@/lib/data';
 
 type RecorderState = 'idle' | 'recording' | 'paused' | 'recorded' | 'creating';
 
@@ -28,6 +29,7 @@ export function AudioRecorder() {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [selectedModel, setSelectedModel] = useState('default');
+  const [selectedLanguage, setSelectedLanguage] = useState('');
   const [hasMicPermission, setHasMicPermission] = useState<boolean | null>(null);
   
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -40,6 +42,21 @@ export function AudioRecorder() {
   const firestore = useFirestore();
   const router = useRouter();
   const { toast } = useToast();
+
+  const preferencesRef = useMemoFirebase(() => {
+    if (!user) return null;
+    return doc(firestore, 'userPreferences', user.uid);
+  }, [firestore, user]);
+
+  const { data: savedPreferences } = useDoc(preferencesRef);
+
+  useEffect(() => {
+    if (savedPreferences?.language) {
+      setSelectedLanguage(savedPreferences.language);
+    } else {
+      setSelectedLanguage('en-US'); // Default if no preferences are set
+    }
+  }, [savedPreferences]);
 
   const modelsQuery = useMemoFirebase(() => {
     if (!user) return null;
@@ -171,6 +188,7 @@ export function AudioRecorder() {
         title: "Preparing your article...",
         content: "",
         status: "processing",
+        language: selectedLanguage,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
@@ -183,6 +201,7 @@ export function AudioRecorder() {
         userId: user.uid,
         audioDataUri,
         selectedModel,
+        language: selectedLanguage,
       });
 
       toast({
@@ -243,10 +262,23 @@ export function AudioRecorder() {
          <>
           <CardHeader>
             <CardTitle>Record Your Thoughts</CardTitle>
-            <CardDescription>Click the mic to start recording.</CardDescription>
+            <CardDescription>Select your language, then click the mic to start recording.</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center gap-6 p-10">
-            <Button onClick={handleStartRecording} size="icon" className="w-20 h-20 rounded-full" disabled={hasMicPermission === false}>
+             <div className="w-full max-w-xs">
+              <label className="text-sm font-medium mb-2 block text-center">Language</label>
+              <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a language" />
+                </SelectTrigger>
+                <SelectContent>
+                  {languages.map(lang => (
+                    <SelectItem key={lang.code} value={lang.code}>{lang.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button onClick={handleStartRecording} size="icon" className="w-20 h-20 rounded-full" disabled={hasMicPermission === false || !selectedLanguage}>
               <Mic className="h-8 w-8" />
             </Button>
             <div className="h-16 w-full bg-secondary rounded-lg" />
@@ -297,21 +329,36 @@ export function AudioRecorder() {
                 {audioUrl && (
                     <audio ref={audioRef} src={audioUrl} controls className="w-full" />
                 )}
-                <div>
-                    <label className="text-sm font-medium mb-2 block">Choose an AI model</label>
-                    <Select defaultValue="default" onValueChange={setSelectedModel}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select an AI model" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="default">AudioScribe AI default</SelectItem>
-                            {aiModels && aiModels.map(model => (
-                                <SelectItem key={model.id} value={model.id}>
-                                    {model.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
+                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Language</label>
+                    <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a language" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {languages.map(lang => (
+                          <SelectItem key={lang.code} value={lang.code}>{lang.name}</SelectItem>
+                        ))}
+                      </SelectContent>
                     </Select>
+                  </div>
+                  <div>
+                      <label className="text-sm font-medium mb-2 block">AI Model</label>
+                      <Select defaultValue="default" onValueChange={setSelectedModel}>
+                          <SelectTrigger>
+                              <SelectValue placeholder="Select an AI model" />
+                          </SelectTrigger>
+                          <SelectContent>
+                              <SelectItem value="default">AudioScribe AI default</SelectItem>
+                              {aiModels && aiModels.map(model => (
+                                  <SelectItem key={model.id} value={model.id}>
+                                      {model.name}
+                                  </SelectItem>
+                              ))}
+                          </SelectContent>
+                      </Select>
+                  </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2">
                     <Button onClick={handleCreateArticle} className="w-full" disabled={recorderState === 'creating'}>
@@ -341,3 +388,5 @@ export function AudioRecorder() {
     </Card>
   );
 }
+
+    
