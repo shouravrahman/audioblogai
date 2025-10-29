@@ -7,7 +7,7 @@ import { useParams, useRouter } from 'next/navigation';
 import type { BlogPost } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle, Info, Save, Copy, FileDown, Trash2 } from 'lucide-react';
+import { AlertTriangle, Info, Save, Copy, FileDown, Trash2, Search, Zap, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useRef, useState, useEffect } from 'react';
@@ -31,7 +31,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import TurndownService from 'turndown';
-
+import { researchAndExpandArticle } from '@/ai/flows/research-and-expand-article';
+import { analyzeSeo, type AnalyzeSeoOutput } from '@/ai/flows/analyze-seo';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 export default function ArticlePage() {
   const { articleId } = useParams();
@@ -43,6 +45,9 @@ export default function ArticlePage() {
   const contentRef = useRef<HTMLDivElement>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isResearching, setIsResearching] = useState(false);
+  const [isAnalyzingSeo, setIsAnalyzingSeo] = useState(false);
+  const [seoResults, setSeoResults] = useState<AnalyzeSeoOutput | null>(null);
   const [turndownService, setTurndownService] = useState<TurndownService | null>(null);
 
   useEffect(() => {
@@ -64,6 +69,7 @@ export default function ArticlePage() {
     data: article,
     isLoading,
     error,
+    setData: setArticle, // from useDoc
   } = useDoc<BlogPost>(articleRef);
   
   const handleSave = async () => {
@@ -141,6 +147,44 @@ export default function ArticlePage() {
       toast({ variant: 'destructive', title: 'Copy Failed', description: 'Could not copy content to clipboard.' });
     });
   };
+
+  const handleResearch = async () => {
+    if (!article || !contentRef.current) return;
+    setIsResearching(true);
+    toast({ title: 'Starting Research...', description: 'The AI is searching for data to enrich your article.' });
+    try {
+        const currentContent = contentRef.current.innerText;
+        const result = await researchAndExpandArticle({ articleContent: currentContent });
+        
+        if (contentRef.current) {
+            contentRef.current.innerHTML = result.enrichedArticle.replace(/\n/g, '<br />');
+        }
+
+        // We update the local state to reflect the change immediately
+        setArticle(prev => prev ? { ...prev, content: result.enrichedArticle } : null);
+
+        toast({ title: 'Research Complete!', description: 'Your article has been updated with new information.' });
+    } catch (e: any) {
+        toast({ variant: 'destructive', title: 'Research Failed', description: e.message || 'Could not perform research.' });
+    } finally {
+        setIsResearching(false);
+    }
+  }
+
+  const handleSeoAnalysis = async () => {
+      if (!article || !contentRef.current) return;
+      setIsAnalyzingSeo(true);
+      toast({ title: 'Analyzing SEO...', description: 'The AI is reviewing your article for SEO improvements.' });
+      try {
+          const currentContent = contentRef.current.innerText;
+          const result = await analyzeSeo({ title: article.title, content: currentContent });
+          setSeoResults(result);
+      } catch (e: any) {
+          toast({ variant: 'destructive', title: 'SEO Analysis Failed', description: e.message || 'Could not perform SEO analysis.' });
+      } finally {
+          setIsAnalyzingSeo(false);
+      }
+  }
 
 
   if (isLoading) {
@@ -242,6 +286,15 @@ export default function ArticlePage() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
+                    <DropdownMenuItem onClick={handleResearch} disabled={isResearching}>
+                        {isResearching ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Search className="mr-2 h-4 w-4"/>}
+                        Enrich with Research
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleSeoAnalysis} disabled={isAnalyzingSeo}>
+                        {isAnalyzingSeo ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Zap className="mr-2 h-4 w-4"/>}
+                        Analyze SEO
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => handleExport('text')}>Copy as Plain Text</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleExport('html')}>Copy as HTML</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleExport('markdown')}>Copy as Markdown</DropdownMenuItem>
@@ -282,6 +335,37 @@ export default function ArticlePage() {
             dangerouslySetInnerHTML={{ __html: article.content.replace(/\n/g, '<br />') }} 
         />
       </article>
+
+      <Dialog open={!!seoResults} onOpenChange={(open) => !open && setSeoResults(null)}>
+        <DialogContent className="sm:max-w-2xl">
+            <DialogHeader>
+            <DialogTitle>SEO Analysis Results</DialogTitle>
+            <DialogDescription>
+                Here are the AI-powered suggestions to improve your article's search engine optimization.
+            </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-6 py-4">
+                <div>
+                    <h3 className="font-semibold mb-2">Alternative Titles</h3>
+                    <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+                        {seoResults?.suggestedTitles.map((title, i) => <li key={i}>{title}</li>)}
+                    </ul>
+                </div>
+                 <div>
+                    <h3 className="font-semibold mb-2">Meta Description</h3>
+                    <p className="text-sm text-muted-foreground p-3 bg-secondary rounded-md">{seoResults?.metaDescription}</p>
+                </div>
+                 <div>
+                    <h3 className="font-semibold mb-2">Suggested Keywords</h3>
+                    <div className="flex flex-wrap gap-2">
+                        {seoResults?.keywords.map((keyword, i) => (
+                           <span key={i} className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded-full">{keyword}</span>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
