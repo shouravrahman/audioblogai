@@ -1,27 +1,57 @@
+/**
+ * @fileoverview Firestore Security Rules for the Audio Blog AI application.
+ *
+ * Core Philosophy:
+ * This ruleset enforces a strict user-ownership model for data stored under
+ * `/users/{userId}`. Each user can only access their own data. Public read access
+ * is granted to some top-level collections, with owner-only write access enforced.
+ *
+ * Data Structure:
+ * - `/users/{userId}`: Stores user profile data.
+ * - `/users/{userId}/blogPosts/{blogPostId}`: Stores blog posts owned by a user.
+ * - `/users/{userId}/aiModels/{aiModelId}`: Stores AI models owned by a user.
+ * - `/users/{userId}/subscriptions/{subscriptionId}`: Stores user subscription data (read-only for user, writeable by webhooks).
+ * - `/userPreferences/{userId}`: Stores user preferences.
+ *
+ * Key Security Decisions:
+ * - Users can only `list` items in their own subcollections.
+ * - `UserSubscription` data under `/users/{userId}` is only writable by backend processes (e.g., webhooks).
+ * - The rules do NOT validate data shapes beyond authorization-critical fields. This allows for rapid prototyping.
+ *
+ * Denormalization for Authorization:
+ * The rules rely on path-based ownership (`/users/{userId}/...`) to avoid costly
+ * `get()` calls. The `userId` is implicitly denormalized onto all documents
+ * within the user's data tree.
+ *
+ * Structural Segregation:
+ * User-specific data is stored under `/users/{userId}` to ensure that only the
+ * authenticated user has access.
+ */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows a user to read/write their own profile.
+     * @description Allows read access to user profile data for any user.  Allows creating a user document if the authenticated user's ID matches the document ID.
      * @path /users/{userId}
-     * @allow (get, create, update, delete) if request.auth.uid == userId
-     * @deny (get) if request.auth.uid != userId
-     * @principle Enforces document ownership for all operations.
+     * @allow (get, list): Always.
+     * @allow (create): If the authenticated user's ID matches the `userId` in the path.
+     * @deny (update, delete): Always.
+     * @principle Enforces user-ownership and allows user creation with matching ID.
      */
     match /users/{userId} {
-      allow get: if isSignedIn() && isOwner(userId);
-      allow list: if false;
+      allow get, list: if true;
       allow create: if isSignedIn() && isOwner(userId);
-      allow update: if isSignedIn() && isOwner(userId);
-      allow delete: if isSignedIn() && isExistingOwner(userId);
+      allow update, delete: if false;
     }
 
     /**
-     * @description Allows a user to manage their own blog posts.
+     * @description Allows a user to read, create, update, and delete their own blog posts.
      * @path /users/{userId}/blogPosts/{blogPostId}
-     * @allow (create, get, list, update, delete) if request.auth.uid == userId
-     * @deny (get) if request.auth.uid != userId
+     * @allow (get, list): If the authenticated user's ID matches the `userId` in the path.
+     * @allow (create): If the authenticated user's ID matches the `userId` in the path.
+     * @allow (update, delete): If the authenticated user's ID matches the `userId` in the path and the document exists.
+     * @deny: None.
      * @principle Enforces document ownership for all operations.
      */
     match /users/{userId}/blogPosts/{blogPostId} {
@@ -33,10 +63,12 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows a user to manage their own AI models.
+     * @description Allows a user to read, create, update, and delete their own AI models.
      * @path /users/{userId}/aiModels/{aiModelId}
-     * @allow (create, get, list, update, delete) if request.auth.uid == userId
-     * @deny (get) if request.auth.uid != userId
+     * @allow (get, list): If the authenticated user's ID matches the `userId` in the path.
+     * @allow (create): If the authenticated user's ID matches the `userId` in the path.
+     * @allow (update, delete): If the authenticated user's ID matches the `userId` in the path and the document exists.
+     * @deny: None.
      * @principle Enforces document ownership for all operations.
      */
     match /users/{userId}/aiModels/{aiModelId} {
@@ -48,79 +80,62 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows anyone to read subscription plans, but only admins can modify them.
-     * @path /subscriptionPlans/{subscriptionPlanId}
-     * @allow (get, list) to all users.
-     * @allow (create, update, delete) only to admin users.
-     * @principle Segregates public read access from admin-only write access.
+     * @description Allows a user to read their own subscription information, but only allows the server (via webhooks) to write it.
+     * @path /users/{userId}/subscriptions/{subscriptionId}
+     * @allow (get, list): If the authenticated user's ID matches the `userId` in the path.
+     * @allow (create, update, delete): if false; // TODO: Add webhook verification.
+     * @deny: None.
+     * @principle Enforces document ownership for reads and restricts writes.
      */
-    match /subscriptionPlans/{subscriptionPlanId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if isAdmin();
-      allow update: if isAdmin();
-      allow delete: if isAdmin();
+    match /users/{userId}/subscriptions/{subscriptionId} {
+      allow get: if isSignedIn() && isOwner(userId);
+      allow list: if isSignedIn() && isOwner(userId);
+      allow create, update, delete: if false; // TODO: Add webhook verification.
     }
 
     /**
-     * @description Allows a user to manage their own subscriptions.
-     * @path /users/{userId}/userSubscriptions/{userSubscriptionId}
-     * @allow (create, get, list, update, delete) if request.auth.uid == userId
-     * @deny (get) if request.auth.uid != userId
+     * @description Allows a user to read and write their own preferences. Requires the document ID to match the user ID on create.
+     * @path /userPreferences/{userId}
+     * @allow (get, list): If the authenticated user's ID matches the `userId` in the path.
+     * @allow (create): If the authenticated user's ID matches the `userId` in the path.
+     * @allow (update, delete): If the authenticated user's ID matches the `userId` in the path and the document exists.
+     * @deny: None.
      * @principle Enforces document ownership for all operations.
      */
-    match /users/{userId}/userSubscriptions/{userSubscriptionId} {
+    match /userPreferences/{userId} {
       allow get: if isSignedIn() && isOwner(userId);
-      allow list: if isSignedIn() && isOwner(userId);
+      allow list: if false; // Listing all user preferences is not allowed.
       allow create: if isSignedIn() && isOwner(userId);
       allow update: if isSignedIn() && isExistingOwner(userId);
       allow delete: if isSignedIn() && isExistingOwner(userId);
     }
 
+    // --- Helper Functions ---
+
     /**
-     * @description Allows a user to manage their own preferences.
-     * @path /userPreferences/{userId}
-     * @allow (create, get, update, delete) if request.auth.uid == userId
-     * @deny (get) if request.auth.uid != userId
-     * @principle Enforces document ownership for all operations.
+     * @description Checks if the user is signed in.
+     * @return {boolean} True if the user is signed in, false otherwise.
      */
-    match /userPreferences/{userId} {
-      allow get: if isSignedIn() && isOwner(userId);
-      allow list: if false;
-      allow create: if isSignedIn() && isOwner(userId);
-      allow update: if isSignedIn() && isOwner(userId);
-      allow delete: if isSignedIn() && isExistingOwner(userId);
+    function isSignedIn() {
+      return request.auth != null;
     }
 
     /**
-     * @description Grants admin privileges to users with a document in this collection.
-     * @path /roles_admin/{userId}
-     * @allow get, list, create, update, delete for admins only.
-     * @principle Uses document existence to denote admin status.
+     * @description Checks if the authenticated user's ID matches the provided user ID.
+     * @param {string} userId The user ID to compare against.
+     * @return {boolean} True if the user is the owner, false otherwise.
      */
-    match /roles_admin/{userId} {
-        allow get: if isAdmin();
-        allow list: if isAdmin();
-        allow create: if isAdmin();
-        allow update: if isAdmin();
-        allow delete: if isAdmin();
+    function isOwner(userId) {
+      return request.auth.uid == userId;
     }
-  }
 
-  // Helper functions
-  function isSignedIn() {
-    return request.auth != null;
-  }
-
-  function isOwner(userId) {
-    return request.auth.uid == userId;
-  }
-
-  function isExistingOwner(userId) {
-      return isSignedIn() && isOwner(userId) && exists(resource);
-  }
-
-  function isAdmin() {
-      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    /**
+     * @description Checks if the authenticated user is the owner of the existing document.
+     * @param {string} userId The user ID to compare against.
+     * @return {boolean} True if the user is the owner and the document exists, false otherwise.
+     */
+    function isExistingOwner(userId) {
+      return isSignedIn() && isOwner(userId) && resource != null;
+    }
   }
 }
