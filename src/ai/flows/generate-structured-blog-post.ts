@@ -5,6 +5,7 @@
  * The flow uses an AI model to automatically add section headings and lists where appropriate,
  * creating a well-organized article. It also incorporates user-defined writing preferences and
  * a custom style guide to tailor the tone, style, and formatting of the output.
+ * It will also strategically insert image placeholders for later processing.
  */
 
 import {ai} from '@/ai/genkit';
@@ -37,7 +38,7 @@ export type GenerateStructuredBlogPostInput = z.infer<
 >;
 
 const GenerateStructuredBlogPostOutputSchema = z.object({
-  structuredBlogPost: z.string().describe('The structured blog post with section headings and lists.'),
+  structuredBlogPost: z.string().describe('The structured blog post with section headings, lists, and image placeholders.'),
 });
 export type GenerateStructuredBlogPostOutput = z.infer<
   typeof GenerateStructuredBlogPostOutputSchema
@@ -61,7 +62,8 @@ const prompt = ai.definePrompt({
 
 1.  **Humanize the Content**: Convert the conversational, spoken-word transcription into clean, readable, and engaging written content. Fix grammatical errors, remove filler words (like 'um', 'ah', 'you know'), and restructure sentences for clarity and flow.
 2.  **Structure the Article**: Organize the content logically. Add a compelling title, a brief introduction to hook the reader, clear section headings to break up the text, and a concluding summary. Use lists (bulleted or numbered) where appropriate to make information digestible. All output (title, headings, content) must be in the specified language.
-3.  **Apply Content and Styling Rules**: Adhere strictly to the content format and styling guidelines provided below.
+3.  **Generate Image Placeholders**: As you write, identify 2-3 key opportunities to add a visual aid (like an illustrative image, a simple chart, or an infographic). At these points, insert a placeholder tag in the format: \`[image: A descriptive prompt for a visually appealing image that illustrates this concept]\`. For example: \`[image: A vibrant, abstract representation of neural networks connecting]\`.
+4.  **Apply Content and Styling Rules**: Adhere strictly to the content format and styling guidelines provided below.
 
 **Content Format and Length:**
 {{#if blogType}}
@@ -118,5 +120,3 @@ const generateStructuredBlogPostFlow = ai.defineFlow(
     return output!;
   }
 );
-
-    

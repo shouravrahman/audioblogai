@@ -4,7 +4,7 @@ import { generateStructuredBlogPost } from '@/ai/flows/generate-structured-blog-
 import { getFirebaseAdmin } from '@/app/firebase-admin';
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import type { AiModel } from '@/lib/types';
-import { generateBlogCoverImage } from '@/ai/flows/generate-blog-cover-image';
+import { generateImage } from '@/ai/flows/generate-image';
 
 
 export const generateArticle = inngest.createFunction(
@@ -44,30 +44,52 @@ export const generateArticle = inngest.createFunction(
           return { preferences, styleGuide };
       });
 
-      const [structuredPost, imageUrl] = await step.run('generate-content-and-image', async () => {
-        // Run text and image generation in parallel
-        const [blogPostResult, imageResult] = await Promise.all([
-          generateStructuredBlogPost({
-            transcribedText,
-            language,
-            preferences,
-            styleGuide,
-            blogType,
-            wordCount,
-          }),
-          generateBlogCoverImage({
-            articleContent: transcribedText, // Use transcription for image prompt context
-          })
-        ]);
-        
-        return [
-          blogPostResult.structuredBlogPost,
-          imageResult.coverImageUrl
-        ];
+      // Generate the initial blog post with image placeholders
+      const structuredPostWithPlaceholders = await step.run('generate-structured-post', async () => {
+        const result = await generateStructuredBlogPost({
+          transcribedText,
+          language,
+          preferences,
+          styleGuide,
+          blogType,
+          wordCount,
+        });
+        return result.structuredBlogPost;
       });
 
+      // Generate cover image separately
+      const coverImageUrl = await step.run('generate-cover-image', async () => {
+         const result = await generateImage({
+            articleContent: structuredPostWithPlaceholders.substring(0, 3000), // Use summary for prompt
+          });
+        return result.imageUrl;
+      });
+      
+      // Find all image placeholders in the content
+      const imagePrompts = [...structuredPostWithPlaceholders.matchAll(/\[image: (.*?)\]/g)].map(match => match[1]);
 
-      const lines = structuredPost.split('\n');
+      let finalContent = structuredPostWithPlaceholders;
+
+      if (imagePrompts.length > 0) {
+        const generatedImages = await step.run('generate-in-line-images', async () => {
+            const imagePromises = imagePrompts.map(prompt => 
+                generateImage({ articleContent: prompt })
+            );
+            return await Promise.all(imagePromises);
+        });
+
+        // Replace placeholders with actual image tags
+        finalContent = structuredPostWithPlaceholders.replace(/\[image: (.*?)\]/g, () => {
+            const result = generatedImages.shift();
+            if (result?.imageUrl) {
+                return `<img src="${result.imageUrl}" alt="${imagePrompts.shift()}" class="rounded-lg shadow-md my-8" data-ai-hint="generated illustration" />`;
+            }
+            return ''; // Remove placeholder if image generation failed
+        });
+      }
+
+
+      const lines = finalContent.split('\n');
       const title = lines[0].replace(/^#\s*/, '').trim() || 'Untitled Article';
       const content = lines.slice(1).join('\n').trim();
 
@@ -75,7 +97,7 @@ export const generateArticle = inngest.createFunction(
         await updateDoc(articleRef, {
           title,
           content,
-          coverImageUrl: imageUrl,
+          coverImageUrl: coverImageUrl,
           status: 'completed',
           updatedAt: serverTimestamp(),
         });
