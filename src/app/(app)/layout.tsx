@@ -167,51 +167,53 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 md:px-6">
-           <div className="flex items-center gap-2">
-            <SidebarTrigger className="md:hidden">
-                <PanelLeft />
-                <span className="sr-only">Toggle Menu</span>
-            </SidebarTrigger>
-            <div className="md:hidden">
-              <Logo />
+    <div className="min-h-screen">
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 md:px-6">
+            <div className="flex items-center gap-2">
+              <SidebarTrigger className="md:hidden">
+                  <PanelLeft />
+                  <span className="sr-only">Toggle Menu</span>
+              </SidebarTrigger>
+              <div className="md:hidden">
+                <Logo />
+              </div>
             </div>
-           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <Avatar>
-                  <AvatarImage
-                    src={user.photoURL || undefined}
-                    alt={user.email || 'User Avatar'}
-                  />
-                  <AvatarFallback>
-                    {user.email ? user.email.charAt(0).toUpperCase() : 'U'}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/dashboard/preferences">Settings</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="#">Support</Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSignOut}>
-                Sign Out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </header>
-        <main className="flex-1 p-4 md:p-8">{children}</main>
-      </SidebarInset>
-    </SidebarProvider>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Avatar>
+                    <AvatarImage
+                      src={user.photoURL || undefined}
+                      alt={user.email || 'User Avatar'}
+                    />
+                    <AvatarFallback>
+                      {user.email ? user.email.charAt(0).toUpperCase() : 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard/preferences">Settings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="#">Support</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut}>
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </header>
+          <main className="flex-1 p-4 md:p-8">{children}</main>
+        </SidebarInset>
+      </SidebarProvider>
+    </div>
   );
 }
