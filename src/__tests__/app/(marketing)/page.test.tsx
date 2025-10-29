@@ -21,7 +21,7 @@ jest.mock('@/components/landing/comparison', () => ({
 jest.mock('@/components/landing/pricing', () => ({
     Pricing: () => <div data-testid="pricing">Pricing Component</div>,
 }));
-jest.mock('@components/landing/faq', () => ({
+jest.mock('@/components/landing/faq', () => ({
     Faq: () => <div data-testid="faq">Faq Component</div>,
 }));
 jest.mock('@/components/landing/final-cta', () => ({
