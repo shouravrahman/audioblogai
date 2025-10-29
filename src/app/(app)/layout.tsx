@@ -167,14 +167,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <AppSidebar />
         <SidebarInset>
           <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 sm:px-6">
-             <div className="flex items-center gap-2">
-                <SidebarTrigger className="sm:hidden">
+             <div className="flex items-center gap-2 sm:hidden">
+                <SidebarTrigger>
                     <PanelLeft />
                     <span className="sr-only">Toggle Menu</span>
                 </SidebarTrigger>
-                <div className="sm:hidden">
-                  <Logo />
-                </div>
+             </div>
+             <div className="flex flex-1 justify-center sm:hidden">
+                <Logo />
              </div>
             
             <div className='flex items-center gap-4'>

@@ -12,7 +12,7 @@ function getImage(id: string): ImagePlaceholder {
 export const navLinks = [
   { label: 'How it Works', href: '#features' },
   { label: 'Pricing', href: '#pricing' },
-  { label: 'Examples', href: '#examples' },
+  { label: 'Blog', href: '/blog' },
 ];
 
 export const features = [
@@ -186,10 +186,9 @@ export const footerLinks = {
     product: [
         { label: 'Pricing', href: '#pricing' },
         { label: 'How it Works', href: '#features' },
-        { label: 'Examples', href: '#examples' },
+        { label: 'Blog', href: '/blog' },
     ],
     company: [
-        { label: 'Blog', href: '#' },
         { label: 'About Us', href: '#' },
     ],
     legal: [

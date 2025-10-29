@@ -70,9 +70,9 @@ export function Header() {
           </div>
 
           <div className="w-full flex-1 md:w-auto md:flex-none">
-            <Link href="/" className="md:hidden">
-              <Logo />
-            </Link>
+            <div className="flex justify-center md:hidden">
+                <Logo />
+            </div>
           </div>
 
           <nav className="flex items-center gap-2">
