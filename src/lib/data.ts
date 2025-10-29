@@ -18,29 +18,29 @@ export const navLinks = [
 export const features = [
     {
       step: 1,
-      title: "Just Start Talking",
-      subtitle: "Defeat the Blank Page",
-      description: "Get your first draft done in record time by simply speaking your thoughts. Let our AI convert your ideas into a structured article.",
+      title: "Defeat the Blank Page",
+      subtitle: "Just Start Talking",
+      description: "Get your first draft done in record time by simply speaking your thoughts. Let our AI convert your ideas into a structured article in multiple languages.",
       action: "Start Recording"
     },
     {
       step: 2,
-      title: "Select a Style",
-      subtitle: "Define Your Voice",
+      title: "From Speech to Structure",
+      subtitle: "AI-Powered Transcription",
       description: "Choose the tone for your article from various AI models. You can even train a model to write just like you.",
       action: "Personalize Now"
     },
     {
       step: 3,
-      title: "Effortless Editing",
-      subtitle: "Refine and Polish",
-      description: "Quickly make adjustments to ensure the article perfectly captures your message and voice.",
+      title: "Add Depth and Credibility",
+      subtitle: "Enrich & Optimize",
+      description: "Use our AI Research Assistant to add supporting data and sources. Then, analyze your article's SEO to improve its ranking potential.",
       action: "Start Editing"
     },
     {
       step: 4,
-      title: "Publish Everywhere",
-      subtitle: "Share with the World",
+      title: "Share with the World",
+      subtitle: "Publish Everywhere",
       description: "With multiple export formats, you can easily copy and paste your content to any platform. More integrations are on the way.",
       action: "Start Publishing"
     }
@@ -119,12 +119,12 @@ export const comparisonFeatures = {
         "Unlike generic tools, AudioScribe AI crafts articles based solely on your voice recordings.",
         "Develop your unique AI voice",
         "Train the AI on your past articles to make it adopt your personal writing style.",
-        "One-click export",
-        "Export your articles to various formats and publish them on any platform.",
+        "Research & SEO Tools",
+        "Enrich articles with factual data and optimize them for search engines with AI analysis.",
     ],
     without: {
         traditional: ["Time-consuming", "Prone to writer's block", "Expensive to outsource", "Requires intense focus"],
-        chatGPT: ["Generic, robotic-sounding content", "Lacks personal voice and authenticity", "Not designed as a dedicated writing tool", "Difficult to edit and format"],
+        chatGPT: ["Generic, robotic-sounding content", "Lacks personal voice and authenticity", "No integrated research or SEO tools", "Difficult to edit and format"],
     },
 };
 
@@ -137,7 +137,7 @@ export const pricingPlans = [
         features: [
             '3 articles per month',
             '5-minute recordings',
-            'Unlimited edits',
+            'Multi-language support',
             'Standard AI model',
             'Export as plain text',
         ],
@@ -153,9 +153,10 @@ export const pricingPlans = [
         features: [
             '15 articles per month',
             '15-minute recordings',
-            'Unlimited edits',
-            'Advanced AI models',
+            'Multi-language support',
             '1 personalized AI model',
+            'AI Research Assistant',
+            'SEO Analysis Tools',
             'Export as Rich text, HTML, Markdown',
         ],
         variantIdMonthly: '468987',
@@ -169,9 +170,10 @@ export const pricingPlans = [
         features: [
             '50 articles per month',
             '45-minute recordings',
-            'Unlimited edits',
-            'Advanced AI models',
+            'Multi-language support',
             '5 personalized AI models',
+            'AI Research Assistant',
+            'SEO Analysis Tools',
             'Export as Rich text, HTML, Markdown',
             'Priority support'
         ],
@@ -196,44 +198,42 @@ export const footerLinks = {
     ],
 };
 
-export const faqItems = [
-    {
-        question: "How does the AI transcription work?",
-        answer: "We use a state-of-the-art AI model to convert your audio into text. It's designed to handle various accents and background noise, ensuring high accuracy."
-    },
-    {
-        question: "Can I train the AI to write in my own style?",
-        answer: "Absolutely! With our Pro and Ultra plans, you can provide samples of your writing (like blog posts or articles), and the AI will learn to mimic your unique voice, tone, and style."
-    },
-    {
-        question: "What formats can I export my articles in?",
-        answer: "You can export your finished articles as plain text, HTML, or Markdown, making it easy to publish on any platform like WordPress, Medium, or your personal website."
-    },
-    {
-        question: "Is there a limit on the length of audio I can record or upload?",
-        answer: "Yes, the limits depend on your plan. The Free plan allows up to 5-minute recordings, Pro allows 15 minutes, and Ultra allows up to 45 minutes per article."
-    },
-    {
-        question: "How is my data and privacy handled?",
-        answer: "We take your privacy seriously. Your audio files and generated content are yours alone. We do not use your data for any purpose other than providing the service to you. All data is securely stored and protected."
-    },
-    {
-        question: "Can I cancel my subscription at any time?",
-        answer: "Yes, you can cancel your subscription at any time through the billing management portal. You will retain access to your plan's features until the end of the current billing cycle."
-    }
-];
-
 export const languages = [
   { name: 'English (US)', code: 'en-US' },
   { name: 'Spanish (Spain)', code: 'es-ES' },
   { name: 'French (France)', code: 'fr-FR' },
   { name: 'German (Germany)', code: 'de-DE' },
   { name: 'Italian (Italy)', code: 'it-IT' },
-  { name: 'Portuguese (Portugal)', code: 'pt-PT' },
-  { name: 'Dutch (Netherlands)', code: 'nl-NL' },
+  { name: 'Portuguese (Brazil)', code: 'pt-BR' },
   { name: 'Russian (Russia)', code: 'ru-RU' },
   { name: 'Japanese (Japan)', code: 'ja-JP' },
   { name: 'Chinese (Mandarin, Simplified)', code: 'zh-CN' },
+  { name: 'Korean (South Korea)', code: 'ko-KR' },
 ];
 
-    
+export const faqItems = [
+    {
+        question: "What is AudioScribe AI?",
+        answer: "AudioScribe AI is a platform that transforms your spoken audio into well-structured, SEO-optimized, and researched articles. It's designed for content creators, experts, and marketers to turn ideas into polished content with minimal friction."
+    },
+    {
+        question: "Who is this for?",
+        answer: "It's for anyone who wants to create written content more efficiently. This includes bloggers, podcasters, YouTubers, founders, consultants, developers, and marketing teams who want to produce authentic content at scale."
+    },
+    {
+        question: "How does the AI work?",
+        answer: "When you upload an audio file, our AI, powered by Google's Gemini models, first transcribes the audio to text. Then, another AI flow structures this text into a blog post, adding a title, headings, and lists. You can also use our research and SEO tools to enrich the content further."
+    },
+    {
+        question: "Can the AI write in my personal style?",
+        answer: "Yes! With a paid plan, you can train a personalized AI model. By providing 3 or more of your past writing samples, the AI learns your unique tone, vocabulary, and sentence structure to generate content that sounds just like you."
+    },
+    {
+        question: "Which languages are supported?",
+        answer: "AudioScribe AI supports transcription and content generation in multiple languages, including English, Spanish, French, German, and more. You can select your preferred language when you create a new article."
+    },
+    {
+        question: "Is my data secure?",
+        answer: "Yes, your data security is a top priority. All of your data, including audio files and generated articles, is stored securely and is only accessible by you. We use Firebase's robust security rules to ensure data privacy."
+    }
+];

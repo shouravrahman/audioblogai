@@ -7,8 +7,8 @@ This document provides a technical overview of the AudioScribe AI application, d
 AudioScribe AI was built to solve a critical pain point for content creators, subject matter experts, and marketers: **the friction of turning ideas into polished, written content.**
 
 -   **Core Problem:** Writer's block, time constraints, and the difficulty of maintaining an authentic voice with generic AI tools.
--   **Core Solution:** A platform that transforms spoken audio into well-structured articles, leveraging AI to handle transcription, formatting, and stylistic adaptation.
--   **Value Proposition:** We sell **speed, authenticity, and efficiency**. By enabling users to simply talk, we reduce the time to create a first draft from hours to minutes, unlocking the valuable knowledge held by experts who aren't professional writers.
+-   **Core Solution:** A platform that transforms spoken audio into well-structured, SEO-optimized, and researched articles, leveraging AI to handle transcription, formatting, stylistic adaptation, and enrichment.
+-   **Value Proposition:** We sell **speed, authenticity, and intelligence**. By enabling users to simply talk, we reduce the time to create a first draft from hours to minutes. By providing integrated research and SEO tools, we help them create *successful* content that performs.
 
 ## 2. Technical Architecture Overview
 
@@ -48,12 +48,13 @@ The application is architected as a modern, full-stack serverless web applicatio
 
 ### AI Integration: Genkit & Google Gemini
 
--   **Orchestration:** **Genkit** is an open-source framework from Google that structures and simplifies calls to generative AI models.
-    -   **Flows:** We define specific, type-safe "flows" for each AI task (`transcribe-audio-to-text`, `generate-structured-blog-post`, `analyze-seo`, etc.). This makes the AI logic modular, testable, and easy to manage.
-    -   **Tools:** For the "Research" feature, we leverage Genkit's tool-calling capability. This allows the AI model to decide when to use an external function (like a web search) to gather information before formulating its final response, enabling more agentic behavior.
--   **AI Models:**
-    -   **Gemini 2.5 Flash:** Used for most text-based generation tasks due to its excellent balance of speed, cost, and capability.
-    -   **Chirp (via Gemini):** Used for the high-accuracy audio-to-text transcription.
+-   **Orchestration:** **Genkit** is an open-source framework from Google that structures and simplifies calls to generative AI models. It allows us to define type-safe, testable, and modular "flows" for each distinct AI task.
+-   **Core AI Flows:**
+    1.  **Transcription (`transcribe-audio-to-text`):** When audio is submitted, this flow is the first step. It takes the audio data URI and selected language, passes it to the Gemini model (which uses Chirp for speech-to-text), and returns a clean text transcription.
+    2.  **Content Generation (`generate-structured-blog-post`):** This flow takes the raw transcription and transforms it into a publish-ready article. It uses a detailed prompt that instructs the AI to humanize the content, add a title and headings, and apply specific styling rules based on the user's preferences or a trained style guide.
+    3.  **Style Training (`train-ai-model-with-writing-samples`):** This allows users to create a personalized AI. It analyzes 3+ writing samples and generates a concise "style guide" that captures the author's tone, vocabulary, and sentence structure. This style guide is then fed into the content generation flow to produce authentically-styled articles.
+    4.  **Research (`research-and-expand-article`):** This flow demonstrates agentic behavior using **Genkit Tools**. The AI is given access to a `webSearch` tool. When asked to enrich an article, the AI analyzes the text, decides what information needs verification or support, and then calls the `webSearch` tool with specific queries. It then integrates the search results (statistics, facts) back into the article.
+    5.  **SEO Analysis (`analyze-seo`):** This flow acts as an SEO expert, taking the article's content and generating a structured JSON output containing SEO-friendly title suggestions, a meta description, and relevant keywords.
 
 ### Payments & Subscriptions
 

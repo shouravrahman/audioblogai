@@ -27,17 +27,17 @@ const FeatureCard = ({
   children,
 }: (typeof features)[0] & { children: React.ReactNode }) => (
   <div className="container grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-    <div className="md:order-2">
+    <div className={cn(step % 2 === 0 ? "md:order-2" : "md:order-1")}>
       <h3 className="text-sm font-semibold uppercase tracking-wider text-primary">
         Step {step}
       </h3>
       <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-        {subtitle}
+        {title}
       </p>
-      <h2 className="mt-1 text-2xl font-semibold text-muted-foreground">{title}</h2>
+      <h2 className="mt-1 text-2xl font-semibold text-muted-foreground">{subtitle}</h2>
       <p className="mt-4 text-lg text-muted-foreground">{description}</p>
     </div>
-    <div className="md:order-1 flex items-center justify-center">
+    <div className={cn(step % 2 === 0 ? "md:order-1" : "md:order-2", "flex items-center justify-center")}>
       {children}
     </div>
   </div>
@@ -45,9 +45,9 @@ const FeatureCard = ({
 
 export function Features() {
   const steps = [
-    'Record', 'Transcribe', 'Structure', 'Edit', 'Publish'
+    'Record', 'Transcribe', 'Enrich', 'Publish'
   ]
-  const currentStep = 'Structure';
+  const currentStep = 'Enrich';
 
   return (
     <section id="features">
@@ -63,13 +63,13 @@ export function Features() {
       <div className="container max-w-4xl mb-16">
         <div className="flex justify-between items-center relative">
           <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-border -z-10" />
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1/2 h-0.5 bg-primary -z-10" />
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2/3 h-0.5 bg-primary -z-10" />
           {steps.map((step, index) => {
             const isCompleted = steps.indexOf(currentStep) > index;
             const isCurrent = steps.indexOf(currentStep) === index;
 
             return (
-              <div key={step} className="flex flex-col items-center gap-2 z-0">
+              <div key={step} className="flex flex-col items-center gap-2 z-0 bg-background px-2">
                 <div className={cn("w-8 h-8 rounded-full flex items-center justify-center transition-all", 
                   isCompleted ? "bg-primary text-primary-foreground" : 
                   isCurrent ? "bg-primary text-primary-foreground ring-4 ring-primary/30" : 
@@ -90,7 +90,7 @@ export function Features() {
             <CardHeader>
               <CardTitle>Speak Your Mind</CardTitle>
               <CardDescription>
-                Start recording and capture your ideas as they come.
+                Start recording in any language. Just capture your ideas as they come.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -104,39 +104,9 @@ export function Features() {
         <FeatureCard {...features[1]}>
           <Card className="w-full max-w-md shadow-lg">
             <CardHeader>
-              <CardTitle>AI Transcription</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <p>0:00</p>
-                <Slider defaultValue={[20]} max={100} step={1} />
-                <p>07:23</p>
-              </div>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose an AI model" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="personal">Your personal AI model</SelectItem>
-                  <SelectItem value="default">AudioScribe AI default</SelectItem>
-                  <SelectItem value="conversational">
-                    Conversational and friendly
-                  </SelectItem>
-                  <SelectItem value="professional">
-                    Professional and authoritative
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </CardContent>
-          </Card>
-        </FeatureCard>
-
-        <FeatureCard {...features[2]}>
-          <Card className="w-full max-w-md shadow-lg">
-            <CardHeader>
               <CardTitle>From Speech to Structure</CardTitle>
               <CardDescription>
-                Our AI organizes your transcript into a polished article.
+                Our AI transcribes your audio and organizes it into a polished article draft.
               </CardDescription>
             </CardHeader>
             <CardContent className="prose prose-sm text-sm dark:prose-invert">
@@ -150,6 +120,19 @@ export function Features() {
               <p>
                 <strong>Smart Editor:</strong> It's more than just text. It's a full-featured editor.
               </p>
+            </CardContent>
+          </Card>
+        </FeatureCard>
+
+        <FeatureCard {...features[2]}>
+           <Card className="w-full max-w-md shadow-lg">
+            <CardHeader>
+              <CardTitle>AI-Powered Enhancements</CardTitle>
+               <CardDescription>Go beyond the first draft with powerful AI tools.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button>Enrich with Research</Button>
+               <Button variant="secondary">Analyze SEO</Button>
             </CardContent>
           </Card>
         </FeatureCard>
