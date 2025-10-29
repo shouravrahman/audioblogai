@@ -29,6 +29,8 @@ const GenerateStructuredBlogPostInputSchema = z.object({
   language: z.string().optional().describe('The language of the content in BCP-47 format (e.g., "en-US", "es-ES").'),
   preferences: UserPreferencesSchema.describe("The user's writing style preferences."),
   styleGuide: z.string().optional().describe('An optional, detailed style guide for the AI to follow, derived from a custom model.'),
+  blogType: z.string().optional().describe('The desired format of the blog post (e.g., standard, listicle, how-to).'),
+  wordCount: z.string().optional().describe('The target word count for the article (e.g., 300, 500, 1000).'),
 });
 export type GenerateStructuredBlogPostInput = z.infer<
   typeof GenerateStructuredBlogPostInputSchema
@@ -55,10 +57,19 @@ const prompt = ai.definePrompt({
 
 **Language for Output:** {{language}}
 
-Your process should be as follows:
+**Core Instructions:**
+
 1.  **Humanize the Content**: Convert the conversational, spoken-word transcription into clean, readable, and engaging written content. Fix grammatical errors, remove filler words (like 'um', 'ah', 'you know'), and restructure sentences for clarity and flow.
 2.  **Structure the Article**: Organize the content logically. Add a compelling title, a brief introduction to hook the reader, clear section headings to break up the text, and a concluding summary. Use lists (bulleted or numbered) where appropriate to make information digestible. All output (title, headings, content) must be in the specified language.
-3.  **Apply Styling Rules**: Adhere strictly to the styling and voice guidelines provided below.
+3.  **Apply Content and Styling Rules**: Adhere strictly to the content format and styling guidelines provided below.
+
+**Content Format and Length:**
+{{#if blogType}}
+- **Post Type**: Format this article as a '{{blogType}}'. For a 'listicle', use numbered headings for each point. For a 'how-to', use clear, step-by-step instructions.
+{{/if}}
+{{#if wordCount}}
+- **Target Word Count**: The final article should be approximately {{wordCount}} words long.
+{{/if}}
 
 **Styling and Voice Guidelines:**
 {{#if styleGuide}}

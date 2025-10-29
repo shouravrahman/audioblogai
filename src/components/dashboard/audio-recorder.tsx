@@ -30,6 +30,8 @@ export function AudioRecorder() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [selectedModel, setSelectedModel] = useState('default');
   const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [blogType, setBlogType] = useState('standard');
+  const [wordCount, setWordCount] = useState('500');
   const [hasMicPermission, setHasMicPermission] = useState<boolean | null>(null);
   
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -202,6 +204,8 @@ export function AudioRecorder() {
         audioDataUri,
         selectedModel,
         language: selectedLanguage,
+        blogType,
+        wordCount,
       });
 
       toast({
@@ -358,6 +362,35 @@ export function AudioRecorder() {
                               ))}
                           </SelectContent>
                       </Select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Blog Post Type</label>
+                     <Select value={blogType} onValueChange={setBlogType}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select post type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="standard">Standard Article</SelectItem>
+                        <SelectItem value="listicle">Listicle</SelectItem>
+                        <SelectItem value="how-to">How-To Guide</SelectItem>
+                        <SelectItem value="thought-leadership">Thought Leadership</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Word Count</label>
+                    <Select value={wordCount} onValueChange={setWordCount}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select word count" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="300">Short (~300 words)</SelectItem>
+                        <SelectItem value="500">Medium (~500 words)</SelectItem>
+                        <SelectItem value="1000">Long (~1000 words)</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2">

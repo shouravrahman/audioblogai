@@ -11,7 +11,7 @@ export const generateArticle = inngest.createFunction(
   { event: 'app/article.generate' },
   async ({ event, step }) => {
     const { firestore } = getFirebaseAdmin();
-    const { articleId, userId, audioDataUri, selectedModel, language } = event.data;
+    const { articleId, userId, audioDataUri, selectedModel, language, blogType, wordCount } = event.data;
 
     const articleRef = doc(firestore, `users/${userId}/blogPosts`, articleId);
 
@@ -49,6 +49,8 @@ export const generateArticle = inngest.createFunction(
           language,
           preferences,
           styleGuide,
+          blogType,
+          wordCount,
         });
         return blogPostResult.structuredBlogPost;
       });
