@@ -3,15 +3,35 @@ import Link from 'next/link';
 // Placeholder for your blog posts
 const posts = [
     {
+        slug: 'end-of-writers-block',
+        title: "The End of Writer's Block is a Conversation Away",
+        excerpt: "Discover how to bypass the dreaded blank page by simply speaking your thoughts and letting AI do the heavy lifting.",
+        date: '2024-08-01',
+    },
+    {
+        slug: 'authentic-ai-content',
+        title: "Why Your AI Content Sounds Robotic (And How to Fix It)",
+        excerpt: "Generic AI tools create soulless content. Learn how to generate truly authentic articles by using your own voice as the source.",
+        date: '2024-08-05',
+    },
+     {
+        slug: 'content-repurposing-flywheel',
+        title: "The Content Repurposing Flywheel: Turn One Podcast into Ten Assets",
+        excerpt: "A strategic guide for marketers and creators on how to use AudioScribe AI to maximize content output and reach a wider audience.",
+        date: '2024-08-10',
+    },
+    {
         slug: 'hello-world',
         title: 'Hello, World!',
         excerpt: 'This is the first blog post for AudioScribe AI! Learn more about what\'s to come.',
         date: '2024-07-25',
     },
-    // Add more posts here
 ];
 
 export default function BlogPage() {
+    // Sort posts by date, descending
+    const sortedPosts = posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
     return (
         <div className="container mx-auto py-12 px-4 max-w-4xl">
             <div className="text-center mb-12">
@@ -20,7 +40,7 @@ export default function BlogPage() {
             </div>
 
             <div className="space-y-8">
-                {posts.map(post => (
+                {sortedPosts.map(post => (
                     <Link key={post.slug} href={`/blog/${post.slug}`} className="block group">
                         <article>
                             <h2 className="text-2xl font-bold group-hover:text-primary transition-colors">{post.title}</h2>
