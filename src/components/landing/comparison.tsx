@@ -10,7 +10,7 @@ export function Comparison() {
           Publish faster, without the friction
         </h2>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          Use AudioScribe AI to get your ideas out of your head and onto the page faster than ever.
+          Use AudioScribe to get your ideas out of your head and onto the page faster than ever.
         </p>
       </div>
 
@@ -48,7 +48,7 @@ export function Comparison() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-primary">
               <Mic className="h-5 w-5" />
-              With AudioScribe AI
+              With AudioScribe
             </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">

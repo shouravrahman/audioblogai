@@ -32,7 +32,7 @@ export function Logo({ className }: { className?: string }) {
           strokeLinecap="round"
         />
       </svg>
-      <span className="text-lg font-bold">AudioScribe AI</span>
+      <span className="text-lg font-bold">AudioScribe</span>
     </div>
   );
 }

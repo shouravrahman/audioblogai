@@ -1,10 +1,10 @@
-# Case Study: AudioScribe AI
+# Case Study: AudioScribe
 
-This document provides a technical overview of the AudioScribe AI application, detailing the architectural decisions, technology stack, and a value-driven analysis of its features. This project serves as a robust example of a modern, full-stack, AI-powered SaaS application.
+This document provides a technical overview of the AudioScribe application, detailing the architectural decisions, technology stack, and a value-driven analysis of its features. This project serves as a robust example of a modern, full-stack, AI-powered SaaS application.
 
 ## 1. Project Vision & Value Proposition
 
-AudioScribe AI was built to solve a critical pain point for content creators, subject matter experts, and marketers: **the friction of turning ideas into polished, written content.**
+AudioScribe was built to solve a critical pain point for content creators, subject matter experts, and marketers: **the friction of turning ideas into polished, written content.**
 
 -   **Core Problem:** Writer's block, time constraints, and the difficulty of maintaining an authentic voice with generic AI tools.
 -   **Core Solution:** A platform that transforms spoken audio into well-structured, SEO-optimized, and researched articles, leveraging AI to handle transcription, formatting, stylistic adaptation, and enrichment.

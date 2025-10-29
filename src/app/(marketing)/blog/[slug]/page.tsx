@@ -7,7 +7,7 @@ async function getPostData(slug: string) {
         'hello-world': {
             title: 'Hello, World!',
             date: '2024-07-25',
-            content: `<p>This is the first blog post for AudioScribe AI! This is where you can share product updates, tutorials, and insights with your audience.</p>
+            content: `<p>This is the first blog post for AudioScribe! This is where you can share product updates, tutorials, and insights with your audience.</p>
                      <p>You can create more posts by adding new files in your codebase or integrating with a headless CMS.</p>`
         },
         'end-of-writers-block': {
@@ -20,8 +20,8 @@ async function getPostData(slug: string) {
                 <p>The blank page is intimidating because it represents infinite possibilities and zero progress. It demands perfection from the very first word. This pressure can be paralyzing, especially for subject matter experts who are brilliant at what they do but don't identify as "writers." Their ideas are sharp and valuable, but the process of typing, structuring, and editing feels unnatural and slow.</p>
                 <p>For prolific content creators, the enemy is volume and time. When you have to publish three articles a week, waiting for inspiration to strike isn't an option. The result is often burnout or content that feels forced.</p>
                 <h2 class="text-2xl font-bold mt-8 mb-4">A New Paradigm: Think, Speak, Publish</h2>
-                <p>What if you could skip the blank page entirely? This is the core philosophy behind AudioScribe AI. We believe the most natural way to express an idea is to talk about it. The flow of a conversation is fluid, intuitive, and free from the self-editing that plagues typing.</p>
-                <p>With AudioScribe AI, the process is transformed:</p>
+                <p>What if you could skip the blank page entirely? This is the core philosophy behind AudioScribe. We believe the most natural way to express an idea is to talk about it. The flow of a conversation is fluid, intuitive, and free from the self-editing that plagues typing.</p>
+                <p>With AudioScribe, the process is transformed:</p>
                 <ul class="list-disc list-inside my-4 space-y-2">
                     <li><strong>Capture the Spark:</strong> Have an idea on your commute? During a walk? Record a quick voice memo. Don't worry about structure; just talk.</li>
                     <li><strong>Let AI Do the Heavy Lifting:</strong> Our AI doesn't just transcribe your words; it understands them. It takes your spoken thoughts and automatically structures them into a coherent first draft, complete with a title, introduction, and logical section headings.</li>
@@ -29,7 +29,7 @@ async function getPostData(slug: string) {
                 </ul>
                 <h2 class="text-2xl font-bold mt-8 mb-4">Your Voice, Amplified</h2>
                 <p>The best part is that the final article is 100% authentically yours. It's built from your unique perspective, your exact words, and your specific insights. The AI simply removes the friction between your brain and the page.</p>
-                <p>The next time you feel the pressure of the blinking cursor, don't force yourself to write. Start a conversation with yourself. Record it. And let AudioScribe AI turn that conversation into your next great article.</p>
+                <p>The next time you feel the pressure of the blinking cursor, don't force yourself to write. Start a conversation with yourself. Record it. And let AudioScribe turn that conversation into your next great article.</p>
                 <p>Ready to try it? <a href="/signup" class="text-primary underline">Get started for free</a> and see how it feels to never face a blank page again.</p>
             `
         },
@@ -48,12 +48,12 @@ async function getPostData(slug: string) {
                 </ul>
                 <h2 class="text-2xl font-bold mt-8 mb-4">The Solution: Your Voice is the Source</h2>
                 <p>The secret to creating authentic content with AI is to change the source material. Instead of giving the AI a generic prompt to write *for* you, you need an AI that writes *from* you.</p>
-                <p>This is where AudioScribe AI fundamentally differs. We don't ask you for a prompt; we ask you for your voice. By recording yourself speaking on a topic, you are providing the AI with 100% original, authentic source material. The AI's job isn't to invent content, but to structure, clean up, and format *your* ideas.</p>
+                <p>This is where AudioScribe fundamentally differs. We don't ask you for a prompt; we ask you for your voice. By recording yourself speaking on a topic, you are providing the AI with 100% original, authentic source material. The AI's job isn't to invent content, but to structure, clean up, and format *your* ideas.</p>
                 <p>The result is an article that is undeniably yours. The core insights are yours. The analogies are yours. The unique turns of phrase are yours.</p>
                 <h2 class="text-2xl font-bold mt-8 mb-4">Go a Step Further: Train Your Personal AI</h2>
-                <p>For those who want to take authenticity to the next level, AudioScribe AI allows you to train a personalized AI model. By feeding it 3-5 of your past articles, the AI analyzes your writing style—your tone, your preferred sentence structure, your vocabulary—and creates a "style guide."</p>
+                <p>For those who want to take authenticity to the next level, AudioScribe allows you to train a personalized AI model. By feeding it 3-5 of your past articles, the AI analyzes your writing style—your tone, your preferred sentence structure, your vocabulary—and creates a "style guide."</p>
                 <p>Now, when it transforms your spoken audio, it doesn't just use your words; it actively tries to structure the output to sound exactly like you would if you had written it yourself. This is the holy grail of AI-assisted content: the speed of AI with the authenticity of you.</p>
-                <p>Stop feeding the content machine with generic prompts. Start creating content that builds your brand and connects with your audience. <a href="/signup" class="text-primary underline">Use your voice with AudioScribe AI and create something truly original.</a></p>
+                <p>Stop feeding the content machine with generic prompts. Start creating content that builds your brand and connects with your audience. <a href="/signup" class="text-primary underline">Use your voice with AudioScribe and create something truly original.</a></p>
             `
         },
         'content-repurposing-flywheel': {
@@ -61,11 +61,11 @@ async function getPostData(slug: string) {
             date: '2024-08-10',
             content: `
                 <p>As a marketer or creator, your most valuable asset is your time. You spend hours preparing and recording a single podcast episode, webinar, or YouTube video. Once it's published, what happens? You move on to the next one. This is a massive missed opportunity.</p>
-                <p>A single, high-value piece of "pillar" content can be the fuel for a dozen other marketing assets. This isn't about just reposting links; it's about creating a "Content Repurposing Flywheel" that maximizes the value of your original effort. And the engine of that flywheel is AudioScribe AI.</p>
+                <p>A single, high-value piece of "pillar" content can be the fuel for a dozen other marketing assets. This isn't about just reposting links; it's about creating a "Content Repurposing Flywheel" that maximizes the value of your original effort. And the engine of that flywheel is AudioScribe.</p>
                 <h2 class="text-2xl font-bold mt-8 mb-4">The Flywheel in Action: From Audio to Everywhere</h2>
                 <p>Let's take a 30-minute podcast episode as an example. Here's how you can turn it into a week's worth of content in under an hour.</p>
                 <p><strong>Step 1: The Foundation (5 Minutes)</strong></p>
-                <p>Upload your podcast's audio file to AudioScribe AI. Let the AI transcribe and transform it into a well-structured, SEO-friendly blog post. This article is now the foundational asset for everything else.</p>
+                <p>Upload your podcast's audio file to AudioScribe. Let the AI transcribe and transform it into a well-structured, SEO-friendly blog post. This article is now the foundational asset for everything else.</p>
                 
                 <p><strong>Step 2: The Core Article (15 Minutes)</strong></p>
                 <p>Your AI-generated draft is ready. Review it, make minor edits, and use the built-in Research and SEO tools to enrich it with data and optimize it for search. Publish it on your blog.</p>
@@ -80,7 +80,7 @@ async function getPostData(slug: string) {
                 </ul>
                 <h2 class="text-2xl font-bold mt-8 mb-4">From One to Many, Effortlessly</h2>
                 <p>In less than an hour, you've turned one 30-minute recording into a blog post, a newsletter, a LinkedIn post, a Twitter thread, an Instagram carousel, and several video scripts. You've reached your audience on multiple platforms, driven traffic back to your website, and established your authority—all from a single source of truth.</p>
-                <p>This is the power of a content flywheel. Stop creating content in a silo. Start repurposing intelligently. <a href="/signup" class="text-primary underline">Let AudioScribe AI be the engine of your content machine.</a></p>
+                <p>This is the power of a content flywheel. Stop creating content in a silo. Start repurposing intelligently. <a href="/signup" class="text-primary underline">Let AudioScribe be the engine of your content machine.</a></p>
             `
         }
     };

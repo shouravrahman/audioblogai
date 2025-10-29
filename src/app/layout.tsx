@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
-  title: 'AudioScribe AI',
+  title: 'AudioScribe',
   description: 'Transform your spoken ideas into polished blog posts effortlessly.',
 };
 

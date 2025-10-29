@@ -3,7 +3,7 @@ export default function PrivacyPage() {
       <div className="container mx-auto py-12 px-4 max-w-4xl">
         <div className="prose dark:prose-invert max-w-none">
           <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
-          <p>Your privacy is important to us. It is AudioScribe AI's policy to respect your privacy regarding any information we may collect from you across our website, and other sites we own and operate.</p>
+          <p>Your privacy is important to us. It is AudioScribe's policy to respect your privacy regarding any information we may collect from you across our website, and other sites we own and operate.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4">1. Information we collect</h2>
           <p><strong>Log data:</strong> When you visit our website, our servers may automatically log the standard data provided by your web browser. It may include your computer’s Internet Protocol (IP) address, your browser type and version, the pages you visit, the time and date of your visit, the time spent on each page, and other details.</p>

@@ -17,13 +17,13 @@ const posts = [
      {
         slug: 'content-repurposing-flywheel',
         title: "The Content Repurposing Flywheel: Turn One Podcast into Ten Assets",
-        excerpt: "A strategic guide for marketers and creators on how to use AudioScribe AI to maximize content output and reach a wider audience.",
+        excerpt: "A strategic guide for marketers and creators on how to use AudioScribe to maximize content output and reach a wider audience.",
         date: '2024-08-10',
     },
     {
         slug: 'hello-world',
         title: 'Hello, World!',
-        excerpt: 'This is the first blog post for AudioScribe AI! Learn more about what\'s to come.',
+        excerpt: 'This is the first blog post for AudioScribe! Learn more about what\'s to come.',
         date: '2024-07-25',
     },
 ];
@@ -35,7 +35,7 @@ export default function BlogPage() {
     return (
         <div className="container mx-auto py-12 px-4 max-w-4xl">
             <div className="text-center mb-12">
-                <h1 className="text-4xl font-bold">The AudioScribe AI Blog</h1>
+                <h1 className="text-4xl font-bold">The AudioScribe Blog</h1>
                 <p className="text-muted-foreground mt-2">Updates, tutorials, and insights from the team.</p>
             </div>
 

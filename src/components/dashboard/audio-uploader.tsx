@@ -203,7 +203,7 @@ export function AudioUploader() {
                   <SelectValue placeholder="Select an AI model" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="default">AudioScribe AI default</SelectItem>
+                  <SelectItem value="default">AudioScribe default</SelectItem>
                   {aiModels && aiModels.map(model => (
                       <SelectItem key={model.id} value={model.id}>
                           {model.name}
@@ -236,5 +236,3 @@ export function AudioUploader() {
 
   return null;
 }
-
-    

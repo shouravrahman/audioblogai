@@ -120,7 +120,7 @@ export const comparisonFeatures = {
         "Your ideas, AI's speed",
         "The content is 100% yours. The AI only organizes and refines what you say.",
         "Authentic, original content",
-        "Unlike generic tools, AudioScribe AI crafts articles based solely on your voice recordings.",
+        "Unlike generic tools, AudioScribe crafts articles based solely on your voice recordings.",
         "Develop your unique AI voice",
         "Train the AI on your past articles to make it adopt your personal writing style.",
         "Research & SEO Tools",
@@ -216,8 +216,8 @@ export const languages = [
 
 export const faqItems = [
     {
-        question: "What is AudioScribe AI?",
-        answer: "AudioScribe AI is a platform that transforms your spoken audio into well-structured, SEO-optimized, and researched articles. It's designed for content creators, experts, and marketers to turn ideas into polished content with minimal friction."
+        question: "What is AudioScribe?",
+        answer: "AudioScribe is a platform that transforms your spoken audio into well-structured, SEO-optimized, and researched articles. It's designed for content creators, experts, and marketers to turn ideas into polished content with minimal friction."
     },
     {
         question: "Who is this for?",
@@ -233,7 +233,7 @@ export const faqItems = [
     },
     {
         question: "Which languages are supported?",
-        answer: "AudioScribe AI supports transcription and content generation in multiple languages, including English, Spanish, French, German, and more. You can select your preferred language when you create a new article."
+        answer: "AudioScribe supports transcription and content generation in multiple languages, including English, Spanish, French, German, and more. You can select your preferred language when you create a new article."
     },
     {
         question: "Is my data secure?",
@@ -246,7 +246,7 @@ export const testimonials = [
       name: 'Sarah K.',
       title: 'Content Creator',
       quote:
-        "AudioScribe AI has been a game-changer for my workflow. I can now produce a week's worth of blog content from a single podcast episode. The personalized AI model is pure magic – it actually sounds like me!",
+        "AudioScribe has been a game-changer for my workflow. I can now produce a week's worth of blog content from a single podcast episode. The personalized AI model is pure magic – it actually sounds like me!",
       avatar: getImage('anne-bovelett-avatar'),
     },
     {
@@ -266,7 +266,7 @@ export const testimonials = [
     {
         name: 'Dr. Ben C.',
         title: 'Subject Matter Expert',
-        quote: "I'm an expert in my field, not a writer. AudioScribe AI bridges that gap perfectly. I can speak naturally about complex topics, and the AI handles the difficult task of structuring it into a readable format. The research assistant is a huge bonus.",
+        quote: "I'm an expert in my field, not a writer. AudioScribe bridges that gap perfectly. I can speak naturally about complex topics, and the AI handles the difficult task of structuring it into a readable format. The research assistant is a huge bonus.",
         avatar: getImage('keith-newton-md-avatar'),
     },
     {
@@ -278,7 +278,7 @@ export const testimonials = [
     {
         name: 'Isabella R.',
         title: 'Podcaster',
-        quote: "The biggest friction in my process was turning an hour-long interview into show notes and a blog post. AudioScribe AI automates this entire process. I can't imagine going back to doing it manually.",
+        quote: "The biggest friction in my process was turning an hour-long interview into show notes and a blog post. AudioScribe automates this entire process. I can't imagine going back to doing it manually.",
         avatar: getImage('ellie-zubrowski-avatar'),
     },
 ];

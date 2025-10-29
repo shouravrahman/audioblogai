@@ -12,7 +12,7 @@ export function Footer() {
                 <Logo />
             </Link>
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} AudioScribe AI. All rights reserved.
+              © {new Date().getFullYear()} AudioScribe. All rights reserved.
             </p>
           </div>
 
