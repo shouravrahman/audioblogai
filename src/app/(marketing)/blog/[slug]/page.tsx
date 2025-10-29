@@ -22,7 +22,7 @@ async function getPostData(slug: string) {
                 <h2 class="text-2xl font-bold mt-8 mb-4">A New Paradigm: Think, Speak, Publish</h2>
                 <p>What if you could skip the blank page entirely? This is the core philosophy behind AudioScribe AI. We believe the most natural way to express an idea is to talk about it. The flow of a conversation is fluid, intuitive, and free from the self-editing that plagues typing.</p>
                 <p>With AudioScribe AI, the process is transformed:</p>
-                <ul>
+                <ul class="list-disc list-inside my-4 space-y-2">
                     <li><strong>Capture the Spark:</strong> Have an idea on your commute? During a walk? Record a quick voice memo. Don't worry about structure; just talk.</li>
                     <li><strong>Let AI Do the Heavy Lifting:</strong> Our AI doesn't just transcribe your words; it understands them. It takes your spoken thoughts and automatically structures them into a coherent first draft, complete with a title, introduction, and logical section headings.</li>
                     <li><strong>Start at 80% Done:</strong> Instead of starting with a blank page, you start with a fully-formed article. Your job is no longer to be a "writer" from scratch, but an "editor" and "enhancer." You can refine, add details, and polish a draft that is already 80% of the way there.</li>
@@ -41,7 +41,7 @@ async function getPostData(slug: string) {
                 <p>This sea of sameness is a huge threat to your brand. Your content is your voice, your connection to your audience. If it sounds like everyone else, you’re invisible.</p>
                 <h2 class="text-2xl font-bold mt-8 mb-4">The Problem with Prompt-Based AI</h2>
                 <p>Generic AI tools work by predicting the next most likely word based on a prompt and their massive training data. While technically impressive, this process has a fatal flaw for brand-building:</p>
-                <ul>
+                <ul class="list-disc list-inside my-4 space-y-2">
                     <li><strong>It Lacks Original Thought:</strong> The AI isn't an expert in your field. It's a master of imitation, pulling from the most common information available on the web. It can't generate a truly novel idea or a unique perspective.</li>
                     <li><strong>It Has No Personal Voice:</strong> It doesn't know your specific vocabulary, your sense of humor, or the way you structure your sentences. It defaults to a bland, middle-of-the-road tone that lacks personality.</li>
                     <li><strong>It Creates "Content Echoes":</strong> Because these models are trained on the same internet, they often produce similar outputs for similar prompts, contributing to an echo chamber of recycled ideas.</li>
@@ -72,7 +72,7 @@ async function getPostData(slug: string) {
                 
                 <h2 class="text-2xl font-bold mt-8 mb-4">Spinning Off the Assets</h2>
                 <p>Now that you have a polished article, you can quickly create a cascade of micro-content:</p>
-                <ul>
+                <ul class="list-disc list-inside my-4 space-y-2">
                     <li><strong>Email Newsletter (5 Minutes):</strong> Copy the introduction and the first main point from your article. Add a personal note and a link to the full post on your blog.</li>
                     <li><strong>LinkedIn Post / X (Twitter) Thread (10 Minutes):</strong> Each section heading in your article is a perfect point for a thread. Take the key sentences from each section and format them as a numbered list or a series of posts. End the thread with a link to the full article.</li>
                     <li><strong>Instagram Carousel (10 Minutes):</strong> Turn the key takeaways or a list from your article into a visually appealing carousel. Use a tool like Canva with your key text points. For example, "5 Myths about Productivity" becomes a 5-slide carousel.</li>

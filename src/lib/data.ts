@@ -4,14 +4,18 @@ import { PlaceHolderImages } from './placeholder-images';
 function getImage(id: string): ImagePlaceholder {
   const image = PlaceHolderImages.find((img) => img.id === id);
   if (!image) {
-    throw new Error(`Image with id "${id}" not found.`);
+    // Return a default/fallback image placeholder to avoid crashing
+    const fallbackImage = PlaceHolderImages.find((img) => img.id === 'demo-video-thumbnail');
+    if (fallbackImage) return fallbackImage;
+    // If even the fallback is not found, throw an error or handle it gracefully
+    throw new Error(`Image with id "${id}" not found, and fallback is also missing.`);
   }
   return image;
 }
 
 export const navLinks = [
-  { label: 'How it Works', href: '#features' },
-  { label: 'Pricing', href: '#pricing' },
+  { label: 'How it Works', href: '/#features' },
+  { label: 'Pricing', href: '/#pricing' },
   { label: 'Blog', href: '/blog' },
 ];
 
@@ -184,8 +188,8 @@ export const pricingPlans = [
 
 export const footerLinks = {
     product: [
-        { label: 'Pricing', href: '#pricing' },
-        { label: 'How it Works', href: '#features' },
+        { label: 'Pricing', href: '/#pricing' },
+        { label: 'How it Works', href: '/#features' },
         { label: 'Blog', href: '/blog' },
     ],
     company: [
@@ -235,4 +239,46 @@ export const faqItems = [
         question: "Is my data secure?",
         answer: "Yes, your data security is a top priority. All of your data, including audio files and generated articles, is stored securely and is only accessible by you. We use Firebase's robust security rules to ensure data privacy."
     }
+];
+
+export const testimonials = [
+  {
+      name: 'Sarah K.',
+      title: 'Content Creator',
+      quote:
+        "AudioScribe AI has been a game-changer for my workflow. I can now produce a week's worth of blog content from a single podcast episode. The personalized AI model is pure magic – it actually sounds like me!",
+      avatar: getImage('anne-bovelett-avatar'),
+    },
+    {
+      name: 'Alex J.',
+      title: 'Founder & CEO',
+      quote:
+        "As a founder, I have a lot of ideas but very little time to write. This tool allows me to capture my thoughts on the go and turn them into coherent articles for our company blog. It's like having a ghostwriter that's also a mind-reader.",
+      avatar: getImage('kent-c-dodds-avatar'),
+    },
+    {
+      name: 'Maria G.',
+      title: 'Marketing Manager',
+      quote:
+        "We've been able to scale our content production by 3x without sacrificing quality. The ability to train the AI on our brand's voice guide ensures every article is consistent, no matter which team member records the audio.",
+      avatar: getImage('tessa-kriesel-avatar'),
+    },
+    {
+        name: 'Dr. Ben C.',
+        title: 'Subject Matter Expert',
+        quote: "I'm an expert in my field, not a writer. AudioScribe AI bridges that gap perfectly. I can speak naturally about complex topics, and the AI handles the difficult task of structuring it into a readable format. The research assistant is a huge bonus.",
+        avatar: getImage('keith-newton-md-avatar'),
+    },
+    {
+        name: 'Danny T.',
+        title: 'Developer Advocate',
+        quote: "I used to spend hours converting my conference talks into blog posts. Now, I just upload the audio, and I get a first draft that's 80% of the way there. The time savings are enormous, and the SEO tools help my content get seen.",
+        avatar: getImage('danny-thompson-avatar'),
+    },
+    {
+        name: 'Isabella R.',
+        title: 'Podcaster',
+        quote: "The biggest friction in my process was turning an hour-long interview into show notes and a blog post. AudioScribe AI automates this entire process. I can't imagine going back to doing it manually.",
+        avatar: getImage('ellie-zubrowski-avatar'),
+    },
 ];

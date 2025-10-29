@@ -1,8 +1,8 @@
 export default function PrivacyPage() {
     return (
       <div className="container mx-auto py-12 px-4 max-w-4xl">
-        <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
-        <div className="prose dark:prose-invert">
+        <div className="prose dark:prose-invert max-w-none">
+          <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
           <p>Your privacy is important to us. It is AudioScribe AI's policy to respect your privacy regarding any information we may collect from you across our website, and other sites we own and operate.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4">1. Information we collect</h2>

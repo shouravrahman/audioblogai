@@ -1,8 +1,8 @@
 export default function TermsPage() {
     return (
         <div className="container mx-auto py-12 px-4 max-w-4xl">
-            <h1 className="text-3xl font-bold mb-6">Terms of Service</h1>
-            <div className="prose dark:prose-invert">
+            <div className="prose dark:prose-invert max-w-none">
+                <h1 className="text-3xl font-bold mb-6">Terms of Service</h1>
                 <p>Welcome to AudioScribe AI!</p>
                 <p>These terms and conditions outline the rules and regulations for the use of AudioScribe AI's Website, located at your-domain.com.</p>
                 <p>By accessing this website we assume you accept these terms and conditions. Do not continue to use AudioScribe AI if you do not agree to take all of the terms and conditions stated on this page.</p>
@@ -13,7 +13,7 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold mt-8 mb-4">License</h2>
                 <p>Unless otherwise stated, AudioScribe AI and/or its licensors own the intellectual property rights for all material on AudioScribe AI. All intellectual property rights are reserved. You may access this from AudioScribe AI for your own personal use subjected to restrictions set in these terms and conditions.</p>
                 <p>You must not:</p>
-                <ul>
+                <ul class="list-disc list-inside my-4 space-y-2">
                     <li>Republish material from AudioScribe AI</li>
                     <li>Sell, rent or sub-license material from AudioScribe AI</li>
                     <li>Reproduce, duplicate or copy material from AudioScribe AI</li>
@@ -26,7 +26,7 @@ export default function TermsPage() {
 
                 <h2 className="text-2xl font-bold mt-8 mb-4">Disclaimer</h2>
                 <p>To the maximum extent permitted by applicable law, we exclude all representations, warranties and conditions relating to our website and the use of this website. Nothing in this disclaimer will:</p>
-                <ul>
+                <ul class="list-disc list-inside my-4 space-y-2">
                     <li>limit or exclude our or your liability for death or personal injury;</li>
                     <li>limit or exclude our or your liability for fraud or fraudulent misrepresentation;</li>
                     <li>limit any of our or your liabilities in any way that is not permitted under applicable law; or</li>
