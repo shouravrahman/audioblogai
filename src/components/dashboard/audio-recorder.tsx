@@ -95,7 +95,7 @@ export function AudioRecorder() {
         toast({
             variant: 'destructive',
             title: 'Microphone Error',
-            description: 'Could not access the microphone. Please check permissions.',
+            description: `Could not access the microphone. Please check permissions. Error: ${err.message}`,
         });
         setRecorderState('idle');
     }
