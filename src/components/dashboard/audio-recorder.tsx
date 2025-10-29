@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Mic, Pause, Square, Download, Loader2, RotateCcw, Play } from 'lucide-react';
+import { Mic, Pause, Square, Download, Loader2, RotateCcw, Play, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
@@ -19,6 +19,7 @@ import { blobToBase64 } from '@/lib/utils';
 import { AudioVisualizer } from './audio-visualizer';
 import type { AiModel } from '@/lib/types';
 import { createArticle } from '@/app/actions';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 type RecorderState = 'idle' | 'recording' | 'paused' | 'recorded' | 'creating';
 
@@ -27,6 +28,7 @@ export function AudioRecorder() {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [selectedModel, setSelectedModel] = useState('default');
+  const [hasMicPermission, setHasMicPermission] = useState<boolean | null>(null);
   
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -46,6 +48,40 @@ export function AudioRecorder() {
 
   const { data: aiModels } = useCollection<AiModel>(modelsQuery);
 
+  // Check for microphone permission on mount
+  useEffect(() => {
+    async function checkMicPermission() {
+      try {
+        // A more robust check for microphone existence
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const hasAudioInput = devices.some(device => device.kind === 'audioinput');
+        
+        if (!hasAudioInput) {
+            setHasMicPermission(false);
+            return;
+        }
+
+        // Then check for permission
+        const permissionStatus = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+        if (permissionStatus.state === 'granted') {
+          setHasMicPermission(true);
+        } else if (permissionStatus.state === 'prompt') {
+          setHasMicPermission(true); // Will ask when needed
+        } else {
+          setHasMicPermission(false);
+        }
+
+        permissionStatus.onchange = () => {
+            setHasMicPermission(permissionStatus.state === 'granted' || permissionStatus.state === 'prompt');
+        };
+      } catch (error) {
+        // This might fail if the browser doesn't support the permissions API
+        setHasMicPermission(false);
+        console.error("Error checking microphone permissions:", error);
+      }
+    }
+    checkMicPermission();
+  }, []);
 
   // Timer effect
   useEffect(() => {
@@ -78,6 +114,7 @@ export function AudioRecorder() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         streamRef.current = stream;
+        setHasMicPermission(true); // Permission granted
         mediaRecorderRef.current = new MediaRecorder(stream);
         mediaRecorderRef.current.ondataavailable = (event) => {
             audioChunksRef.current.push(event.data);
@@ -92,6 +129,7 @@ export function AudioRecorder() {
         mediaRecorderRef.current.start();
     } catch (err: any) {
         console.error("Error accessing microphone:", err);
+        setHasMicPermission(false);
         toast({
             variant: 'destructive',
             title: 'Microphone Error',
@@ -176,16 +214,39 @@ export function AudioRecorder() {
     }
   };
 
+  const NoMicAccessView = () => (
+    <>
+      <CardHeader>
+        <CardTitle>Microphone Access Required</CardTitle>
+        <CardDescription>We can't seem to find a microphone.</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col items-center justify-center gap-6 p-10">
+        <Button disabled size="icon" className="w-20 h-20 rounded-full">
+            <Mic className="h-8 w-8" />
+        </Button>
+        <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>No Microphone Detected</AlertTitle>
+            <AlertDescription>
+                Please connect a microphone and ensure you've granted permission in your browser and operating system settings, then refresh the page.
+            </AlertDescription>
+        </Alert>
+      </CardContent>
+    </>
+  );
+
   return (
     <Card className="max-w-2xl mx-auto">
-      {recorderState === 'idle' && (
+      {hasMicPermission === false && <NoMicAccessView />}
+      
+      {hasMicPermission && recorderState === 'idle' && (
          <>
           <CardHeader>
             <CardTitle>Record Your Thoughts</CardTitle>
             <CardDescription>Click the mic to start recording.</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center gap-6 p-10">
-            <Button onClick={handleStartRecording} size="icon" className="w-20 h-20 rounded-full">
+            <Button onClick={handleStartRecording} size="icon" className="w-20 h-20 rounded-full" disabled={hasMicPermission === false}>
               <Mic className="h-8 w-8" />
             </Button>
             <div className="h-16 w-full bg-secondary rounded-lg" />
@@ -193,7 +254,7 @@ export function AudioRecorder() {
         </>
       )}
 
-      {(recorderState === 'recording' || recorderState === 'paused') && (
+      {hasMicPermission && (recorderState === 'recording' || recorderState === 'paused') && (
         <>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
@@ -226,7 +287,7 @@ export function AudioRecorder() {
         </>
       )}
 
-      {(recorderState === 'recorded' || recorderState === 'creating') && (
+      {hasMicPermission && (recorderState === 'recorded' || recorderState === 'creating') && (
         <>
             <CardHeader>
                 <CardTitle>Review and Create</CardTitle>
