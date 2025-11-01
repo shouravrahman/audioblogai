@@ -1,5 +1,5 @@
 import { serve } from 'inngest/next';
-import { inngest } from '@/inngest/server-client';
+import { inngest } from '@/inngest/client';
 import { generateArticle } from '@/inngest/functions';
 
 export const { GET, POST, PUT } = serve({
@@ -7,4 +7,5 @@ export const { GET, POST, PUT } = serve({
   functions: [
     generateArticle,
   ],
+  streaming: 'allow',
 });

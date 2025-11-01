@@ -1,6 +1,6 @@
 'use server';
 
-import { inngest } from '@/inngest/server-client';
+import { inngest } from '@/inngest/client';
 import { z } from 'zod';
 import { lemonSqueezySetup, createCheckout as createLsCheckout } from '@lemonsqueezy/lemonsqueezy.js';
 import { redirect } from 'next/navigation';
@@ -8,6 +8,7 @@ import { trainAiModelWithWritingSamples, type TrainAiModelWithWritingSamplesInpu
 import { transcribeAudioToText, type TranscribeAudioToTextInput, type TranscribeAudioToTextOutput } from '@/ai/flows/transcribe-audio-to-text';
 import { researchAndExpandArticle, type ResearchAndExpandArticleInput, type ResearchAndExpandArticleOutput } from '@/ai/flows/research-and-expand-article';
 import { analyzeSeo, type AnalyzeSeoInput, type AnalyzeSeoOutput } from '@/ai/flows/analyze-seo';
+import { generateStructuredBlogPost, type GenerateStructuredBlogPostInput, type GenerateStructuredBlogPostOutput } from '@/ai/flows/generate-structured-blog-post';
 
 
 const createArticleSchema = z.object({
@@ -102,4 +103,9 @@ export async function researchAndExpandArticleAction(input: ResearchAndExpandArt
 // Action for analyzing SEO
 export async function analyzeSeoAction(input: AnalyzeSeoInput): Promise<AnalyzeSeoOutput> {
   return await analyzeSeo(input);
+}
+
+// Action for generating a blog post
+export async function generateStructuredBlogPostAction(input: GenerateStructuredBlogPostInput): Promise<GenerateStructuredBlogPostOutput> {
+    return await generateStructuredBlogPost(input);
 }
