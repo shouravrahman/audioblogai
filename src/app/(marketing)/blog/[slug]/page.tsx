@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const runtime = 'edge';
+
 
 // This is a placeholder for fetching blog post data.
 // In a real app, you'd fetch this from a CMS or a local file.
@@ -68,10 +68,10 @@ async function getPostData(slug: string) {
                 <p>Let's take a 30-minute podcast episode as an example. Here's how you can turn it into a week's worth of content in under an hour.</p>
                 <p><strong>Step 1: The Foundation (5 Minutes)</strong></p>
                 <p>Upload your podcast's audio file to AudioScribe. Let the AI transcribe and transform it into a well-structured, SEO-friendly blog post. This article is now the foundational asset for everything else.</p>
-                
+
                 <p><strong>Step 2: The Core Article (15 Minutes)</strong></p>
                 <p>Your AI-generated draft is ready. Review it, make minor edits, and use the built-in Research and SEO tools to enrich it with data and optimize it for search. Publish it on your blog.</p>
-                
+
                 <h2 class="text-2xl font-bold mt-8 mb-4">Spinning Off the Assets</h2>
                 <p>Now that you have a polished article, you can quickly create a cascade of micro-content:</p>
                 <ul class="list-disc list-inside my-4 space-y-2">
