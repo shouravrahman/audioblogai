@@ -9,4 +9,6 @@ const handler = serve({
   streaming: 'allow',
 });
 
-export const { GET, POST, PUT } = handler;
+export const GET = handler;
+export const POST = handler;
+export const PUT = handler;
