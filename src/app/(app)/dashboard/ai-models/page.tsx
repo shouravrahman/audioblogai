@@ -14,12 +14,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { addDoc, collection, serverTimestamp, query, where } from 'firebase/firestore';
-import { trainAiModelWithWritingSamples } from '@/ai/flows/train-ai-model-with-writing-samples';
+import { trainAiModelAction, transcribeAudioToAction } from '@/app/actions';
 import type { AiModel, UserSubscription } from '@/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useDropzone } from 'react-dropzone';
 import { blobToBase64 } from '@/lib/utils';
-import { transcribeAudioToText } from '@/ai/flows/transcribe-audio-to-text';
 
 const modelFormSchema = z.object({
   name: z.string().min(3, 'Model name must be at least 3 characters.'),
@@ -141,7 +140,7 @@ function CreateModelForm({ onModelCreated, onBack }: { onModelCreated: () => voi
             toast({ title: 'Transcribing audio samples...', description: 'This may take a moment.' });
             for (const audioFile of data.audioSamples) {
                 const audioDataUri = await blobToBase64(audioFile);
-                const result = await transcribeAudioToText({ audioDataUri });
+                const result = await transcribeAudioToAction({ audioDataUri });
                 audioTranscriptions.push(result.transcription);
             }
         }
@@ -153,7 +152,7 @@ function CreateModelForm({ onModelCreated, onBack }: { onModelCreated: () => voi
         }
         
         toast({ title: 'Training AI model...', description: 'Analyzing your writing style.' });
-        const trainingResult = await trainAiModelWithWritingSamples({ writingSamples: allWritingSamples });
+        const trainingResult = await trainAiModelAction({ writingSamples: allWritingSamples });
 
         const modelsCollection = collection(firestore, `users/${user.uid}/aiModels`);
         await addDoc(modelsCollection, {

@@ -32,8 +32,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import TurndownService from 'turndown';
-import { researchAndExpandArticle } from '@/ai/flows/research-and-expand-article';
-import { analyzeSeo, type AnalyzeSeoOutput } from '@/ai/flows/analyze-seo';
+import { researchAndExpandArticleAction, analyzeSeoAction } from '@/app/actions';
+import type { AnalyzeSeoOutput } from '@/ai/flows/analyze-seo';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 export default function ArticlePage() {
@@ -155,7 +155,7 @@ export default function ArticlePage() {
     toast({ title: 'Starting Research...', description: 'The AI is searching for data to enrich your article.' });
     try {
         const currentContent = contentRef.current.innerText;
-        const result = await researchAndExpandArticle({ articleContent: currentContent });
+        const result = await researchAndExpandArticleAction({ articleContent: currentContent });
         
         if (contentRef.current) {
             contentRef.current.innerHTML = result.enrichedArticle.replace(/\n/g, '<br />');
@@ -178,7 +178,7 @@ export default function ArticlePage() {
       toast({ title: 'Analyzing SEO...', description: 'The AI is reviewing your article for SEO improvements.' });
       try {
           const currentContent = contentRef.current.innerText;
-          const result = await analyzeSeo({ title: article.title, content: currentContent });
+          const result = await analyzeSeoAction({ title: article.title, content: currentContent });
           setSeoResults(result);
       } catch (e: any) {
           toast({ variant: 'destructive', title: 'SEO Analysis Failed', description: e.message || 'Could not perform SEO analysis.' });

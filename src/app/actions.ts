@@ -4,6 +4,11 @@ import { inngest } from '@/inngest/server-client';
 import { z } from 'zod';
 import { lemonSqueezySetup, createCheckout as createLsCheckout } from '@lemonsqueezy/lemonsqueezy.js';
 import { redirect } from 'next/navigation';
+import { trainAiModelWithWritingSamples, type TrainAiModelWithWritingSamplesInput, type TrainAiModelWithWritingSamplesOutput } from '@/ai/flows/train-ai-model-with-writing-samples';
+import { transcribeAudioToText, type TranscribeAudioToTextInput, type TranscribeAudioToTextOutput } from '@/ai/flows/transcribe-audio-to-text';
+import { researchAndExpandArticle, type ResearchAndExpandArticleInput, type ResearchAndExpandArticleOutput } from '@/ai/flows/research-and-expand-article';
+import { analyzeSeo, type AnalyzeSeoInput, type AnalyzeSeoOutput } from '@/ai/flows/analyze-seo';
+
 
 const createArticleSchema = z.object({
   articleId: z.string(),
@@ -51,34 +56,50 @@ export async function createCheckout(input: z.infer<typeof createCheckoutSchema>
     throw new Error('LEMONSQUEEZY_STORE_ID is not set');
   }
 
-  // Setup Lemon Squeezy with the API key
   lemonSqueezySetup({
     apiKey: process.env.LEMONSQUEEZY_API_KEY,
   });
 
-  const { data, error } = await createLsCheckout({
-    store: process.env.LEMONSQUEEZY_STORE_ID,
-    variant: planId,
-    custom: {
-      user_id: userId,
-    },
-    checkout_options: {
-      embed: true,
-      media: false,
-      logo: false,
-    },
-    checkout_data: {
+  const { data, error } = await createLsCheckout(process.env.LEMONSQUEEZY_STORE_ID!, planId, {
+    checkoutData: {
       email: userEmail,
+      custom: {
+        user_id: userId,
+      }
     },
+    productOptions: {
+      redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/dashboard`,
+    }
   });
+
 
   if (error) {
     throw new Error(`Failed to create checkout: ${error.message}`);
   }
   
-  if (!data?.attributes.url) {
+  if (!data?.data.attributes.url) {
      throw new Error('Failed to retrieve checkout URL');
   }
   
-  redirect(data.attributes.url);
+  redirect(data.data.attributes.url);
+}
+
+// Action for training AI model
+export async function trainAiModelAction(input: TrainAiModelWithWritingSamplesInput): Promise<TrainAiModelWithWritingSamplesOutput> {
+  return await trainAiModelWithWritingSamples(input);
+}
+
+// Action for transcribing audio
+export async function transcribeAudioToAction(input: TranscribeAudioToTextInput): Promise<TranscribeAudioToTextOutput> {
+  return await transcribeAudioToText(input);
+}
+
+// Action for researching and expanding an article
+export async function researchAndExpandArticleAction(input: ResearchAndExpandArticleInput): Promise<ResearchAndExpandArticleOutput> {
+  return await researchAndExpandArticle(input);
+}
+
+// Action for analyzing SEO
+export async function analyzeSeoAction(input: AnalyzeSeoInput): Promise<AnalyzeSeoOutput> {
+  return await analyzeSeo(input);
 }
