@@ -2,9 +2,7 @@
 
 import { inngest } from '@/inngest/server-client';
 import { z } from 'zod';
-import { LemonSqueezy } from '@lemonsqueezy/lemonsqueezy.js';
-import { auth } from 'firebase-admin';
-import { getFirebaseAdmin } from './firebase-admin';
+import { lemonSqueezySetup, createCheckout as createLsCheckout } from '@lemonsqueezy/lemonsqueezy.js';
 import { redirect } from 'next/navigation';
 
 const createArticleSchema = z.object({
@@ -53,27 +51,34 @@ export async function createCheckout(input: z.infer<typeof createCheckoutSchema>
     throw new Error('LEMONSQUEEZY_STORE_ID is not set');
   }
 
-  const lemonSqueezy = new LemonSqueezy(process.env.LEMONSQUEEZY_API_KEY);
+  // Setup Lemon Squeezy with the API key
+  lemonSqueezySetup({
+    apiKey: process.env.LEMONSQUEEZY_API_KEY,
+  });
 
-  const checkout = await lemonSqueezy.createCheckout({
-    storeId: Number(process.env.LEMONSQUEEZY_STORE_ID),
-    variantId: Number(planId),
+  const { data, error } = await createLsCheckout({
+    store: process.env.LEMONSQUEEZY_STORE_ID,
+    variant: planId,
     custom: {
       user_id: userId,
     },
-    checkoutOptions: {
+    checkout_options: {
       embed: true,
       media: false,
       logo: false,
     },
-    checkoutData: {
+    checkout_data: {
       email: userEmail,
     },
   });
 
-  if (!checkout.data?.data.attributes.url) {
-    throw new Error('Failed to create checkout');
+  if (error) {
+    throw new Error(`Failed to create checkout: ${error.message}`);
   }
   
-  redirect(checkout.data.data.attributes.url);
+  if (!data?.attributes.url) {
+     throw new Error('Failed to retrieve checkout URL');
+  }
+  
+  redirect(data.attributes.url);
 }

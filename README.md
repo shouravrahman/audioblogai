@@ -18,9 +18,11 @@ This guide explains how to deploy the Next.js frontend of this application to a 
 
 ### Prerequisites
 
-1.  **Firebase Project**: Your Firebase project is already set up and contains your Authentication, Firestore, and Inngest function configurations.
-2.  **Cloudflare Account**: You have an account with Cloudflare (or another hosting provider).
-3.  **Local Code**: You have downloaded the source code of this application.
+1.  **Firebase Project**: Your Firebase project is already set up and contains your Authentication and Firestore configurations.
+2.  **Inngest Account**: You have a free account with [Inngest](https://www.inngest.com/) to manage background jobs.
+3.  **Lemon Squeezy Account**: You have an account with [Lemon Squeezy](https://www.lemonsqueezy.com/) for payment processing.
+4.  **Cloudflare Account**: You have an account with Cloudflare (or another hosting provider).
+5.  **Local Code**: You have downloaded the source code of this application.
 
 ### Step 1: Build the Next.js Application Locally
 
@@ -37,9 +39,12 @@ This command transpiles the TypeScript code, bundles your assets, and outputs a 
 
 ### Step 2: Configure Environment Variables
 
-Your hosting provider needs to know your Firebase project's configuration to connect to it from the client-side. These keys are safe to expose publicly, as your app's security is enforced by Firestore Security Rules.
+Your hosting provider needs a complete set of secrets and keys to connect to Firebase, Inngest, and Lemon Squeezy.
 
-In your hosting provider's dashboard (e.g., Cloudflare Pages), find the section for "Environment Variables" and add the following keys. You can copy these values directly from your `src/firebase/config.ts` file or your Firebase project settings.
+In your hosting provider's dashboard (e.g., Cloudflare Pages), find the section for "Environment Variables" and add the following keys. 
+
+#### Firebase Keys
+You can copy these values directly from your `src/firebase/config.ts` file or your Firebase project settings.
 
 | Variable Name              | Value                                         | Description                                    |
 | -------------------------- | --------------------------------------------- | ---------------------------------------------- |
@@ -48,29 +53,26 @@ In your hosting provider's dashboard (e.g., Cloudflare Pages), find the section 
 | `NEXT_PUBLIC_API_KEY`      | `your-firebase-api-key`                       | Your Firebase Web API Key.                     |
 | `NEXT_PUBLIC_AUTH_DOMAIN`  | `your-project-id.firebaseapp.com`             | Your Firebase project's authentication domain. |
 
-**Important**: Make sure to prefix all variables with `NEXT_PUBLIC_` so that Next.js makes them available in the browser.
+**Important**: Make sure to prefix Firebase variables with `NEXT_PUBLIC_` so that Next.js makes them available in the browser.
 
-### Step 3: Update Firebase Configuration in the Code
+#### Inngest Keys
+Sign in to your Inngest account and find your **Signing Key** and **Event Key** under the "Manage" section of your project.
 
-Your application is currently set up to get its Firebase config automatically from the environment. To make it work on a third-party host, you need to tell it to read from the public environment variables you just set.
+| Variable Name           | Description           |
+| ----------------------- | --------------------- |
+| `INNGEST_SIGNING_KEY`   | Your Inngest signing key. |
 
-Modify `src/firebase/config.ts` to use these environment variables:
+#### Lemon Squeezy Keys
+Sign in to your Lemon Squeezy account. You can find your **Store ID** in the "Settings > Stores" page, and you can create an **API Key** and **Webhook Secret** in "Settings > API".
 
-```typescript
-// src/firebase/config.ts
+| Variable Name                   | Description                             |
+| ------------------------------- | --------------------------------------- |
+| `LEMONSQUEEZY_API_KEY`          | Your Lemon Squeezy API key.             |
+| `LEMONSQUEEZY_STORE_ID`         | Your Lemon Squeezy store ID.            |
+| `LEMONSQUEEZY_WEBHOOK_SECRET`   | Your secret for verifying webhooks.     |
 
-export const firebaseConfig = {
-  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-  appId: process.env.NEXT_PUBLIC_APP_ID,
-  apiKey: process.env.NEXT_PUBLIC_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
-  // Add other necessary keys like messagingSenderId if you use them
-};
-```
 
-This change makes your app's frontend portable. As long as the environment variables are set correctly on the hosting platform, it will connect to the correct Firebase backend.
-
-### Step 4: Deploy to Cloudflare Pages
+### Step 3: Deploy to Cloudflare Pages
 
 1.  **Log in to Cloudflare**: Go to your Cloudflare dashboard.
 2.  **Navigate to Workers & Pages**: Select "Workers & Pages" from the sidebar.
@@ -81,10 +83,10 @@ This change makes your app's frontend portable. As long as the environment varia
     *   **Framework Preset**: Choose **Next.js**.
     *   **Build Command**: `npm run build`
     *   **Build Output Directory**: `.next`
-6.  **Add Environment Variables**: In the "Environment variables" section, add the `NEXT_PUBLIC_` variables you configured in Step 2.
+6.  **Add Environment Variables**: In the "Environment variables" section, add all the variables you configured in Step 2.
 7.  **Save and Deploy**: Click "Save and Deploy". Cloudflare will now build and deploy your application.
 
-### Step 5: Configure Authorized Domains in Firebase
+### Step 4: Configure Authorized Domains in Firebase
 
 For security, Firebase Authentication only allows sign-ins from authorized domains.
 
