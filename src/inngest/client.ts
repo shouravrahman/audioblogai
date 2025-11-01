@@ -1,5 +1,3 @@
-'use server';
-
 import { EventSchemas, Inngest } from 'inngest';
 import type { Events } from './events';
 import { transcribeAudioToText } from '@/ai/flows/transcribe-audio-to-text';
