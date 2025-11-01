@@ -1,6 +1,5 @@
 import { serve } from 'inngest/next';
-import { inngest } from '@/inngest/client';
-import { generateArticle } from '@/inngest/functions';
+import { inngest, generateArticle } from '@/inngest/client';
 
 const handler = serve({
   client: inngest,
