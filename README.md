@@ -56,11 +56,13 @@ You can copy these values directly from your `src/firebase/config.ts` file or yo
 **Important**: Make sure to prefix Firebase variables with `NEXT_PUBLIC_` so that Next.js makes them available in the browser.
 
 #### Inngest Keys
-Sign in to your Inngest account and find your **Signing Key** under the "Manage" section of your project.
+Sign in to your Inngest account. You can find your **Signing Key** and **Event Key** under the "Manage" section of your project.
 
 | Variable Name           | Description           |
 | ----------------------- | --------------------- |
+| `INNGEST_EVENT_KEY`     | Your Inngest event key. |
 | `INNGEST_SIGNING_KEY`   | Your Inngest signing key. |
+
 
 #### Lemon Squeezy Keys
 Sign in to your Lemon Squeezy account. You can find your **Store ID** in the "Settings > Stores" page, and you can create an **API Key** and **Webhook Secret** in "Settings > API". The **Variant IDs** can be found on each product variant's page.
