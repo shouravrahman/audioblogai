@@ -46,30 +46,34 @@ In your hosting provider's dashboard (e.g., Cloudflare Pages), find the section 
 #### Firebase Keys
 You can copy these values directly from your `src/firebase/config.ts` file or your Firebase project settings.
 
-| Variable Name              | Value                                         | Description                                    |
-| -------------------------- | --------------------------------------------- | ---------------------------------------------- |
-| `NEXT_PUBLIC_PROJECT_ID`   | `your-firebase-project-id`                    | Your Firebase Project ID.                      |
-| `NEXT_PUBLIC_APP_ID`       | `your-firebase-app-id`                        | Your Firebase Web App ID.                      |
-| `NEXT_PUBLIC_API_KEY`      | `your-firebase-api-key`                       | Your Firebase Web API Key.                     |
-| `NEXT_PUBLIC_AUTH_DOMAIN`  | `your-project-id.firebaseapp.com`             | Your Firebase project's authentication domain. |
+| Variable Name              | Description                                    |
+| -------------------------- | ---------------------------------------------- |
+| `NEXT_PUBLIC_PROJECT_ID`   | Your Firebase Project ID.                      |
+| `NEXT_PUBLIC_APP_ID`       | Your Firebase Web App ID.                      |
+| `NEXT_PUBLIC_API_KEY`      | Your Firebase Web API Key.                     |
+| `NEXT_PUBLIC_AUTH_DOMAIN`  | Your Firebase project's authentication domain. |
 
 **Important**: Make sure to prefix Firebase variables with `NEXT_PUBLIC_` so that Next.js makes them available in the browser.
 
 #### Inngest Keys
-Sign in to your Inngest account and find your **Signing Key** and **Event Key** under the "Manage" section of your project.
+Sign in to your Inngest account and find your **Signing Key** under the "Manage" section of your project.
 
 | Variable Name           | Description           |
 | ----------------------- | --------------------- |
 | `INNGEST_SIGNING_KEY`   | Your Inngest signing key. |
 
 #### Lemon Squeezy Keys
-Sign in to your Lemon Squeezy account. You can find your **Store ID** in the "Settings > Stores" page, and you can create an **API Key** and **Webhook Secret** in "Settings > API".
+Sign in to your Lemon Squeezy account. You can find your **Store ID** in the "Settings > Stores" page, and you can create an **API Key** and **Webhook Secret** in "Settings > API". The **Variant IDs** can be found on each product variant's page.
 
-| Variable Name                   | Description                             |
-| ------------------------------- | --------------------------------------- |
-| `LEMONSQUEEZY_API_KEY`          | Your Lemon Squeezy API key.             |
-| `LEMONSQUEEZY_STORE_ID`         | Your Lemon Squeezy store ID.            |
-| `LEMONSQUEEZY_WEBHOOK_SECRET`   | Your secret for verifying webhooks.     |
+| Variable Name                                    | Description                             |
+| ------------------------------------------------ | --------------------------------------- |
+| `LEMONSQUEEZY_API_KEY`                           | Your Lemon Squeezy API key.             |
+| `LEMONSQUEEZY_STORE_ID`                          | Your Lemon Squeezy store ID.            |
+| `LEMONSQUEEZY_WEBHOOK_SECRET`                    | Your secret for verifying webhooks.     |
+| `NEXT_PUBLIC_LEMONSQUEEZY_PRO_MONTHLY_VARIANT_ID`  | The variant ID for the Pro Monthly plan.  |
+| `NEXT_PUBLIC_LEMONSQUEEZY_PRO_YEARLY_VARIANT_ID`   | The variant ID for the Pro Yearly plan.   |
+| `NEXT_PUBLIC_LEMONSQUEEZY_ULTRA_MONTHLY_VARIANT_ID`| The variant ID for the Ultra Monthly plan.|
+| `NEXT_PUBLIC_LEMONSQUEEZY_ULTRA_YEARLY_VARIANT_ID` | The variant ID for the Ultra Yearly plan. |
 
 
 ### Step 3: Deploy to Cloudflare Pages
