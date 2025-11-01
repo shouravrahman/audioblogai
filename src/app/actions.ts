@@ -1,6 +1,6 @@
 'use server';
 
-import { inngest } from '@/inngest/client';
+import { inngest } from '@/inngest/server-client';
 import { z } from 'zod';
 import { LemonSqueezy } from '@lemonsqueezy/lemonsqueezy.js';
 import { auth } from 'firebase-admin';
@@ -77,5 +77,3 @@ export async function createCheckout(input: z.infer<typeof createCheckoutSchema>
   
   redirect(checkout.data.data.attributes.url);
 }
-
-    
