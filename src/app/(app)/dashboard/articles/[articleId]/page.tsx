@@ -1,5 +1,7 @@
 'use client';
 
+export const runtime = 'edge';
+
 import { useDoc, useMemoFirebase, useUser } from '@/firebase';
 import { useFirestore } from '@/firebase/provider';
 import { doc, updateDoc, serverTimestamp, deleteDoc } from 'firebase/firestore';

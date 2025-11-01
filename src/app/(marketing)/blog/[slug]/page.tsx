@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+export const runtime = 'edge';
+
 // This is a placeholder for fetching blog post data.
 // In a real app, you'd fetch this from a CMS or a local file.
 async function getPostData(slug: string) {

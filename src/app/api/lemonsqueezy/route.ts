@@ -3,6 +3,8 @@ import crypto from 'crypto';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { getFirebaseAdmin } from '@/app/firebase-admin';
 
+export const runtime = 'edge';
+
 const { firestore } = getFirebaseAdmin();
 
 export async function POST(req: NextRequest) {
