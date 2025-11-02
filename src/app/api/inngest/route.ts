@@ -1,3 +1,5 @@
+'use server';
+
 import { serve } from 'inngest/next';
 import { inngest, generateArticle } from '@/inngest/client';
 

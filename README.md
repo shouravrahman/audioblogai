@@ -12,36 +12,23 @@ This is a Next.js application built with Firebase and Genkit. It allows users to
 - **Automatic Cover Images:** AI generates a relevant cover image for each article.
 - **Subscription Management:** Built-in pricing tiers and payment processing with Lemon Squeezy.
 
-## Deployment Guide (Frontend on Cloudflare)
+## Deployment Guide
 
-This guide explains how to deploy the Next.js frontend of this application to a third-party hosting service like Cloudflare Pages, Vercel, or Netlify, while keeping the backend services (Firebase Auth, Firestore, Inngest) running as they are.
+This guide explains how to deploy the Next.js frontend of this application to a third-party hosting service like Netlify or Vercel, while keeping the backend services (Firebase Auth, Firestore, Inngest) running as they are.
 
 ### Prerequisites
 
 1.  **Firebase Project**: Your Firebase project is already set up and contains your Authentication and Firestore configurations.
 2.  **Inngest Account**: You have a free account with [Inngest](https://www.inngest.com/) to manage background jobs.
 3.  **Lemon Squeezy Account**: You have an account with [Lemon Squeezy](https://www.lemonsqueezy.com/) for payment processing.
-4.  **Cloudflare Account**: You have an account with Cloudflare (or another hosting provider).
+4.  **Hosting Provider Account**: You have an account with a provider like Netlify or Vercel.
 5.  **Local Code**: You have downloaded the source code of this application.
 
-### Step 1: Build the Next.js Application Locally
-
-Before deploying, you need to create a production-ready build of your Next.js application.
-
-Run the following command in your project's root directory:
-
-```bash
-npm install
-npm run build
-```
-
-This command transpiles the TypeScript code, bundles your assets, and outputs a static, optimized version of your application into the `.next` directory. This is the directory you will deploy.
-
-### Step 2: Configure Environment Variables
+### Step 1: Configure Environment Variables
 
 Your hosting provider needs a complete set of secrets and keys to connect to Firebase, Inngest, and Lemon Squeezy.
 
-In your hosting provider's dashboard (e.g., Cloudflare Pages), find the section for "Environment Variables" and add the following keys. 
+In your hosting provider's dashboard (e.g., Netlify), find the section for "Environment Variables" and add the following keys. 
 
 #### Firebase Keys
 You can copy these values directly from your `src/firebase/config.ts` file or your Firebase project settings.
@@ -78,27 +65,22 @@ Sign in to your Lemon Squeezy account. You can find your **Store ID** in the "Se
 | `NEXT_PUBLIC_LEMONSQUEEZY_ULTRA_YEARLY_VARIANT_ID` | The variant ID for the Ultra Yearly plan. |
 
 
-### Step 3: Deploy to Cloudflare Pages
+### Step 2: Deploy
 
-1.  **Log in to Cloudflare**: Go to your Cloudflare dashboard.
-2.  **Navigate to Workers & Pages**: Select "Workers & Pages" from the sidebar.
-3.  **Create an Application**: Go to the "Pages" tab and click "Create application".
-4.  **Connect Your Git Repository**: Connect the Git repository where your code is stored.
-5.  **Set Up Build & Deployments**:
-    *   **Production Branch**: Select the branch you want to deploy (e.g., `main`).
-    *   **Framework Preset**: Choose **Next.js**.
-    *   **Build Command**: `npm run build`
-    *   **Build Output Directory**: `.next`
-6.  **Add Environment Variables**: In the "Environment variables" section, add all the variables you configured in Step 2.
-7.  **Save and Deploy**: Click "Save and Deploy". Cloudflare will now build and deploy your application.
+1.  **Connect Your Git Repository**: In your hosting provider's dashboard, connect the Git repository where your code is stored.
+2.  **Set Up Build & Deployments**:
+    *   The provider will likely auto-detect that this is a Next.js project.
+    *   The standard build command is `npm run build`.
+    *   The standard output directory is `.next`.
+3.  **Deploy**: Click "Deploy". Your hosting provider will now build and deploy your application.
 
-### Step 4: Configure Authorized Domains in Firebase
+### Step 3: Configure Authorized Domains in Firebase
 
 For security, Firebase Authentication only allows sign-ins from authorized domains.
 
 1.  **Go to Firebase Console**: Open your Firebase project.
 2.  **Navigate to Authentication**: Go to the "Authentication" section and click the "Settings" tab.
 3.  **Authorized Domains**: Under "Authorized domains", click "Add domain".
-4.  **Add Your Cloudflare Domain**: Add the URL provided by Cloudflare for your deployed site (e.g., `your-app.pages.dev`).
+4.  **Add Your Domain**: Add the final URL for your deployed site (e.g., `your-app.netlify.app`).
 
-Your application is now successfully deployed! The frontend is hosted on Cloudflare, and it communicates securely with your existing Firebase backend for authentication, database operations, and background jobs.
+Your application is now successfully deployed! The frontend is hosted on your chosen provider, and it communicates securely with your existing Firebase backend for authentication, database operations, and background jobs.

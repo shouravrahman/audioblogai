@@ -14,7 +14,7 @@ AudioScribe was built to solve a critical pain point for content creators, subje
 
 The application is architected as a modern, full-stack serverless web application, prioritizing developer experience, scalability, and rapid feature development.
 
--   **Frontend:** A Next.js 15 application using the App Router, hosted on a serverless platform like Vercel or Cloudflare Pages.
+-   **Frontend:** A Next.js 15 application using the App Router, hosted on a serverless platform like Vercel or Netlify.
 -   **Backend Services:** Firebase serves as the core backend for authentication, database, and background job processing.
 -   **AI Integration:** Google's Gemini models, orchestrated through Genkit, provide the generative AI capabilities for transcription, content structuring, and analysis.
 -   **Payments:** Lemon Squeezy is integrated for subscription management and billing.
@@ -70,20 +70,14 @@ The application is designed for a decoupled deployment, offering flexibility and
 
 The Firebase backend (Auth, Firestore, Inngest functions) is managed and deployed through the Firebase CLI or the Firebase Console. Security rules and function updates can be deployed with a single command, and this backend remains constant regardless of where the frontend is hosted.
 
-### Frontend (e.g., Cloudflare Pages)
+### Frontend (e.g., Netlify, Vercel)
 
-The Next.js frontend is a self-contained application that can be deployed to any modern serverless hosting provider. Here’s the process for Cloudflare Pages:
+The Next.js frontend is a self-contained application that can be deployed to any modern serverless hosting provider like Netlify or Vercel. The general process is as follows:
 
-1.  **Build Locally:** The first step is always to ensure a production build can be created successfully: `npm run build`. This generates an optimized `.next` output directory.
-2.  **Configure Environment Variables:** The frontend needs to connect to the correct Firebase project. In the Cloudflare Pages dashboard, the following public environment variables must be set:
-    -   `NEXT_PUBLIC_PROJECT_ID`
-    -   `NEXT_PUBLIC_APP_ID`
-    -   `NEXT_PUBLIC_API_KEY`
-    -   `NEXT_PUBLIC_AUTH_DOMAIN`
-3.  **Deploy via Git:** Connect your Git repository (e.g., GitHub) to Cloudflare Pages. Configure the build settings:
-    -   **Framework Preset:** Next.js
-    -   **Build Command:** `npm run build`
-    -   **Build Output Directory:** `.next`
-4.  **Authorize Domain:** Finally, for security, add the Cloudflare Pages domain (e.g., `your-app.pages.dev`) to the list of "Authorized domains" in your Firebase Authentication settings.
+1.  **Connect Git Repository:** Connect your Git repository (e.g., GitHub) to your chosen hosting provider.
+2.  **Configure Build Settings:** The provider will typically auto-detect that this is a Next.js application. The standard build command is `npm run build` and the output directory is `.next`.
+3.  **Configure Environment Variables:** In the hosting provider's dashboard, you must set all the environment variables listed in the project's `README.md` file. This includes keys for Firebase, Inngest, and Lemon Squeezy.
+4.  **Deploy:** Trigger a deployment. The provider will build and deploy your application to its global edge network.
+5.  **Authorize Domain:** For security, add your new application domain (e.g., `your-app.netlify.app`) to the list of "Authorized domains" in your Firebase Authentication settings.
 
-This decoupled approach ensures the frontend benefits from the global edge network of a provider like Cloudflare, while the backend relies on the robust and scalable infrastructure of Firebase.
+This decoupled approach ensures the frontend benefits from the global edge network of a provider like Netlify, while the backend relies on the robust and scalable infrastructure of Firebase.
