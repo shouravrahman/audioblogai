@@ -5,12 +5,8 @@ import { inngest, generateArticle } from '@/inngest/client';
 
 const handler = serve({
   client: inngest,
-  functions: [
-    generateArticle,
-  ],
+  functions: [generateArticle],
   streaming: 'allow',
 });
 
-export const GET = handler;
-export const POST = handler;
-export const PUT = handler;
+export const { GET, POST, PUT } = handler;

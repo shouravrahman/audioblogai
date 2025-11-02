@@ -29,8 +29,14 @@ const nextConfig: NextConfig = {
 			},
 		],
 	},
+	serverExternalPackages: [
+		'genkit',
+		'@genkit-ai/core',
+		'firebase-admin',
+		'@opentelemetry/api',
+		'express',
+    'inngest'
+	]
 };
 
 export default nextConfig;
-import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
-initOpenNextCloudflareForDev();
