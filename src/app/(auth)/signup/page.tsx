@@ -17,8 +17,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Logo } from '@/components/logo';
+import { ClientOnly } from '@/components/ui/client-only';
 
-export default function SignupPage() {
+function SignupForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -96,4 +97,12 @@ export default function SignupPage() {
       </Card>
     </div>
   );
+}
+
+export default function SignupPage() {
+    return (
+        <ClientOnly>
+            <SignupForm />
+        </ClientOnly>
+    )
 }
