@@ -13,7 +13,8 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "postinstall": "node ./fix-jose-issue.js"
   },
   "dependencies": {
     "@genkit-ai/google-genai": "latest",
@@ -72,6 +73,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@types/turndown": "latest",
+    "fs-extra": "latest",
     "genkit-cli": "latest",
     "jest": "latest",
     "jest-environment-jsdom": "latest",
