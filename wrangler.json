@@ -7,10 +7,6 @@
     "nodejs_compat",
     "global_fetch_strictly_public"
   ],
-  "build": {
-    "command": "npx opennextjs-cloudflare build",
-    "build_command_flags": []
-  },
   "node_compat": true,
   "esbuild": {
     "external": ["jose"]
