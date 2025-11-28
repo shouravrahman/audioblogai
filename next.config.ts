@@ -22,13 +22,24 @@ const nextConfig: NextConfig = {
 				pathname: "/**",
 			},
 			{
-				protocol: "https",
+				protocol: "https://",
 				hostname: "picsum.photos",
 				port: "",
 				pathname: "/**",
 			},
 		],
 	},
+    webpack: (
+        config,
+        { isServer }
+    ) => {
+        if (isServer) {
+            // express is a dependency of genkit, but not used by the app server
+            // we can mark it as external to avoid bundling it
+            config.externals.push('express');
+        }
+        return config
+    },
 };
 
 export default nextConfig;
