@@ -26,14 +26,16 @@ This guide explains how to deploy this Next.js application to Cloudflare Pages. 
 
 In the "Build settings" section, you need to tell Cloudflare how to build and deploy your application.
 
-1.  **Framework Preset**: Select **Next.js** from the dropdown menu. This will pre-fill most of the correct settings.
-2.  **Build command**: Ensure this is set to `npx opennext build`.
+1.  **Framework Preset**: Select **Next.js** from the dropdown menu. This will pre-fill most settings.
+2.  **Build command**: Set this to `npx open-next build`.
 3.  **Build output directory**: Set this to `open-next`.
+4.  **Root directory**: **IMPORTANT** - Leave this field **blank**.
 
-Your configuration should look like this:
+Your final configuration should look like this:
 - **Framework preset**: `Next.js`
-- **Build command**: `npx opennext build`
+- **Build command**: `npx open-next build`
 - **Build output directory**: `open-next`
+- **Root directory**: (is empty)
 
 ### Step 3: Configure Environment Variables
 
