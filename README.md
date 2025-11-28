@@ -66,11 +66,14 @@ This project is configured for deployment to Cloudflare Pages using the `@openne
 2.  **Configure Build Settings:** In the "Build & deployments" settings, use the following configuration:
     *   **Framework preset:** `Next.js`
     *   **Build command:** `npx opennextjs-cloudflare build`
-    *   **Build output directory:** `open-next`
+    *   **Build output directory:** `.open-next`
     *   **Root directory:** (leave this blank)
 3.  **Add Environment Variables:** In your Cloudflare Pages project settings, go to **Settings > Environment variables** and add all the necessary variables listed above.
 4.  **Deploy:** Trigger a deployment. Cloudflare will build and deploy your application.
 5.  **Authorize Domain:** For security, add your new application domain (e.g., `your-app.pages.dev`) to the list of "Authorized domains" in your Firebase Authentication settings.
+
+### Wrangler Configuration
+This project includes a `wrangler.json` file to handle specific build requirements for the Cloudflare environment. It ensures that Node.js compatibility is enabled and correctly resolves certain packages (like `jose`) that can cause issues during the bundling process. You should not need to modify this file.
 
 ## Local Preview
 

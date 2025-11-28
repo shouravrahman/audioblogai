@@ -1,4 +1,5 @@
 export type BlogPost = {
+    id: string;
     userId: string;
     title: string;
     content: string;
@@ -10,6 +11,7 @@ export type BlogPost = {
 };
 
 export type AiModel = {
+    id: string;
     userId: string;
     name: string;
     description?: string;
