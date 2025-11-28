@@ -57,10 +57,23 @@ Find these in your Lemon Squeezy dashboard under **Settings > API** and **Settin
 | `NEXT_PUBLIC_LEMONSQUEEZY_ULTRA_MONTHLY_VARIANT_ID`| The variant ID for the Ultra Monthly plan.   |
 | `NEXT_PUBLIC_LEMONSQUEEZY_ULTRA_YEARLY_VARIANT_ID` | The variant ID for the Ultra Yearly plan.    |
 
-## Deployment
 
-This project is configured to produce a standalone Node.js server output. It can be deployed to any hosting provider that supports Node.js applications.
+## Deployment to Cloudflare Pages
 
-The build command (`npm run build`) will create a `.next/standalone` directory. You will need to deploy this directory to your hosting provider. The server can be started by running `node .next/standalone/server.js`.
+This project is configured for deployment to Cloudflare Pages using the `@opennextjs/cloudflare` adapter.
 
-Please consult your hosting provider's documentation for instructions on deploying a standalone Next.js application.
+1.  **Connect Git Repository:** Connect your Git repository (e.g., GitHub) to Cloudflare Pages.
+2.  **Configure Build Settings:** In the "Build & deployments" settings, use the following configuration:
+    *   **Framework preset:** `Next.js`
+    *   **Build command:** `npx opennextjs-cloudflare build`
+    *   **Build output directory:** `open-next`
+    *   **Root directory:** (leave this blank)
+3.  **Add Environment Variables:** In your Cloudflare Pages project settings, go to **Settings > Environment variables** and add all the necessary variables listed above.
+4.  **Deploy:** Trigger a deployment. Cloudflare will build and deploy your application.
+5.  **Authorize Domain:** For security, add your new application domain (e.g., `your-app.pages.dev`) to the list of "Authorized domains" in your Firebase Authentication settings.
+
+## Local Preview
+
+To preview a production build locally using the Cloudflare environment:
+1. Run `npm run preview`.
+2. This will first run `opennextjs-cloudflare build` and then start a local Wrangler server.
