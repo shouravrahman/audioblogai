@@ -1,0 +1,28 @@
+diff --git a/node_modules/jwks-rsa/src/integrations/passport.js b/node_modules/jwks-rsa/src/integrations/passport.js
+index 0352525..35928d2 100644
+--- a/node_modules/jwks-rsa/src/integrations/passport.js
++++ b/node_modules/jwks-rsa/src/integrations/passport.js
+@@ -1,4 +1,8 @@
+-const jose = require('jose');
++let jose;
++try {
++  jose = require('jose');
++} catch (err) {
++}
+ 
+ module.exports.passportJwtSecret = (options) => {
+   if (options === null || options === undefined) {
+diff --git a/node_modules/jwks-rsa/src/utils.js b/node_modules/jwks-rsa/src/utils.js
+index 9e28406..c691cb5 100644
+--- a/node_modules/jwks-rsa/src/utils.js
++++ b/node_modules/jwks-rsa/src/utils.js
+@@ -1,4 +1,8 @@
+-const jose = require('jose');
++let jose;
++try {
++  jose = require('jose');
++} catch (err) {
++}
+ 
+ const certToPEM = (cert) => {
+   if (cert.indexOf('BEGIN CERTIFICATE') !== -1) {
