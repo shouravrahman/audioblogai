@@ -28,6 +28,14 @@ Find these in your Firebase project settings under **Project settings > General*
 | `NEXT_PUBLIC_MESSAGING_SENDER_ID`| Your Firebase Messaging Sender ID.             |
 | `NEXT_PUBLIC_BASE_URL`         | The full URL of your deployed site (e.g., `https://your-app.com`). |
 
+#### Genkit/Google AI Keys
+Find these in your Google Cloud Console.
+
+| Variable Name           | Description                     |
+| ----------------------- | ------------------------------- |
+| `GEMINI_API_KEY`     | Your Google AI API key for Genkit.         |
+
+
 #### Inngest Keys
 Find these in your Inngest project dashboard under **Manage**.
 
@@ -51,4 +59,4 @@ Find these in your Lemon Squeezy dashboard under **Settings > API** and **Settin
 
 ## Deployment
 
-This project is configured to produce a standalone server output. After running `npm run build`, the `.next/standalone` directory will contain a runnable Node.js server. This can be deployed to any hosting provider that supports Node.js applications.
+This project is configured to use Next.js's standalone output mode, which creates a self-contained server. You can deploy this application to any hosting provider that supports Node.js applications.
