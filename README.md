@@ -59,4 +59,8 @@ Find these in your Lemon Squeezy dashboard under **Settings > API** and **Settin
 
 ## Deployment
 
-This project is configured to use Next.js's standalone output mode, which creates a self-contained server. You can deploy this application to any hosting provider that supports Node.js applications.
+This project is configured to produce a standalone Node.js server output. It can be deployed to any hosting provider that supports Node.js applications.
+
+The build command (`npm run build`) will create a `.next/standalone` directory. You will need to deploy this directory to your hosting provider. The server can be started by running `node .next/standalone/server.js`.
+
+Please consult your hosting provider's documentation for instructions on deploying a standalone Next.js application.
