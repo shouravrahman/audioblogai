@@ -1,6 +1,6 @@
-// @ts-check
-
 /**
- * @type {import('open-next').OpenNextConfig}
+ * @type {import("open-next").OpenNextConfig}
  */
-export default {};
+export default {
+  // open-next options
+};
