@@ -13,6 +13,7 @@ import { createCheckout } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
+import { ClientOnly } from '../ui/client-only';
 
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(true);
@@ -110,14 +111,16 @@ export function Pricing() {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button 
-                className="w-full"
-                onClick={() => planId && handleCheckout(planId)}
-                disabled={plan.name === 'Free' || isLoading}
-                variant={plan.recommended ? 'default' : 'secondary'}
-              >
-                {isLoading ? 'Redirecting...' : plan.cta}
-              </Button>
+                <ClientOnly>
+                    <Button 
+                        className="w-full"
+                        onClick={() => planId && handleCheckout(planId)}
+                        disabled={plan.name === 'Free' || isLoading}
+                        variant={plan.recommended ? 'default' : 'secondary'}
+                    >
+                        {isLoading ? 'Redirecting...' : plan.cta}
+                    </Button>
+              </ClientOnly>
             </CardFooter>
           </Card>
         )})}
