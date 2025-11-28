@@ -1,0 +1,9 @@
+{
+  "name": "audioblogai",
+  "pages_build_output_dir": ".open-next",
+  "compatibility_date": "2024-03-20",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ]
+}
