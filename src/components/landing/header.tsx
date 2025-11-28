@@ -12,6 +12,7 @@ import {
 import { Logo } from '@/components/logo';
 import { navLinks } from '@/lib/data';
 import { useUser } from '@/firebase';
+import { ClientOnly } from '../ui/client-only';
 
 export function Header() {
   const { user, isUserLoading } = useUser();
@@ -74,24 +75,26 @@ export function Header() {
         </div>
         
         <div className="flex flex-1 justify-end">
-          <nav className="flex items-center gap-2">
-            {isUserLoading ? (
-              <Button disabled>Loading...</Button>
-            ) : user ? (
-              <Button asChild>
-                <Link href="/dashboard">Dashboard</Link>
-              </Button>
-            ) : (
-              <>
-                <Button variant="ghost" asChild>
-                  <Link href="/login">Login</Link>
-                </Button>
+          <ClientOnly>
+            <nav className="flex items-center gap-2">
+              {isUserLoading ? (
+                <Button disabled>Loading...</Button>
+              ) : user ? (
                 <Button asChild>
-                  <Link href="/signup">Start For Free</Link>
+                  <Link href="/dashboard">Dashboard</Link>
                 </Button>
-              </>
-            )}
-          </nav>
+              ) : (
+                <>
+                  <Button variant="ghost" asChild>
+                    <Link href="/login">Login</Link>
+                  </Button>
+                  <Button asChild>
+                    <Link href="/signup">Start For Free</Link>
+                  </Button>
+                </>
+              )}
+            </nav>
+          </ClientOnly>
         </div>
       </div>
     </header>
