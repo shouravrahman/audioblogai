@@ -17,7 +17,7 @@ This is a Next.js application built with Firebase and Genkit. It allows users to
 To run this project locally and deploy it, you will need to set the following environment variables. You can create a `.env.local` file in the root of your project for local development.
 
 #### Firebase Keys
-Find these in your Firebase project settings under **Project settings > General**.
+These values have been automatically populated for you in your `.env` file.
 
 | Variable Name                  | Description                                      |
 | ------------------------------ | ------------------------------------------------ |
